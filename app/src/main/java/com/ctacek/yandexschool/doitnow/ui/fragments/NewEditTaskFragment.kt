@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import com.ctacek.yandexschool.doitnow.R
 
 
-class NewEditTaskFragment : Fragment() {
+class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

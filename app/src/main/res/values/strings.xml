@@ -1,5 +1,14 @@
 <resources>
     <string name="app_name">DoItNow</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="main_fragment_title">My tasks</string>
+    <string name="completed_title">Completed - %1$d</string>
+    <string name="infoaboutitem">InfoAboutItem</string>
+    <string name="infodata">Do id before %1$s</string>
+    <string name="long_text">
+        Фьючерсный контракт — это договор между покупателем и продавцом о покупке/продаже какого-то актива в будущем. Стороны заранее оговаривают, через какой срок и по какой цене состоится сделка.
+
+        Например, сейчас одна акция «Лукойла» стоит около 5700 рублей. Фьючерс на акции «Лукойла» — это, например, договор между покупателем и продавцом о том, что покупатель купит акции «Лукойла» у продавца по цене 5700 рублей через 3 месяца. При этом не важно, какая цена будет у акций через 3 месяца: цена сделки между покупателем и продавцом все равно останется 5700 рублей. Если реальная цена акции через три месяца не останется прежней, одна из сторон в любом случае понесет убытки.
+    </string>
+    <string name="save_button">Save</string>
 </resources>
