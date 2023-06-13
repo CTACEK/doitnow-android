@@ -79,6 +79,7 @@ class ToDoItemAdapter(private val toDoItemActionListener: ToDoItemActionListener
             }
 
             if (item.status) {
+                data.visibility = View.GONE
                 title.paintFlags = title.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                 checkbox.buttonTintList = AppCompatResources.getColorStateList(
                     itemView.context,
@@ -86,6 +87,10 @@ class ToDoItemAdapter(private val toDoItemActionListener: ToDoItemActionListener
                 )
                 priority.visibility = View.GONE
             } else {
+                if (item.endDate != null){
+                    data.visibility = View.VISIBLE
+                }
+
                 title.paintFlags = title.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
                 when (item.priority) {
                     Priority.LOW -> {
@@ -162,7 +167,7 @@ class ToDoItemAdapter(private val toDoItemActionListener: ToDoItemActionListener
         when (view.id) {
             R.id.isCompleted -> {
                 toDoItemActionListener.onItemCheck(item)
-                notifyItemChanged(item.id.toInt())
+                notifyItemChanged(items.indexOfFirst { it.id == item.id })
             }
             else -> toDoItemActionListener.onItemDetails(item)
         }

@@ -24,7 +24,7 @@
 
         <argument
             android:name="newTaskArg"
-            app:argType="com.ctacek.yandexschool.doitnow.data.model.Todoitem"
+            app:argType="string"
             app:nullable="true" />
 
     </fragment>

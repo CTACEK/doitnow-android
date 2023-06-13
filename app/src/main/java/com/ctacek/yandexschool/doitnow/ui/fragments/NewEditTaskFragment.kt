@@ -1,16 +1,23 @@
 package com.ctacek.yandexschool.doitnow.ui.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.navArgs
 import com.ctacek.yandexschool.doitnow.R
 import com.ctacek.yandexschool.doitnow.data.model.Priority
 import com.ctacek.yandexschool.doitnow.data.model.Todoitem
 import com.ctacek.yandexschool.doitnow.databinding.FragmentNewEditTaskBinding
+import com.ctacek.yandexschool.doitnow.factory
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
@@ -20,31 +27,33 @@ import java.util.Date
 
 class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
 
-    private val viewModel: MainViewModel by activityViewModels()
+    private val viewModel: NewEditTaskViewModel by viewModels{factory()}
     private lateinit var binding: FragmentNewEditTaskBinding
-//    private val args: NewTaskFragmentArgs by navArgs()
-    private var taskInfo = Todoitem(
-        "2".toString(),
-        "",
-        Priority.BASIC,
-        null,
-        false,
-        Date(),
-        null
-    )
+    private val args : NewEditTaskFragmentArgs by navArgs()
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_new_edit_task, container, false)
+    ): View {
+        binding = FragmentNewEditTaskBinding.inflate(inflater, container, false)
+
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentNewEditTaskBinding.bind(view)
 
-//        if (args.newTaskArg != null) initUpdate()
+        if (args.newTaskArg != null){
+            viewModel.loadTask(args.newTaskArg.toString())
+            binding.button.text = "Save"
+        } else{
+            binding.button.text = "Create"
+        }
+
+        viewModel.editTask.observe(viewLifecycleOwner) {
+            binding.title.text = it.description
+        }
 
         binding.button.setOnClickListener {
             showDateTimePicker()

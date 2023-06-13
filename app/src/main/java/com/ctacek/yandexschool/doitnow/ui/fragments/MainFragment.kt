@@ -1,29 +1,33 @@
 package com.ctacek.yandexschool.doitnow.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ctacek.yandexschool.doitnow.R
-import com.ctacek.yandexschool.doitnow.data.datasource.ItemListener
 import com.ctacek.yandexschool.doitnow.data.model.Todoitem
 import com.ctacek.yandexschool.doitnow.databinding.FragmentMainBinding
+import com.ctacek.yandexschool.doitnow.factory
 import com.ctacek.yandexschool.doitnow.ui.adapter.ToDoItemAdapter
 
 class MainFragment : Fragment(R.layout.fragment_main) {
 
-    private val viewModel: MainViewModel by activityViewModels()
+    private val viewModel: MainViewModel by viewModels{factory()}
     private lateinit var binding: FragmentMainBinding
     private lateinit var adapter: ToDoItemAdapter
     private var showComplited: Boolean = true
-
 
 
     override fun onCreateView(
@@ -46,8 +50,8 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         val manager = LinearLayoutManager(context) // LayoutManager
 
         binding.fab.setOnClickListener {
-            Navigation.findNavController(view)
-                .navigate(R.id.action_mainFragment_to_newEditTaskFragment)
+            val action = MainFragmentDirections.actionMainFragmentToNewEditTaskFragment(null)
+            findNavController().navigate(action)
         }
 
         binding.visibility.setOnClickListener {
@@ -79,16 +83,14 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             ToDoItemAdapter(object : ToDoItemAdapter.ToDoItemActionListener {
                 override fun onItemCheck(item: Todoitem) {
                     viewModel.updateTask(item.id, !item.status)
-                    Toast.makeText(context, "Check " + item.status, Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onItemRemove(item: Todoitem) {
-                    Toast.makeText(context, "Yep", Toast.LENGTH_SHORT).show()
+
                 }
 
                 override fun onItemDetails(item: Todoitem) {
-                    Navigation.findNavController(view).navigate(R.id.action_mainFragment_to_newEditTaskFragment)
-                    Toast.makeText(context, "Details", Toast.LENGTH_SHORT).show()
+                    editTaskInformation(item)
                 }
 
 
@@ -105,6 +107,11 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                 getString(R.string.completed_title, viewModel.completedTasks.value)
         }
 
+    }
+
+    private fun editTaskInformation(task: Todoitem) {
+        val action = MainFragmentDirections.actionMainFragmentToNewEditTaskFragment(task.id)
+        findNavController().navigate(action)
     }
 
 }
