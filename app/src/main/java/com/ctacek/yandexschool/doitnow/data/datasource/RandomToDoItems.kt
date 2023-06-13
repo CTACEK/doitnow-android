@@ -5,7 +5,7 @@ import com.ctacek.yandexschool.doitnow.data.model.Todoitem
 import com.github.javafaker.Faker
 import kotlin.random.Random
 
-typealias ItemListener = (persons: List<Todoitem>) -> Unit
+typealias ItemListener = (items: List<Todoitem>) -> Unit
 
 class RandomToDoItems {
 
@@ -16,7 +16,7 @@ class RandomToDoItems {
     private var listeners = mutableListOf<ItemListener>()
 
     init {
-        tasks = (1..40).map {
+        tasks = (0..40).map {
             Todoitem(
                 it.toString(),
                 faker.backToTheFuture().character().toString(),
@@ -41,29 +41,23 @@ class RandomToDoItems {
         )
     }
 
-    fun getToDoItems(): MutableList<Todoitem> {
-        return tasks
+    fun deleteTask(todoitem: Todoitem) {
+        val indexToDelete = tasks.indexOfFirst { it.id == todoitem.id }
+        if (indexToDelete != -1) {
+            tasks.removeAt(indexToDelete)
+        }
+        notifyChanges()
     }
 
-    fun editTaks(id: String, status: Boolean){
+    fun editTask(id: String, status: Boolean) {
         tasks[id.toInt()].status = status
+        notifyChanges()
     }
 
     private fun getRandomPriority(): Priority {
-        val list = listOf(Priority.LOW, Priority.STANDARD, Priority.HIGH)
+        val list = listOf(Priority.LOW, Priority.BASIC, Priority.HIGH)
         return list[Random.nextInt(0, 3)]
     }
-
-    fun addListener(listener: ItemListener) {
-        listeners.add(listener)
-        listener.invoke(tasks)
-    }
-
-    fun removeListener(listener: ItemListener) {
-        listeners.remove(listener)
-        listener.invoke(tasks)
-    }
-
     private fun notifyChanges() = listeners.forEach { it.invoke(tasks) }
 
     fun getTasks() = tasks

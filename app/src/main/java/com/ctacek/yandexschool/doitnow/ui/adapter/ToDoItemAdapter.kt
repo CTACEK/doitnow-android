@@ -50,19 +50,18 @@ class ToDoItemAdapter(private val toDoItemActionListener: ToDoItemActionListener
         }
 
     @SuppressLint("SimpleDateFormat")
-    class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val checkbox: MaterialCheckBox
-        private val title: TextView
-        private val priority: ImageView
-        private val data: TextView
-        private val dataFormat: SimpleDateFormat
-
+    class ItemViewHolder(binding: ItemTaskBinding) : RecyclerView.ViewHolder(binding.root) {
+        val checkbox: MaterialCheckBox
+        val title: TextView
+        val priority: ImageView
+        val data: TextView
+        val dataFormat: SimpleDateFormat
 
         init {
-            checkbox = itemView.findViewById(R.id.isCompleted)
-            title = itemView.findViewById(R.id.title)
-            priority = itemView.findViewById(R.id.priority)
-            data = itemView.findViewById(R.id.data)
+            checkbox = binding.isCompleted
+            title = binding.title
+            priority = binding.priority
+            data = binding.data
             dataFormat = SimpleDateFormat("d MMMM")
         }
 
@@ -101,7 +100,7 @@ class ToDoItemAdapter(private val toDoItemActionListener: ToDoItemActionListener
                             AppCompatResources.getColorStateList(itemView.context, R.color.grey)
                     }
 
-                    Priority.STANDARD -> {
+                    Priority.BASIC -> {
                         priority.visibility = View.GONE
                         checkbox.buttonTintList =
                             AppCompatResources.getColorStateList(itemView.context, R.color.grey)
@@ -133,17 +132,24 @@ class ToDoItemAdapter(private val toDoItemActionListener: ToDoItemActionListener
         binding.root.setOnClickListener(this)
         binding.isCompleted.setOnClickListener(this)
 
-        return ItemViewHolder(binding.root)
+        return ItemViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        holder.bind(items[position])
+        val item = items[position]
+
+        holder.itemView.tag = item
+        holder.checkbox.tag = item
+
+        holder.bind(item)
+
+
     }
 
     interface ToDoItemActionListener {
         fun onItemCheck(item: Todoitem)
         fun onItemRemove(item: Todoitem)
-        fun onItemGetId(item: Todoitem)
+        fun onItemDetails(item: Todoitem)
     }
 
     override fun getItemCount(): Int {
@@ -154,8 +160,11 @@ class ToDoItemAdapter(private val toDoItemActionListener: ToDoItemActionListener
         val item: Todoitem = view.tag as Todoitem
 
         when (view.id) {
-            R.id.isCompleted -> toDoItemActionListener.onItemCheck(item)
-            else -> toDoItemActionListener.onItemGetId(item)
+            R.id.isCompleted -> {
+                toDoItemActionListener.onItemCheck(item)
+                notifyItemChanged(item.id.toInt())
+            }
+            else -> toDoItemActionListener.onItemDetails(item)
         }
     }
 }

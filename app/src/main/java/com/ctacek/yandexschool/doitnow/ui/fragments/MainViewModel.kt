@@ -1,49 +1,52 @@
 package com.ctacek.yandexschool.doitnow.ui.fragments
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ctacek.yandexschool.doitnow.data.datasource.RandomToDoItems
 import com.ctacek.yandexschool.doitnow.data.model.Todoitem
 import com.ctacek.yandexschool.doitnow.data.repository.TodoItemsRepository
-import com.github.javafaker.Dune.Quote
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
 class MainViewModel() : ViewModel() {
-    private val date = MutableLiveData<List<Todoitem>>()
-    private val completedTasks = MutableLiveData<Int>()
+    private val _tasks = MutableLiveData<List<Todoitem>>()
+    val tasks: LiveData<List<Todoitem>> = _tasks
+
+    private val _completedTasks = MutableLiveData<Int>()
+    val completedTasks: LiveData<Int> = _completedTasks
+
     private val repository = TodoItemsRepository()
 
 
     init {
         viewModelScope.launch {
-            date.value = repository.getRandomItems()
-            completedTasks.value = repository.getRandomItems().filter { it.status }.size
+            _tasks.value = repository.getItems()
+            _completedTasks.value = repository.getItems().filter { it.status }.size
         }
     }
-
-    fun getData() = date
-    fun getCountCompleted() = completedTasks
 
     fun updateTask(
         id: String,
         status: Boolean,
     ) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.editTask(id, status)
-        }
+        repository.editTask(id, status)
+        notifyUpdates()
     }
 
     fun hideCompletedTasks() {
-        date.value = repository.getRandomItems().filter { !it.status }
+        _tasks.value = repository.getItems().filter { !it.status }
     }
 
     fun showCompletedTasks() {
-        date.value = repository.getRandomItems()
+        _tasks.value = repository.getItems()
+    }
+
+    private fun notifyUpdates() {
+        _tasks.postValue(repository.getItems())
+        _completedTasks.postValue(repository.getItems().filter { it.status }.size)
+
     }
 
 

@@ -9,10 +9,10 @@ data class Todoitem (
     val priority : Priority,
     val endDate: Date?,
     var status : Boolean,
-    val startDate: Date,
-    val editedDate: Date?
+    val createdAt: Date,
+    val lastUpdatedBy: Date?
         ): Serializable
 
 enum class Priority {
-    LOW, STANDARD, HIGH
+    LOW, BASIC, HIGH
 }

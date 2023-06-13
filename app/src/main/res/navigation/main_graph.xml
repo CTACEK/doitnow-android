@@ -9,14 +9,25 @@
         android:id="@+id/mainFragment"
         android:name="com.ctacek.yandexschool.doitnow.ui.fragments.MainFragment"
         android:label="fragment_main"
-        tools:layout="@layout/fragment_main" >
+        tools:layout="@layout/fragment_main">
         <action
             android:id="@+id/action_mainFragment_to_newEditTaskFragment"
             app:destination="@id/newEditTaskFragment" />
     </fragment>
+
+
     <fragment
         android:id="@+id/newEditTaskFragment"
         android:name="com.ctacek.yandexschool.doitnow.ui.fragments.NewEditTaskFragment"
         android:label="fragment_new_edit_task"
-        tools:layout="@layout/fragment_new_edit_task" />
+        tools:layout="@layout/fragment_new_edit_task">
+
+        <argument
+            android:name="newTaskArg"
+            app:argType="com.ctacek.yandexschool.doitnow.data.model.Todoitem"
+            app:nullable="true" />
+
+    </fragment>
+
+
 </navigation>
