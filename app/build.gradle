@@ -55,6 +55,10 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:2.6.0"
     implementation "androidx.coordinatorlayout:coordinatorlayout:1.2.0"
     implementation 'com.github.javafaker:javafaker:1.0.2'
+    implementation 'it.xabaras.android:recyclerview-swipedecorator:1.4'
+
+    implementation "com.airbnb.android:lottie:3.4.0"
+    implementation 'com.daimajia.androidanimations:library:2.4@aar'
 
 
 }

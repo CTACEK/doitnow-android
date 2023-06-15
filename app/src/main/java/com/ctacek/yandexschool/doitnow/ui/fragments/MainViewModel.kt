@@ -4,8 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ctacek.yandexschool.doitnow.TaskNotFoundException
-import com.ctacek.yandexschool.doitnow.data.datasource.RandomToDoItems
 import com.ctacek.yandexschool.doitnow.data.model.Todoitem
 import com.ctacek.yandexschool.doitnow.data.repository.TodoItemsRepository
 import kotlinx.coroutines.launch
@@ -29,11 +27,13 @@ class MainViewModel(
         }
     }
 
-    fun updateTask(
-        id: String,
-        status: Boolean,
-    ) {
-        repository.editTask(id, status)
+    fun updateTask(id: String, status: Boolean) {
+        repository.updateStatusTask(id, status)
+        notifyUpdates()
+    }
+
+    fun deleteTask( id: String){
+        repository.deleteTask(id)
         notifyUpdates()
     }
 
@@ -45,7 +45,7 @@ class MainViewModel(
         _tasks.value = repository.getItems()
     }
 
-    private fun notifyUpdates() {
+    fun notifyUpdates() {
         _tasks.postValue(repository.getItems())
         _completedTasks.postValue(repository.getItems().filter { it.status }.size)
 

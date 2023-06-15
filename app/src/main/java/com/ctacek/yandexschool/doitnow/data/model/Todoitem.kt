@@ -4,10 +4,10 @@ import java.io.Serializable
 import java.util.Date
 
 data class Todoitem (
-    val id : String,
-    val description: String,
-    val priority : Priority,
-    val endDate: Date?,
+    var id : String,
+    var description: String,
+    var priority : Priority,
+    var endDate: Date?,
     var status : Boolean,
     val createdAt: Date,
     val lastUpdatedBy: Date?

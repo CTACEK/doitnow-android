@@ -1,77 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/cardView"
-    style="@style/Widget.MaterialComponents.CardView"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="8dp"
-    android:layout_marginTop="4dp"
-    android:layout_marginEnd="8dp"
-    app:cardElevation="4dp"
-    app:strokeColor="@color/white"
-    app:strokeWidth="1dp">
+    android:orientation="horizontal">
 
-    <RelativeLayout
-        android:id="@+id/relativeLayout"
-        android:layout_width="match_parent"
+
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/isCompleted"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_centerVertical="true" />
+
+    <ImageView
+        android:id="@+id/priority"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="10dp"
+        android:layout_toEndOf="@id/isCompleted"
+        android:contentDescription="@string/infoaboutitem"
+        android:textSize="11sp"
+        android:visibility="gone" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="12dp"
+        android:layout_toStartOf="@id/info"
+        android:layout_toEndOf="@id/priority"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:textSize="16sp" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_gravity="center"
+        android:layout_marginTop="6dp"
+        android:layout_toEndOf="@id/isCompleted"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:textSize="11sp"
+        android:visibility="gone" />
 
 
-        <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/isCompleted"
-            android:layout_centerVertical="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+    <ImageView
+        android:id="@+id/info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="10dp"
+        android:contentDescription="@string/infoaboutitem"
+        android:src="@drawable/info_outline"
+        android:textSize="11sp" />
 
-        <ImageView
-            android:id="@+id/priority"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="10dp"
-            android:layout_toEndOf="@id/isCompleted"
-            android:contentDescription="@string/infoaboutitem"
-            android:visibility="gone"
-            android:textSize="11sp" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="12dp"
-            android:layout_toStartOf="@id/info"
-            android:layout_toEndOf="@id/priority"
-            android:ellipsize="end"
-            android:maxLines="3"
-            android:textSize="16sp" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/data"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="6dp"
-            android:layout_below="@id/title"
-            android:layout_toEndOf="@id/isCompleted"
-            android:ellipsize="end"
-            android:maxLines="3"
-            android:textSize="11sp" />
-
-
-        <ImageView
-            android:id="@+id/info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="10dp"
-            android:contentDescription="@string/infoaboutitem"
-            android:src="@drawable/info_outline"
-            android:textSize="11sp" />
-
-    </RelativeLayout>
-</com.google.android.material.card.MaterialCardView>
+</RelativeLayout>

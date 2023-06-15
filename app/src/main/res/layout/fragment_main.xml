@@ -4,17 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_while"
+    android:theme="@style/Theme.DoItNow"
     android:fitsSystemWindows="true"
+    android:background="?attr/colorPrimary"
     tools:context=".ui.fragments.MainFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="@color/dark_while"
         android:fitsSystemWindows="true"
-        android:theme="@style/Theme.DoItNow.AppBarOverlay"
+        android:theme="@style/Theme.DoItNow"
         app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
 
@@ -23,10 +23,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            app:collapsedTitleTextColor="@color/black"
-            app:contentScrim="?attr/colorPrimary"
+            app:collapsedTitleTextColor="?attr/colorOnSecondary"
+            app:contentScrim="?attr/colorSecondary"
             app:expandedTitleMarginBottom="50dp"
-            app:expandedTitleTextColor="@color/black"
+            app:expandedTitleTextColor="?attr/colorOnSecondary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:title="@string/main_fragment_title">
 
@@ -52,7 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_gravity="bottom|end"
-                android:layout_marginEnd="35dp"
+                android:layout_marginEnd="30dp"
                 android:background="@null"
                 android:importantForAccessibility="no"
                 app:backgroundTint="@android:color/transparent"
@@ -66,27 +66,33 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="15dp"
+        android:elevation="5dp"
+
         android:background="@drawable/tasks_background"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context=".ui.fragments.MainFragment">
 
-        <androidx.core.widget.NestedScrollView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true">
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            tools:itemCount="20"
+            tools:listitem="@layout/item_task" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                tools:itemCount="10"
-                tools:listitem="@layout/item_task" />
 
-        </androidx.core.widget.NestedScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/no_result_animation_view"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:visibility="gone"
+        app:lottie_rawRes="@raw/noresultanim"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -94,12 +100,12 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="@dimen/fab_margin"
+        android:contentDescription="@string/create_new_task_fab"
         app:backgroundTint="@color/color_light_blue"
-        app:tint="@color/white"
-        android:contentDescription="TODO"
         app:layout_anchor="@id/swipe_container"
         app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@drawable/baseline_add_24" />
+        app:srcCompat="@drawable/baseline_add_24"
+        app:tint="@color/white" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

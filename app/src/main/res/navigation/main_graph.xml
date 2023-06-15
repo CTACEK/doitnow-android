@@ -12,7 +12,9 @@
         tools:layout="@layout/fragment_main">
         <action
             android:id="@+id/action_mainFragment_to_newEditTaskFragment"
-            app:destination="@id/newEditTaskFragment" />
+            app:destination="@id/newEditTaskFragment"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down" />
     </fragment>
 
 

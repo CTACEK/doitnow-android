@@ -1,6 +1,5 @@
 package com.ctacek.yandexschool.doitnow.data.repository
 
-import com.ctacek.yandexschool.doitnow.App
 import com.ctacek.yandexschool.doitnow.data.datasource.RandomToDoItems
 import com.ctacek.yandexschool.doitnow.data.model.Todoitem
 
@@ -17,9 +16,20 @@ class TodoItemsRepository() {
         return randomToDoItems.getTaskById(id)
     }
 
-    fun editTask(id: String, status: Boolean) {
-        randomToDoItems.editTask(id, status)
+    fun updateStatusTask(id: String, status: Boolean) {
+        randomToDoItems.updateStatusTask(id, status)
     }
 
+    fun saveTask(newToDoItem: Todoitem){
+        randomToDoItems.saveTask(newToDoItem)
+    }
+
+    fun deleteTask(id: String) {
+        randomToDoItems.deleteTask(id)
+    }
+
+    fun createTask(newToDoItem: Todoitem){
+        randomToDoItems.createTask(newToDoItem)
+    }
 
 }

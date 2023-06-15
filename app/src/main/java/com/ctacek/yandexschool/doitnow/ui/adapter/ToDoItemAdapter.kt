@@ -73,7 +73,8 @@ class ToDoItemAdapter(private val toDoItemActionListener: ToDoItemActionListener
             if (item.endDate != null) {
                 data.visibility = View.VISIBLE
                 data.text =
-                    itemView.context.getString(R.string.infodata, dataFormat.format(item.endDate))
+                    itemView.context.getString(R.string.infodata,
+                        item.endDate?.let { dataFormat.format(it) })
             } else {
                 data.visibility = View.GONE
             }
@@ -87,7 +88,7 @@ class ToDoItemAdapter(private val toDoItemActionListener: ToDoItemActionListener
                 )
                 priority.visibility = View.GONE
             } else {
-                if (item.endDate != null){
+                if (item.endDate != null) {
                     data.visibility = View.VISIBLE
                 }
 
@@ -153,7 +154,6 @@ class ToDoItemAdapter(private val toDoItemActionListener: ToDoItemActionListener
 
     interface ToDoItemActionListener {
         fun onItemCheck(item: Todoitem)
-        fun onItemRemove(item: Todoitem)
         fun onItemDetails(item: Todoitem)
     }
 
@@ -169,6 +169,7 @@ class ToDoItemAdapter(private val toDoItemActionListener: ToDoItemActionListener
                 toDoItemActionListener.onItemCheck(item)
                 notifyItemChanged(items.indexOfFirst { it.id == item.id })
             }
+
             else -> toDoItemActionListener.onItemDetails(item)
         }
     }

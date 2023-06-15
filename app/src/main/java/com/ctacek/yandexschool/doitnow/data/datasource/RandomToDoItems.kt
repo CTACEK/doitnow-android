@@ -40,8 +40,8 @@ class RandomToDoItems {
         )
     }
 
-    fun deleteTask(todoitem: Todoitem) {
-        val indexToDelete = tasks.indexOfFirst { it.id == todoitem.id }
+    fun deleteTask(id: String) {
+        val indexToDelete = tasks.indexOfFirst { it.id == id }
         if (indexToDelete != -1) {
             tasks.removeAt(indexToDelete)
         }
@@ -51,10 +51,21 @@ class RandomToDoItems {
         return tasks.firstOrNull { it.id == id } ?: throw TaskNotFoundException()
     }
 
-    fun editTask(id: String, status: Boolean) {
+    fun createTask(newToDoItem: Todoitem){
+        tasks.add(newToDoItem)
+    }
+
+    fun updateStatusTask(id: String, status: Boolean) {
         val indexToUpdate = tasks.indexOfFirst { it.id == id }
         if (indexToUpdate != -1) {
             tasks[indexToUpdate].status = status
+        }
+    }
+
+    fun saveTask(newToDoItem: Todoitem) {
+        val indexToUpdate = tasks.indexOfFirst { it.id == newToDoItem.id }
+        if (indexToUpdate != -1) {
+            tasks[indexToUpdate] = newToDoItem
         }
     }
 
