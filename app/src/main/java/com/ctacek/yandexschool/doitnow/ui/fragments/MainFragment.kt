@@ -2,7 +2,6 @@ package com.ctacek.yandexschool.doitnow.ui.fragments
 
 import android.graphics.Canvas
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,14 +14,13 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ctacek.yandexschool.doitnow.R
-import com.ctacek.yandexschool.doitnow.data.model.Todoitem
+import com.ctacek.yandexschool.doitnow.data.model.ToDoItem
 import com.ctacek.yandexschool.doitnow.databinding.FragmentMainBinding
 import com.ctacek.yandexschool.doitnow.factory
 import com.ctacek.yandexschool.doitnow.ui.adapter.ToDoItemActionListener
 import com.ctacek.yandexschool.doitnow.ui.adapter.ToDoItemAdapter
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
-import com.google.android.material.snackbar.Snackbar
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
 
@@ -69,15 +67,6 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.swipeContainer.setOnRefreshListener {
-            viewModel.getTasks(isSwitched)
-            binding.swipeContainer.isRefreshing = false
-        }
-
-        binding.completedTasks.text = getString(R.string.completed_title)
-
-        val manager = LinearLayoutManager(context) // LayoutManager
-
         binding.fab.setOnClickListener {
             val action = MainFragmentDirections.actionMainFragmentToNewEditTaskFragment(null)
             findNavController().navigate(action)
@@ -104,15 +93,17 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                 )
             }
             viewModel.getTasks(isSwitched)
+            binding.recyclerview.scrollToPosition(0)
         }
 
+        val manager = LinearLayoutManager(context)
 
         adapter = ToDoItemAdapter(object : ToDoItemActionListener {
-            override fun onItemCheck(item: Todoitem) {
-                viewModel.updateTask(item.id, item.status)
+            override fun onItemCheck(item: ToDoItem) {
+                viewModel.updateStatusTask(item.id, item.status)
             }
 
-            override fun onItemDetails(item: Todoitem) {
+            override fun onItemDetails(item: ToDoItem) {
                 editTaskInformation(item)
             }
         })
@@ -134,11 +125,10 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                 when (direction) {
                     ItemTouchHelper.LEFT -> {
                         viewModel.deleteTask(item.id)
-                        adapter.notifyDataSetChanged()
                     }
 
                     ItemTouchHelper.RIGHT -> {
-                        viewModel.updateTask(item.id, !item.status)
+                        viewModel.updateStatusTask(item.id, !item.status)
                         adapter.notifyItemChanged(position)
                     }
                 }
@@ -176,7 +166,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                             R.color.color_light_green
                         )
                     )
-                    .addSwipeRightActionIcon(R.drawable.baseline_add_24)
+                    .addSwipeRightActionIcon(R.drawable.baseline_check)
                     .setActionIconTint(
                         ContextCompat.getColor(
                             recyclerView.context,
@@ -203,7 +193,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         binding.recyclerview.layoutManager = manager
         binding.recyclerview.adapter = adapter
 
-        viewModel.tasks.observe(viewLifecycleOwner) { updateRecycler(it) }
+        viewModel.tasks.observe(viewLifecycleOwner) { adapter.setData(it) }
 
         viewModel.completedTasks.observe(viewLifecycleOwner) {
             binding.completedTasks.text =
@@ -212,12 +202,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
     }
 
-    private fun updateRecycler(items: List<Todoitem>) {
-        adapter.setData(items)
-        binding.recyclerview.scrollToPosition(0)
-    }
-
-    private fun editTaskInformation(task: Todoitem) {
+    private fun editTaskInformation(task: ToDoItem) {
         val action = MainFragmentDirections.actionMainFragmentToNewEditTaskFragment(task.id)
         findNavController().navigate(action)
     }

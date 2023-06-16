@@ -4,7 +4,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ctacek.yandexschool.doitnow.ui.fragments.MainViewModel
-import com.ctacek.yandexschool.doitnow.ui.fragments.NewEditTaskViewModel
 
 class ViewModelFactory(
     private val app: App
@@ -16,11 +15,6 @@ class ViewModelFactory(
             MainViewModel::class.java -> {
                 MainViewModel(app.repository)
             }
-
-            NewEditTaskViewModel::class.java -> {
-                NewEditTaskViewModel(app.repository)
-            }
-
             else -> {
                 throw IllegalStateException("Unknown view model class")
             }

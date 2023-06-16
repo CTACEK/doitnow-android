@@ -1,9 +1,8 @@
 package com.ctacek.yandexschool.doitnow.data.datasource
 
 import android.util.Log
-import com.ctacek.yandexschool.doitnow.TaskNotFoundException
 import com.ctacek.yandexschool.doitnow.data.model.Priority
-import com.ctacek.yandexschool.doitnow.data.model.Todoitem
+import com.ctacek.yandexschool.doitnow.data.model.ToDoItem
 import com.github.javafaker.Faker
 import kotlin.random.Random
 
@@ -12,63 +11,48 @@ class RandomToDoItems {
 
     private val faker = Faker.instance()
 
-    private var tasks = mutableListOf<Todoitem>()
+    private var tasks = hashMapOf<Int, ToDoItem>()
 
 
     init {
-        tasks = (0..40).map {
-            Todoitem(
+        val tempTasks = (0..50).map {
+            ToDoItem(
                 it.toString(),
-                faker.backToTheFuture().character().toString(),
+                if (Random.nextBoolean()) faker.backToTheFuture().character()
+                    .toString() else faker.harryPotter().quote(),
                 getRandomPriority(),
-                null,
+                if (Random.nextBoolean()) faker.date().birthday() else null,
                 Random.nextBoolean(),
                 faker.date().birthday(),
                 null
             )
         }.toMutableList()
 
-        tasks.add(
-            Todoitem(
-                "50",
-                faker.backToTheFuture().character().toString(),
-                Priority.LOW,
-                faker.date().birthday(),
-                false,
-                faker.date().birthday(),
-                null
-            )
-        )
-    }
-
-    fun deleteTask(id: String) {
-        val indexToDelete = tasks.indexOfFirst { it.id == id }
-        if (indexToDelete != -1) {
-            Log.i("DataSource", tasks[indexToDelete].toString())
-            tasks.removeAt(indexToDelete)
+        for (task in tempTasks) {
+            tasks[task.id.toInt()] = task
         }
     }
 
-    fun getTaskById(id: String): Todoitem {
-        return tasks.firstOrNull { it.id == id } ?: throw TaskNotFoundException()
+    fun deleteTask(id: Int) {
+        Log.i("DataSource", tasks[id].toString())
+        tasks.remove(id)
     }
 
-    fun createTask(newToDoItem: Todoitem){
-        tasks.add(newToDoItem)
+    fun getTaskById(id: Int): ToDoItem {
+        return tasks[id] ?: ToDoItem()
+    }
+
+    fun createTask(newToDoItem: ToDoItem) {
+        newToDoItem.id = (tasks.size + 1).toString()
+        tasks[tasks.size + 1] = newToDoItem
     }
 
     fun updateStatusTask(id: String, status: Boolean) {
-        val indexToUpdate = tasks.indexOfFirst { it.id == id }
-        if (indexToUpdate != -1) {
-            tasks[indexToUpdate].status = status
-        }
+        tasks[id.toInt()]?.status = status
     }
 
-    fun saveTask(newToDoItem: Todoitem) {
-        val indexToUpdate = tasks.indexOfFirst { it.id == newToDoItem.id }
-        if (indexToUpdate != -1) {
-            tasks[indexToUpdate] = newToDoItem
-        }
+    fun saveTask(newToDoItem: ToDoItem) {
+        tasks[newToDoItem.id.toInt()] = newToDoItem
     }
 
     private fun getRandomPriority(): Priority {

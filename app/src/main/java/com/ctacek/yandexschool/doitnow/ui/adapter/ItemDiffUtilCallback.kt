@@ -1,11 +1,11 @@
 package com.ctacek.yandexschool.doitnow.ui.adapter
 
 import androidx.recyclerview.widget.DiffUtil
-import com.ctacek.yandexschool.doitnow.data.model.Todoitem
+import com.ctacek.yandexschool.doitnow.data.model.ToDoItem
 
 class ItemDiffUtilCallback(
-    private val oldList: List<Todoitem>,
-    private val newList: List<Todoitem>
+    private val oldList: List<ToDoItem>,
+    private val newList: List<ToDoItem>
 ) : DiffUtil.Callback() {
 
     override fun getOldListSize(): Int = oldList.size

@@ -38,7 +38,7 @@
     <style name="MaterialCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
         <!-- just override the colors used in the default style -->
         <item name="colorOnPrimary">@color/back_light_primary</item>
-        <item name="colorPrimary">@color/back_dark_primary</item>
+        <item name="colorPrimary">@color/color_dark_blue</item>
     </style>
 
 

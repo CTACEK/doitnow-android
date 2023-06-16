@@ -1,34 +1,34 @@
 package com.ctacek.yandexschool.doitnow.data.repository
 
 import com.ctacek.yandexschool.doitnow.data.datasource.RandomToDoItems
-import com.ctacek.yandexschool.doitnow.data.model.Todoitem
+import com.ctacek.yandexschool.doitnow.data.model.ToDoItem
 
-class TodoItemsRepository() {
+class TodoItemsRepository {
 
 
     private val randomToDoItems = RandomToDoItems()
 
-    fun getItems(): MutableList<Todoitem> {
-        return randomToDoItems.getTasks()
+    fun getItems(): List<ToDoItem> {
+        return ArrayList(randomToDoItems.getTasks().values)
     }
 
-    fun getTaskById(id: String): Todoitem {
-        return randomToDoItems.getTaskById(id)
+    fun getTaskById(id: String): ToDoItem {
+        return randomToDoItems.getTaskById(id.toInt())
     }
 
     fun updateStatusTask(id: String, status: Boolean) {
         randomToDoItems.updateStatusTask(id, status)
     }
 
-    fun saveTask(newToDoItem: Todoitem){
+    fun saveTask(newToDoItem: ToDoItem) {
         randomToDoItems.saveTask(newToDoItem)
     }
 
     fun deleteTask(id: String) {
-        randomToDoItems.deleteTask(id)
+        randomToDoItems.deleteTask(id.toInt())
     }
 
-    fun createTask(newToDoItem: Todoitem){
+    fun createTask(newToDoItem: ToDoItem) {
         randomToDoItems.createTask(newToDoItem)
     }
 

@@ -14,7 +14,8 @@
             android:id="@+id/action_mainFragment_to_newEditTaskFragment"
             app:destination="@id/newEditTaskFragment"
             app:enterAnim="@anim/slide_up"
-            app:exitAnim="@anim/slide_down" />
+            app:popExitAnim="@anim/slide_down"
+            app:launchSingleTop="true"/>
     </fragment>
 
 
@@ -28,6 +29,9 @@
             android:name="newTaskArg"
             app:argType="string"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_newEditTaskFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
 
     </fragment>
 
