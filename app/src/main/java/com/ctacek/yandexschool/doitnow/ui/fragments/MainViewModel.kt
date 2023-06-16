@@ -1,5 +1,7 @@
 package com.ctacek.yandexschool.doitnow.ui.fragments
 
+import android.opengl.Visibility
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,11 +20,11 @@ class MainViewModel(
     private val _completedTasks = MutableLiveData<Int>()
     val completedTasks: LiveData<Int> = _completedTasks
 
-
+    private var visibility = false
 
     init {
         viewModelScope.launch {
-            _tasks.value = repository.getItems()
+            _tasks.value = repository.getItems().filter { !it.status }
             _completedTasks.value = repository.getItems().filter { it.status }.size
         }
     }
@@ -32,23 +34,23 @@ class MainViewModel(
         notifyUpdates()
     }
 
-    fun deleteTask( id: String){
+    fun deleteTask(id: String) {
         repository.deleteTask(id)
         notifyUpdates()
     }
 
-    fun hideCompletedTasks() {
-        _tasks.value = repository.getItems().filter { !it.status }
+    fun getTasks(isSwitched: Boolean) {
+        visibility = isSwitched
+        notifyUpdates()
     }
 
-    fun showCompletedTasks() {
-        _tasks.value = repository.getItems()
-    }
-
-    fun notifyUpdates() {
-        _tasks.postValue(repository.getItems())
+    private fun notifyUpdates() {
         _completedTasks.postValue(repository.getItems().filter { it.status }.size)
 
+        when (visibility) {
+            true -> _tasks.postValue(repository.getItems())
+            false -> _tasks.postValue(repository.getItems().filter { !it.status })
+        }
     }
 
 

@@ -2,6 +2,7 @@ package com.ctacek.yandexschool.doitnow.ui.adapter
 
 import android.annotation.SuppressLint
 import android.graphics.Paint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.ctacek.yandexschool.doitnow.R
 import com.ctacek.yandexschool.doitnow.data.model.Priority
 import com.ctacek.yandexschool.doitnow.data.model.Todoitem
@@ -17,160 +19,141 @@ import com.ctacek.yandexschool.doitnow.databinding.ItemTaskBinding
 import com.google.android.material.checkbox.MaterialCheckBox
 import java.text.SimpleDateFormat
 
-class ItemDiffUtil(
-    private val oldList: List<Todoitem>,
-    private val newList: List<Todoitem>
-) : DiffUtil.Callback() {
+class ToDoItemAdapter(val toDoItemActionListener: ToDoItemActionListener) :
+    RecyclerView.Adapter<ToDoItemAdapter.ItemViewHolder>() {
 
-    override fun getOldListSize(): Int = oldList.size
-    override fun getNewListSize(): Int = newList.size
-    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        val oldItem = oldList[oldItemPosition]
-        val newItem = newList[newItemPosition]
-        return oldItem.id == newItem.id
+    private var items: List<Todoitem> = emptyList()
+    fun setData(newData: List<Todoitem>) {
+        val personDiffUtil = ItemDiffUtilCallback(
+            oldList = items,
+            newList = newData
+        )
+        val diffResult = DiffUtil.calculateDiff(personDiffUtil)
+        items = newData
+        diffResult.dispatchUpdatesTo(this)
     }
 
-    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        val oldItem = oldList[oldItemPosition]
-        val newItem = newList[newItemPosition]
-        return oldItem == newItem
-    }
-}
-
-
-class ToDoItemAdapter(private val toDoItemActionListener: ToDoItemActionListener) :
-    RecyclerView.Adapter<ToDoItemAdapter.ItemViewHolder>(), View.OnClickListener {
-
-    var items: List<Todoitem> = emptyList()
-        set(newValue) {
-            val personDiffUtil = ItemDiffUtil(field, newValue)
-            val personDiffUtilResult = DiffUtil.calculateDiff(personDiffUtil)
-            field = newValue
-            personDiffUtilResult.dispatchUpdatesTo(this)
-        }
-
-    @SuppressLint("SimpleDateFormat")
-    class ItemViewHolder(binding: ItemTaskBinding) : RecyclerView.ViewHolder(binding.root) {
-        val checkbox: MaterialCheckBox
-        val title: TextView
-        val priority: ImageView
-        val data: TextView
-        val dataFormat: SimpleDateFormat
-
-        init {
-            checkbox = binding.isCompleted
-            title = binding.title
-            priority = binding.priority
-            data = binding.data
-            dataFormat = SimpleDateFormat("d MMMM")
-        }
-
-
-        fun bind(item: Todoitem) {
-            title.text = item.description
-            checkbox.isChecked = item.status
-
-            if (item.endDate != null) {
-                data.visibility = View.VISIBLE
-                data.text =
-                    itemView.context.getString(R.string.infodata,
-                        item.endDate?.let { dataFormat.format(it) })
-            } else {
-                data.visibility = View.GONE
-            }
-
-            if (item.status) {
-                data.visibility = View.GONE
-                title.paintFlags = title.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                checkbox.buttonTintList = AppCompatResources.getColorStateList(
-                    itemView.context,
-                    R.color.color_light_green
-                )
-                priority.visibility = View.GONE
-            } else {
-                if (item.endDate != null) {
-                    data.visibility = View.VISIBLE
-                }
-
-                title.paintFlags = title.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-                when (item.priority) {
-                    Priority.LOW -> {
-                        priority.visibility = View.VISIBLE
-                        priority.setImageDrawable(
-                            AppCompatResources.getDrawable(
-                                itemView.context,
-                                R.drawable.priority1
-                            )
-                        )
-                        checkbox.buttonTintList =
-                            AppCompatResources.getColorStateList(itemView.context, R.color.grey)
-                    }
-
-                    Priority.BASIC -> {
-                        priority.visibility = View.GONE
-                        checkbox.buttonTintList =
-                            AppCompatResources.getColorStateList(itemView.context, R.color.grey)
-
-                    }
-
-                    Priority.HIGH -> {
-                        priority.visibility = View.VISIBLE
-                        priority.setImageDrawable(
-                            AppCompatResources.getDrawable(
-                                itemView.context,
-                                R.drawable.priority3
-                            )
-                        )
-                        checkbox.buttonTintList = AppCompatResources.getColorStateList(
-                            itemView.context,
-                            R.color.color_light_red
-                        )
-                    }
-                }
-            }
-        }
+    fun getElement(position: Int): Todoitem {
+        return items[position]
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemTaskBinding.inflate(inflater, parent, false)
 
-        binding.root.setOnClickListener(this)
-        binding.isCompleted.setOnClickListener(this)
+//        binding.root.setOnClickListener(this)
+//        binding.isCompleted.setOnClickListener(this)
 
-        return ItemViewHolder(binding)
+        return ItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_task, parent, false))
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = items[position]
 
-        holder.itemView.tag = item
-        holder.checkbox.tag = item
+//        holder.itemView.tag = item
+//        holder.checkbox.tag = item
 
         holder.bind(item)
 
-
-    }
-
-    interface ToDoItemActionListener {
-        fun onItemCheck(item: Todoitem)
-        fun onItemDetails(item: Todoitem)
     }
 
     override fun getItemCount(): Int {
         return items.size
     }
 
-    override fun onClick(view: View) {
-        val item: Todoitem = view.tag as Todoitem
+    @SuppressLint("SimpleDateFormat")
+    inner class ItemViewHolder(itemView:View) : RecyclerView.ViewHolder(itemView) {
+        private val binding = ItemTaskBinding.bind(itemView)
+        private val dataFormat = SimpleDateFormat("d MMMM")
 
-        when (view.id) {
-            R.id.isCompleted -> {
-                toDoItemActionListener.onItemCheck(item)
-                notifyItemChanged(items.indexOfFirst { it.id == item.id })
+
+        fun bind(item: Todoitem) {
+            binding.title.text = item.description
+            binding.isCompleted.isChecked = item.status
+
+            if (item.endDate != null) {
+                binding.data.visibility = View.VISIBLE
+                binding.data.text =
+                    itemView.context.getString(
+                        R.string.infodata,
+                        item.endDate?.let { dataFormat.format(it) })
+            } else {
+                binding.data.visibility = View.GONE
             }
 
-            else -> toDoItemActionListener.onItemDetails(item)
+            if (item.status) {
+                binding.data.visibility = View.GONE
+                binding.title.paintFlags = binding.title.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                binding.isCompleted.buttonTintList = AppCompatResources.getColorStateList(
+                    itemView.context,
+                    R.color.color_light_green
+                )
+                binding.priority.visibility = View.GONE
+            } else {
+                if (item.endDate != null) {
+                    binding.data.visibility = View.VISIBLE
+                }
+
+                binding.title.paintFlags = binding.title.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                when (item.priority) {
+                    Priority.LOW -> {
+                        binding.priority.visibility = View.VISIBLE
+                        binding.priority.setImageDrawable(
+                            AppCompatResources.getDrawable(
+                                itemView.context,
+                                R.drawable.priority1
+                            )
+                        )
+                        binding.isCompleted.buttonTintList =
+                            AppCompatResources.getColorStateList(itemView.context, R.color.grey)
+                    }
+
+                    Priority.BASIC -> {
+                        binding.priority.visibility = View.GONE
+                        binding.isCompleted.buttonTintList =
+                            AppCompatResources.getColorStateList(itemView.context, R.color.grey)
+
+                    }
+
+                    Priority.HIGH -> {
+                        binding.priority.visibility = View.VISIBLE
+                        binding.priority.setImageDrawable(
+                            AppCompatResources.getDrawable(
+                                itemView.context,
+                                R.drawable.priority3
+                            )
+                        )
+                        binding.isCompleted.buttonTintList = AppCompatResources.getColorStateList(
+                            itemView.context,
+                            R.color.color_light_red
+                        )
+                    }
+                }
+            }
+
+            binding.isCompleted.setOnClickListener {
+                item.status = binding.isCompleted.isChecked
+                toDoItemActionListener.onItemCheck(item)
+                notifyItemChanged(absoluteAdapterPosition)
+            }
+
+
+            itemView.setOnClickListener {
+                toDoItemActionListener.onItemDetails(item)
+            }
         }
     }
+
+//    override fun onClick(view: View) {
+//        val item: Todoitem = view.tag as Todoitem
+//
+//        when (view.id) {
+//            R.id.isCompleted -> {
+//                toDoItemActionListener.onItemCheck(item)
+//                notifyItemChanged(items.indexOfFirst { it.id == item.id })
+//            }
+//
+//            else -> toDoItemActionListener.onItemDetails(item)
+//        }
+//    }
 }

@@ -35,7 +35,6 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
     private val viewModel: NewEditTaskViewModel by viewModels { factory() }
     private lateinit var binding: FragmentNewEditTaskBinding
     private val args: NewEditTaskFragmentArgs by navArgs()
-    private var isSwitched = false
 
     @SuppressLint("SimpleDateFormat")
     val dataFormat = SimpleDateFormat("d MMMM y")
@@ -87,8 +86,9 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
             if (it.endDate != null) {
                 binding.switchDataVisible.isActivated = true
                 binding.textviewDateBefore.visibility = View.VISIBLE
-                binding.textviewDateBefore.text = it.endDate?.let { date -> dataFormat.format(date) }
-            } else{
+                binding.textviewDateBefore.text =
+                    it.endDate?.let { date -> dataFormat.format(date) }
+            } else {
                 binding.switchDataVisible.isActivated = false
                 binding.textviewDateBefore.visibility = View.INVISIBLE
             }
@@ -96,23 +96,38 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
         }
 
         binding.switchDataVisible.setOnCheckedChangeListener { _, switched ->
-                if (switched) {
-                    binding.textviewDateBefore.visibility = View.VISIBLE
-                    binding.textviewDateBefore.text = dataFormat.format(Date())
-                    showDateTimePicker()
-                } else {
-                    binding.textviewDateBefore.visibility = View.INVISIBLE
-                    viewModel.deleteData()
-                }
+            if (switched) {
+                binding.textviewDateBefore.visibility = View.VISIBLE
+                binding.textviewDateBefore.text = dataFormat.format(Date())
+                showDateTimePicker()
+            } else {
+                binding.textviewDateBefore.visibility = View.INVISIBLE
+                viewModel.deleteData()
             }
+        }
 
         binding.buttonSaveCreate.setOnClickListener {
-            if (binding.buttonSaveCreate.text == getString(R.string.save_button)) viewModel.saveTask()
-            else viewModel.createTask()
+            if (binding.buttonSaveCreate.text == getString(R.string.save_button)) {
+                if (binding.editText.text.isNullOrBlank()) {
+                    Toast.makeText(context, "Enter some words!", Toast.LENGTH_SHORT).show()
+                    binding.editText.error = "Enter some words!"
+                    return@setOnClickListener
+                }
+                binding.editText.error = null
+                viewModel.saveTask()
+            } else {
+                if (binding.editText.text.isNullOrBlank()) {
+                    Toast.makeText(context, "Enter some words!", Toast.LENGTH_SHORT).show()
+                    binding.editText.error = "Enter some words!"
+                    return@setOnClickListener
+                }
+                binding.editText.error = null
+                viewModel.createTask()
+            }
             findNavController().popBackStack()
             Toast.makeText(
                 context,
-                "You are ${binding.buttonSaveCreate.text.toString().lowercase()}ed task!",
+                "You are ${binding.buttonSaveCreate.text.toString().lowercase()} task!",
                 Toast.LENGTH_SHORT
             ).show()
         }
@@ -133,7 +148,8 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
 
         val highImportanceItem = popupMenu.menu.getItem(2)
         val spannable = SpannableString(highImportanceItem.title.toString())
-        spannable.setSpan(ForegroundColorSpan(ContextCompat.getColor(v.context, R.color.color_light_red)),
+        spannable.setSpan(
+            ForegroundColorSpan(ContextCompat.getColor(v.context, R.color.color_light_red)),
             0,
             spannable.length,
             0
@@ -164,7 +180,8 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
     @SuppressLint("SimpleDateFormat")
     private fun showDateTimePicker() {
         var date = Date()
-        val datePicker = MaterialDatePicker.Builder.datePicker().setTheme(R.style.MaterialCalendarTheme).build()
+        val datePicker =
+            MaterialDatePicker.Builder.datePicker().setTheme(R.style.MaterialCalendarTheme).build()
         val timePicker = MaterialTimePicker.Builder().setTimeFormat(TimeFormat.CLOCK_24H).build()
         val simpleFormat = SimpleDateFormat("d MMMM")
         datePicker.addOnPositiveButtonClickListener {
@@ -180,11 +197,11 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
             timePicker.show(childFragmentManager, "TAG")
         }
 
-        datePicker.addOnCancelListener{
+        datePicker.addOnCancelListener {
             viewModel.deleteData()
         }
 
-        timePicker.addOnPositiveButtonClickListener{
+        timePicker.addOnPositiveButtonClickListener {
             val cal = Calendar.getInstance()
             cal.time = date
             cal.set(Calendar.HOUR_OF_DAY, timePicker.hour)
@@ -195,10 +212,10 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
             viewModel.updateData(date)
         }
 
-        timePicker.addOnCancelListener{
+        timePicker.addOnCancelListener {
             viewModel.deleteData()
         }
 
-        datePicker.show(childFragmentManager,"TAG")
+        datePicker.show(childFragmentManager, "TAG")
     }
 }

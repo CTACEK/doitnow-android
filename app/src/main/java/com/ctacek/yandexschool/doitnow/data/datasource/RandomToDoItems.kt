@@ -1,5 +1,6 @@
 package com.ctacek.yandexschool.doitnow.data.datasource
 
+import android.util.Log
 import com.ctacek.yandexschool.doitnow.TaskNotFoundException
 import com.ctacek.yandexschool.doitnow.data.model.Priority
 import com.ctacek.yandexschool.doitnow.data.model.Todoitem
@@ -43,6 +44,7 @@ class RandomToDoItems {
     fun deleteTask(id: String) {
         val indexToDelete = tasks.indexOfFirst { it.id == id }
         if (indexToDelete != -1) {
+            Log.i("DataSource", tasks[indexToDelete].toString())
             tasks.removeAt(indexToDelete)
         }
     }
