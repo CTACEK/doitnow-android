@@ -53,7 +53,7 @@
                 android:layout_height="50dp"
                 android:layout_gravity="bottom|end"
                 android:layout_marginEnd="22dp"
-                android:background="@null"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:importantForAccessibility="no"
                 app:backgroundTint="@android:color/transparent"
                 app:elevation="0dp"
