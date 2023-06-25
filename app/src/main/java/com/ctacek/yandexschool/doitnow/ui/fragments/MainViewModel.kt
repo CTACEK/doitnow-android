@@ -10,6 +10,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
@@ -20,15 +21,12 @@ class MainViewModel(
     private val repository: ToDoItemsRepository
 ) : ViewModel() {
 
-    private val _completedTasks = MutableLiveData<Int>()
-    val completedTasks: LiveData<Int> = _completedTasks
-
-
     var job: Job? = null
 
     var modeAll: Boolean = false
 
     val tasks = MutableSharedFlow<List<ToDoItem>>()
+    val countCompletedTask = MutableSharedFlow<Int>()
 
     val item = MutableSharedFlow<ToDoItem>()
     fun changeMode() {
@@ -44,15 +42,18 @@ class MainViewModel(
         }
     }
 
+
     private fun loadNotCompletedTasks() {
         job = viewModelScope.launch {
             tasks.emitAll(repository.getNotCompletedToDoItems().asLiveDataFlow())
+            countCompletedTask.emitAll(tasks.map { it.count{it.done} }.asLiveDataFlow())
         }
     }
 
     private fun loadAllData() {
         job = viewModelScope.launch {
             tasks.emitAll(repository.getAllToDoItems().asLiveDataFlow())
+            countCompletedTask.emitAll(tasks.map { it.count{it.done} }.asLiveDataFlow())
         }
     }
 
@@ -71,6 +72,7 @@ class MainViewModel(
     fun updateTask(newItem: ToDoItem) {
         viewModelScope.launch {
             repository.updateToDoItem(newItem)
+            countCompletedTask.emitAll(tasks.map { it.count{it.done} }.asLiveDataFlow())
         }
     }
 

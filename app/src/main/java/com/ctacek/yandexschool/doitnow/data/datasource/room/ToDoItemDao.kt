@@ -23,7 +23,7 @@ interface ToDoItemDao {
     @Update
     suspend fun updateToDoItem(toDoItemEntity: ToDoItemEntity)
 
-    @Query("UPDATE todoitems SET done= :done WHERE id = :id")
+    @Query("UPDATE todoitems SET done=:done WHERE id=:id")
     suspend fun updateDone(id: String, done: Boolean)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

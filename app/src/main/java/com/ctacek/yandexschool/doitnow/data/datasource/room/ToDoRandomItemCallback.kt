@@ -23,7 +23,7 @@ class ToDoRandomItemCallback() : RoomDatabase.Callback() {
                 val faker = Faker.instance()
 
                 // Генерируем случайные данные и добавляем их в базу данных
-                for (i in 1..30) {
+                for (i in 1..40) {
                     val tempItem = ToDoItemEntity(
                         i.toString(),
                         if (Random.nextBoolean()) faker.backToTheFuture().character()

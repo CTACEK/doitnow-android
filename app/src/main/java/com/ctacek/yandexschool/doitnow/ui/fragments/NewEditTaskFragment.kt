@@ -25,8 +25,10 @@ import com.ctacek.yandexschool.doitnow.databinding.FragmentNewEditTaskBinding
 import com.ctacek.yandexschool.doitnow.factory
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.gson.Gson
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -44,23 +46,31 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
     @SuppressLint("SimpleDateFormat")
     val dataFormat = SimpleDateFormat("d MMMM y")
 
-    @SuppressLint("UseCompatTextViewDrawableApis")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentNewEditTaskBinding.inflate(layoutInflater)
+    }
 
+
+    @SuppressLint("UseCompatTextViewDrawableApis")
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         val id = args.newTaskArg
 
-        if (args.newTaskArg != "-1") {
-            if (id != null) {
-                viewModel.loadTask(id)
-            }
-            viewModel.item.onEach {
-                if (currentTask.id == "-1") {
-                    currentTask = it
-                    createInitData(currentTask)
+        if (id != null && savedInstanceState == null) {
+            viewModel.loadTask(id)
+
+            lifecycleScope.launch {
+                viewModel.item.collectLatest {
+                    if (currentTask.id == "-1") {
+                        currentTask = it
+                        createInitData(currentTask)
+                        createListeners()
+                    }
                 }
-            }.launchIn(lifecycleScope)
+            }
 
             binding.buttonSaveCreate.text = getString(R.string.save_button)
             binding.buttonDeleteTask.compoundDrawableTintList =
@@ -74,20 +84,16 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
         } else {
             binding.buttonSaveCreate.text = getString(R.string.create_button)
             binding.buttonDeleteTask.isEnabled = false
+            createListeners()
         }
 
         if (savedInstanceState != null) {
             val gson = Gson()
-            currentTask = gson.fromJson(savedInstanceState.getString("currentTask"), ToDoItem::class.java)
+            currentTask =
+                gson.fromJson(savedInstanceState.getString("currentTask"), ToDoItem::class.java)
             createInitData(currentTask)
+            createListeners()
         }
-    }
-
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
         return binding.root
     }
 
@@ -95,71 +101,6 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
     @SuppressLint("UseCompatTextViewDrawableApis")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.buttonDeleteTask.setOnClickListener {
-            viewModel.deleteTask(currentTask)
-            findNavController().navigate(R.id.action_newEditTaskFragment_to_mainFragment)
-            Toast.makeText(context, "You are deleted item!", Toast.LENGTH_SHORT).show()
-        }
-
-        binding.textviewDateBefore.setOnClickListener {
-            showDateTimePicker()
-        }
-
-        binding.switchDataVisible.setOnCheckedChangeListener { _, switched ->
-            if (switched) {
-                binding.textviewDateBefore.visibility = View.VISIBLE
-                binding.textviewDateBefore.text = dataFormat.format(Date())
-                showDateTimePicker()
-            } else {
-                deleteDate()
-            }
-        }
-
-        binding.buttonSaveCreate.setOnClickListener {
-            if (binding.editText.text.isNullOrBlank()) {
-                Toast.makeText(context, "Enter some words!", Toast.LENGTH_SHORT).show()
-                binding.editText.error = "Enter some words!"
-                return@setOnClickListener
-            }
-
-            binding.editText.error = null
-            currentTask.description = binding.editText.text.toString()
-
-            if (binding.buttonSaveCreate.text == getString(R.string.save_button)) {
-                viewModel.updateTask(currentTask)
-            } else {
-                viewModel.createTask(currentTask)
-            }
-
-            findNavController().navigate(R.id.action_newEditTaskFragment_to_mainFragment)
-        }
-
-        binding.toolbar.setNavigationOnClickListener {
-            findNavController().popBackStack()
-        }
-
-        binding.menuImportance.setOnClickListener {
-            showImportancePopupMenu(binding.menuImportance)
-        }
-
-        datePicker.addOnPositiveButtonClickListener {
-            val date: Date
-            val calendar = Calendar.getInstance()
-            calendar.timeInMillis = it
-            calendar.set(Calendar.HOUR_OF_DAY, 0)
-            calendar.set(Calendar.MINUTE, 0)
-            calendar.set(Calendar.SECOND, 0)
-            date = calendar.time
-            binding.textviewDateBefore.visibility = View.VISIBLE
-            binding.textviewDateBefore.text = dataFormat.format(date)
-            currentTask.deadline = date
-        }
-
-        datePicker.addOnNegativeButtonClickListener {
-            if (currentTask.deadline == null) deleteDate()
-        }
-
     }
 
     private fun makeImportance(importance: Importance) {
@@ -196,6 +137,75 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
                     )
                 )
             }
+        }
+    }
+
+    private fun createListeners() {
+        binding.buttonDeleteTask.setOnClickListener {
+            viewModel.deleteTask(currentTask)
+            val action = NewEditTaskFragmentDirections.actionNewEditTaskFragmentToMainFragment()
+            findNavController().navigate(action)
+            Toast.makeText(context, "You are deleted item!", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.textviewDateBefore.setOnClickListener {
+            showDateTimePicker()
+        }
+
+        binding.switchDataVisible.setOnCheckedChangeListener { _, switched ->
+            if (switched) {
+                binding.textviewDateBefore.visibility = View.VISIBLE
+                binding.textviewDateBefore.text = dataFormat.format(Date())
+                showDateTimePicker()
+            } else {
+                deleteDate()
+            }
+        }
+
+        binding.buttonSaveCreate.setOnClickListener {
+            if (binding.editText.text.isNullOrBlank()) {
+                Toast.makeText(context, "Enter some words!", Toast.LENGTH_SHORT).show()
+                binding.editText.error = "Enter some words!"
+                return@setOnClickListener
+            }
+
+            binding.editText.error = null
+            currentTask.description = binding.editText.text.toString()
+
+            if (binding.buttonSaveCreate.text == getString(R.string.save_button)) {
+                viewModel.updateTask(currentTask)
+            } else {
+                viewModel.createTask(currentTask)
+            }
+
+            val action = NewEditTaskFragmentDirections.actionNewEditTaskFragmentToMainFragment()
+            findNavController().navigate(action)
+        }
+
+        binding.toolbar.setNavigationOnClickListener {
+            val action = NewEditTaskFragmentDirections.actionNewEditTaskFragmentToMainFragment()
+            findNavController().navigate(action)
+        }
+
+        binding.menuImportance.setOnClickListener {
+            showImportancePopupMenu(binding.menuImportance)
+        }
+
+        datePicker.addOnPositiveButtonClickListener {
+            val date: Date
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = it
+            calendar.set(Calendar.HOUR_OF_DAY, 0)
+            calendar.set(Calendar.MINUTE, 0)
+            calendar.set(Calendar.SECOND, 0)
+            date = calendar.time
+            binding.textviewDateBefore.visibility = View.VISIBLE
+            binding.textviewDateBefore.text = dataFormat.format(date)
+            currentTask.deadline = date
+        }
+
+        datePicker.addOnNegativeButtonClickListener {
+            if (currentTask.deadline == null) deleteDate()
         }
     }
 
@@ -258,6 +268,7 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString("currentTask", currentTask.toString())
+        val gson = Gson()
+        outState.putString("currentTask", gson.toJson(currentTask))
     }
 }
