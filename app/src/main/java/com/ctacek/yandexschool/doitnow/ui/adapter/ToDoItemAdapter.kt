@@ -9,7 +9,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.ctacek.yandexschool.doitnow.R
-import com.ctacek.yandexschool.doitnow.data.model.Priority
+import com.ctacek.yandexschool.doitnow.data.model.Importance
 import com.ctacek.yandexschool.doitnow.data.model.ToDoItem
 import com.ctacek.yandexschool.doitnow.databinding.ItemTaskBinding
 import java.text.SimpleDateFormat
@@ -56,19 +56,19 @@ class ToDoItemAdapter(val toDoItemActionListener: ToDoItemActionListener) :
 
         fun bind(item: ToDoItem) {
             binding.title.text = item.description
-            binding.isCompleted.isChecked = item.status
+            binding.isCompleted.isChecked = item.done
 
-            if (item.endDate != null) {
+            if (item.deadline != null) {
                 binding.data.visibility = View.VISIBLE
                 binding.data.text =
                     itemView.context.getString(
                         R.string.infodata,
-                        item.endDate?.let { dataFormat.format(it) })
+                        item.deadline?.let { dataFormat.format(it) })
             } else {
                 binding.data.visibility = View.GONE
             }
 
-            if (item.status) {
+            if (item.done) {
                 binding.data.visibility = View.GONE
                 binding.title.paintFlags = binding.title.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                 binding.isCompleted.buttonTintList = AppCompatResources.getColorStateList(
@@ -77,14 +77,14 @@ class ToDoItemAdapter(val toDoItemActionListener: ToDoItemActionListener) :
                 )
                 binding.priority.visibility = View.GONE
             } else {
-                if (item.endDate != null) {
+                if (item.deadline != null) {
                     binding.data.visibility = View.VISIBLE
                 }
 
                 binding.title.paintFlags =
                     binding.title.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-                when (item.priority) {
-                    Priority.LOW -> {
+                when (item.importance) {
+                    Importance.LOW -> {
                         binding.priority.visibility = View.VISIBLE
                         binding.priority.setImageDrawable(
                             AppCompatResources.getDrawable(
@@ -96,14 +96,14 @@ class ToDoItemAdapter(val toDoItemActionListener: ToDoItemActionListener) :
                             AppCompatResources.getColorStateList(itemView.context, R.color.grey)
                     }
 
-                    Priority.BASIC -> {
+                    Importance.BASIC -> {
                         binding.priority.visibility = View.GONE
                         binding.isCompleted.buttonTintList =
                             AppCompatResources.getColorStateList(itemView.context, R.color.grey)
 
                     }
 
-                    Priority.HIGH -> {
+                    Importance.HIGH -> {
                         binding.priority.visibility = View.VISIBLE
                         binding.priority.setImageDrawable(
                             AppCompatResources.getDrawable(
@@ -120,7 +120,7 @@ class ToDoItemAdapter(val toDoItemActionListener: ToDoItemActionListener) :
             }
 
             binding.isCompleted.setOnClickListener {
-                item.status = binding.isCompleted.isChecked
+                item.done = binding.isCompleted.isChecked
                 toDoItemActionListener.onItemCheck(item)
                 notifyItemChanged(absoluteAdapterPosition)
             }

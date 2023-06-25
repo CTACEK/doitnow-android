@@ -15,14 +15,18 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.ctacek.yandexschool.doitnow.R
-import com.ctacek.yandexschool.doitnow.data.model.Priority
+import com.ctacek.yandexschool.doitnow.data.model.Importance
 import com.ctacek.yandexschool.doitnow.data.model.ToDoItem
 import com.ctacek.yandexschool.doitnow.databinding.FragmentNewEditTaskBinding
 import com.ctacek.yandexschool.doitnow.factory
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.gson.Gson
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -47,9 +51,16 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
 
         val id = args.newTaskArg
 
-        if (id != null) {
-            currentTask = viewModel.loadTask(args.newTaskArg.toString()).copy()
-            createInitData(currentTask)
+        if (args.newTaskArg != "-1") {
+            if (id != null) {
+                viewModel.loadTask(id)
+            }
+            viewModel.item.onEach {
+                if (currentTask.id == "-1") {
+                    currentTask = it
+                    createInitData(currentTask)
+                }
+            }.launchIn(lifecycleScope)
 
             binding.buttonSaveCreate.text = getString(R.string.save_button)
             binding.buttonDeleteTask.compoundDrawableTintList =
@@ -66,7 +77,8 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
         }
 
         if (savedInstanceState != null) {
-            currentTask = savedInstanceState.getSerializable("currentTask") as ToDoItem
+            val gson = Gson()
+            currentTask = gson.fromJson(savedInstanceState.getString("currentTask"), ToDoItem::class.java)
             createInitData(currentTask)
         }
     }
@@ -85,7 +97,7 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonDeleteTask.setOnClickListener {
-            viewModel.deleteTask(currentTask.id)
+            viewModel.deleteTask(currentTask)
             findNavController().navigate(R.id.action_newEditTaskFragment_to_mainFragment)
             Toast.makeText(context, "You are deleted item!", Toast.LENGTH_SHORT).show()
         }
@@ -115,7 +127,7 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
             currentTask.description = binding.editText.text.toString()
 
             if (binding.buttonSaveCreate.text == getString(R.string.save_button)) {
-                viewModel.saveTask(currentTask)
+                viewModel.updateTask(currentTask)
             } else {
                 viewModel.createTask(currentTask)
             }
@@ -141,20 +153,20 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
             date = calendar.time
             binding.textviewDateBefore.visibility = View.VISIBLE
             binding.textviewDateBefore.text = dataFormat.format(date)
-            currentTask.endDate = date
+            currentTask.deadline = date
         }
 
         datePicker.addOnNegativeButtonClickListener {
-            if (currentTask.endDate == null) deleteDate()
+            if (currentTask.deadline == null) deleteDate()
         }
 
     }
 
-    private fun makeImportance(priority: Priority) {
-        when (priority) {
-            Priority.BASIC -> {
-                binding.textImportanceBody.text = priority.toString()
-                currentTask.priority = Priority.BASIC
+    private fun makeImportance(importance: Importance) {
+        when (importance) {
+            Importance.BASIC -> {
+                binding.textImportanceBody.text = importance.toString()
+                currentTask.importance = Importance.BASIC
                 binding.textImportanceBody.setTextColor(
                     AppCompatResources.getColorStateList(
                         requireContext(),
@@ -163,9 +175,9 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
                 )
             }
 
-            Priority.LOW -> {
-                binding.textImportanceBody.text = priority.toString()
-                currentTask.priority = Priority.LOW
+            Importance.LOW -> {
+                binding.textImportanceBody.text = importance.toString()
+                currentTask.importance = Importance.LOW
                 binding.textImportanceBody.setTextColor(
                     AppCompatResources.getColorStateList(
                         requireContext(),
@@ -174,9 +186,9 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
                 )
             }
 
-            Priority.HIGH -> {
-                binding.textImportanceBody.text = priority.toString()
-                currentTask.priority = Priority.HIGH
+            Importance.HIGH -> {
+                binding.textImportanceBody.text = importance.toString()
+                currentTask.importance = Importance.HIGH
                 binding.textImportanceBody.setTextColor(
                     AppCompatResources.getColorStateList(
                         requireContext(),
@@ -190,18 +202,18 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
     private fun createInitData(newItem: ToDoItem) {
         currentTask.id = newItem.id
         binding.editText.setText(newItem.description)
-        makeImportance(newItem.priority)
-        if (newItem.endDate != null) {
+        makeImportance(newItem.importance)
+        if (newItem.deadline != null) {
             binding.switchDataVisible.isChecked = true
             binding.textviewDateBefore.visibility = View.VISIBLE
-            binding.textviewDateBefore.text = newItem.endDate?.let { dataFormat.format(it) }
+            binding.textviewDateBefore.text = newItem.deadline?.let { dataFormat.format(it) }
         }
     }
 
     private fun deleteDate() {
         binding.switchDataVisible.isChecked = false
         binding.textviewDateBefore.visibility = View.INVISIBLE
-        currentTask.endDate = null
+        currentTask.deadline = null
     }
 
     private fun showImportancePopupMenu(v: View) {
@@ -222,15 +234,15 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
 
             when (menuItem.itemId) {
                 R.id.menu_importance_no -> {
-                    makeImportance(Priority.BASIC)
+                    makeImportance(Importance.BASIC)
                 }
 
                 R.id.menu_importance_low -> {
-                    makeImportance(Priority.LOW)
+                    makeImportance(Importance.LOW)
                 }
 
                 R.id.menu_importance_high -> {
-                    makeImportance(Priority.HIGH)
+                    makeImportance(Importance.HIGH)
                 }
             }
             true
@@ -246,6 +258,6 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putSerializable("currentTask", currentTask)
+        outState.putString("currentTask", currentTask.toString())
     }
 }
