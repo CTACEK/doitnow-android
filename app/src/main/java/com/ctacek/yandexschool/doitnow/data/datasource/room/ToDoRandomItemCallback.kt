@@ -3,7 +3,6 @@ package com.ctacek.yandexschool.doitnow.data.datasource.room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.ctacek.yandexschool.doitnow.data.model.Importance
-import com.ctacek.yandexschool.doitnow.data.model.ToDoItem
 import com.github.javafaker.Faker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -41,7 +40,7 @@ class ToDoRandomItemCallback() : RoomDatabase.Callback() {
     }
 
     private fun getRandomPriority(): Importance {
-        val list = listOf(Importance.LOW, Importance.BASIC, Importance.HIGH)
+        val list = listOf(Importance.LOW, Importance.BASIC, Importance.IMPORTANT)
         return list[Random.nextInt(0, 3)]
     }
 }

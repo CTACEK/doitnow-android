@@ -1,12 +1,9 @@
 package com.ctacek.yandexschool.doitnow.ui.adapter
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
-import com.ctacek.yandexschool.doitnow.R
 import com.ctacek.yandexschool.doitnow.data.model.ToDoItem
+import com.ctacek.yandexschool.doitnow.ui.adapter.diffutil.TaskDiffUtilCallback
 
 class ToDoItemAdapter(private val toDoItemActionListener: ToDoItemActionListener) :
     ListAdapter<ToDoItem, TaskViewHolder>(TaskDiffUtilCallback()) {

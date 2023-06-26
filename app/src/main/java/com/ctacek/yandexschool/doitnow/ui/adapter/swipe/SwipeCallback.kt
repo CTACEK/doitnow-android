@@ -1,4 +1,4 @@
-package com.ctacek.yandexschool.doitnow.ui.adapter
+package com.ctacek.yandexschool.doitnow.ui.adapter.swipe
 
 import android.content.Context
 import android.graphics.Canvas
@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.ctacek.yandexschool.doitnow.R
+import com.ctacek.yandexschool.doitnow.ui.adapter.TaskViewHolder
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
 class SwipeCallback(

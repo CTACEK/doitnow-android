@@ -1,5 +1,5 @@
 package com.ctacek.yandexschool.doitnow.data.model
 
 enum class Importance {
-    LOW, BASIC, HIGH
+    LOW, BASIC, IMPORTANT
 }

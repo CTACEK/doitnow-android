@@ -61,7 +61,7 @@ class TaskViewHolder(private val binding: ItemTaskBinding) : RecyclerView.ViewHo
 
                 }
 
-                Importance.HIGH -> {
+                Importance.IMPORTANT -> {
                     binding.priority.visibility = View.VISIBLE
                     binding.priority.setImageDrawable(
                         AppCompatResources.getDrawable(

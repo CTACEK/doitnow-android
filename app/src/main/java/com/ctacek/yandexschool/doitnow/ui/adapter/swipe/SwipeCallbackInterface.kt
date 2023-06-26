@@ -1,4 +1,4 @@
-package com.ctacek.yandexschool.doitnow.ui.adapter
+package com.ctacek.yandexschool.doitnow.ui.adapter.swipe
 
 import com.ctacek.yandexschool.doitnow.data.model.ToDoItem
 

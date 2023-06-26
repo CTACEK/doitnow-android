@@ -1,30 +1,24 @@
 package com.ctacek.yandexschool.doitnow.ui.fragments
 
-import android.graphics.Canvas
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.ctacek.yandexschool.doitnow.R
 import com.ctacek.yandexschool.doitnow.data.model.ToDoItem
 import com.ctacek.yandexschool.doitnow.databinding.FragmentMainBinding
 import com.ctacek.yandexschool.doitnow.factory
-import com.ctacek.yandexschool.doitnow.ui.adapter.SwipeCallbackInterface
-import com.ctacek.yandexschool.doitnow.ui.adapter.SwipeHelper
+import com.ctacek.yandexschool.doitnow.ui.adapter.swipe.SwipeCallbackInterface
+import com.ctacek.yandexschool.doitnow.ui.adapter.swipe.SwipeHelper
 import com.ctacek.yandexschool.doitnow.ui.adapter.ToDoItemActionListener
 import com.ctacek.yandexschool.doitnow.ui.adapter.ToDoItemAdapter
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
-import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -45,12 +39,12 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                 false -> binding.visibility.setImageResource(R.drawable.visibility)
             }
         }
+        viewModel.getData()
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        viewModel.getData()
         return binding.root
     }
 
@@ -84,13 +78,13 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
         helper.attachToRecyclerView(binding.recyclerview)
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             viewModel.tasks.collectLatest {
                 adapter.submitList(it)
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             viewModel.countCompletedTask.collectLatest {
                 binding.completedTasks.text = getString(R.string.completed_title, it)
             }
@@ -104,6 +98,13 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     }
 
     private fun createListeners() {
+
+        binding.swipelayout.setOnRefreshListener {
+            viewModel.loadRemoteTask()
+
+            binding.swipelayout.isRefreshing = false
+        }
+
         binding.fab.setOnClickListener {
             val action = MainFragmentDirections.actionMainFragmentToNewEditTaskFragment(null)
             findNavController().navigate(action)
@@ -130,7 +131,6 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                             R.drawable.visibility_off
                         )
                     )
-                    binding.recyclerview.scrollToPosition(0)
                 }
             }
 

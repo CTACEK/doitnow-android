@@ -26,8 +26,6 @@ import com.ctacek.yandexschool.doitnow.factory
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -127,9 +125,9 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
                 )
             }
 
-            Importance.HIGH -> {
+            Importance.IMPORTANT -> {
                 binding.textImportanceBody.text = importance.toString()
-                currentTask.importance = Importance.HIGH
+                currentTask.importance = Importance.IMPORTANT
                 binding.textImportanceBody.setTextColor(
                     AppCompatResources.getColorStateList(
                         requireContext(),
@@ -252,7 +250,7 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
                 }
 
                 R.id.menu_importance_high -> {
-                    makeImportance(Importance.HIGH)
+                    makeImportance(Importance.IMPORTANT)
                 }
             }
             true
