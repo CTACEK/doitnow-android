@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ctacek.yandexschool.doitnow.data.repository.ToDoItemsRepository
 import com.ctacek.yandexschool.doitnow.ui.fragments.MainViewModel
-import com.ctacek.yandexschool.doitnow.utils.ServiceLocator
 import com.ctacek.yandexschool.doitnow.utils.locale
 
 class ViewModelFactory(
@@ -16,7 +15,7 @@ class ViewModelFactory(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         val viewModel = when (modelClass) {
             MainViewModel::class.java -> {
-                MainViewModel(ToDoItemsRepository(locale()))
+                MainViewModel(ToDoItemsRepository(locale(), locale(), locale()))
             }
             else -> {
                 throw IllegalStateException("Unknown view model class")

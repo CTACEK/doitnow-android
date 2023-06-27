@@ -61,7 +61,7 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
             viewModel.loadTask(id)
 
             lifecycleScope.launch {
-                viewModel.item.collectLatest {
+                viewModel.oneTask.collectLatest {
                     if (currentTask.id == "-1") {
                         currentTask = it
                         createInitData(currentTask)
@@ -141,8 +141,7 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
     private fun createListeners() {
         binding.buttonDeleteTask.setOnClickListener {
             viewModel.deleteTask(currentTask)
-            val action = NewEditTaskFragmentDirections.actionNewEditTaskFragmentToMainFragment()
-            findNavController().navigate(action)
+            findNavController().popBackStack()
             Toast.makeText(context, "You are deleted item!", Toast.LENGTH_SHORT).show()
         }
 
@@ -176,13 +175,11 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
                 viewModel.createTask(currentTask)
             }
 
-            val action = NewEditTaskFragmentDirections.actionNewEditTaskFragmentToMainFragment()
-            findNavController().navigate(action)
+            findNavController().popBackStack()
         }
 
         binding.toolbar.setNavigationOnClickListener {
-            val action = NewEditTaskFragmentDirections.actionNewEditTaskFragmentToMainFragment()
-            findNavController().navigate(action)
+            findNavController().popBackStack()
         }
 
         binding.menuImportance.setOnClickListener {

@@ -19,6 +19,7 @@ import com.ctacek.yandexschool.doitnow.ui.adapter.ToDoItemActionListener
 import com.ctacek.yandexschool.doitnow.ui.adapter.ToDoItemAdapter
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -39,7 +40,6 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                 false -> binding.visibility.setImageResource(R.drawable.visibility)
             }
         }
-        viewModel.getData()
     }
 
     override fun onCreateView(
@@ -80,7 +80,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
         lifecycleScope.launch {
             viewModel.tasks.collectLatest {
-                adapter.submitList(it)
+                updateUI(it)
             }
         }
 
@@ -92,6 +92,14 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
     }
 
+    private fun updateUI(list: List<ToDoItem>) {
+        if(viewModel.modeAll) {
+            adapter.submitList(list)
+        }else{
+            adapter.submitList(list.filter { !it.done })
+        }
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBoolean("mode", viewModel.modeAll)
@@ -99,10 +107,10 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
     private fun createListeners() {
 
-        binding.swipelayout.setOnRefreshListener {
-            viewModel.loadRemoteTask()
+        binding.swipeLayout.setOnRefreshListener {
+            viewModel.startPatch()
 
-            binding.swipelayout.isRefreshing = false
+            binding.swipeLayout.isRefreshing = false
         }
 
         binding.fab.setOnClickListener {
@@ -111,7 +119,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         }
 
         binding.visibility.setOnClickListener {
-            viewModel.changeMode()
+            viewModel.changeDone()
             when (viewModel.modeAll) {
                 true -> {
                     YoYo.with(Techniques.ZoomIn).playOn(binding.visibility)

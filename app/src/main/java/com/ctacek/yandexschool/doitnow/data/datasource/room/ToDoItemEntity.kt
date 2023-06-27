@@ -7,7 +7,7 @@ import com.ctacek.yandexschool.doitnow.data.model.Importance
 import com.ctacek.yandexschool.doitnow.data.model.ToDoItem
 import java.util.Date
 
-@Entity(tableName = "todoitems")
+@Entity(tableName = "todo_items")
 data class ToDoItemEntity(
     @PrimaryKey @ColumnInfo(name = "id") var id: String,
     @ColumnInfo(name = "description") var description: String,
