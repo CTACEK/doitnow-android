@@ -7,6 +7,7 @@ import com.github.javafaker.Faker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.UUID
 import kotlin.random.Random
 
 class ToDoRandomItemCallback() : RoomDatabase.Callback() {
@@ -22,9 +23,9 @@ class ToDoRandomItemCallback() : RoomDatabase.Callback() {
                 val faker = Faker.instance()
 
                 // Генерируем случайные данные и добавляем их в базу данных
-                for (i in 1..40) {
+                for (i in 1..5) {
                     val tempItem = ToDoItemEntity(
-                        i.toString(),
+                        UUID.randomUUID().toString(),
                         if (Random.nextBoolean()) faker.backToTheFuture().character()
                             .toString() else faker.harryPotter().quote(),
                         getRandomPriority(),

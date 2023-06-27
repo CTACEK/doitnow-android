@@ -21,25 +21,24 @@ interface ToDoItemApi {
     ): Response<ToDoApiResponseList>
 
     @GET("list/{id}")
-    suspend fun getListItemById(@Path("id") itemId: String): Response<ToDoApiResponseElement>
+    suspend fun getTaskById(@Path("id") itemId: String): Response<ToDoApiResponseElement>
 
     @POST("list")
-    suspend fun addItemToList(
+    suspend fun addTask(
         @Header("X-Last-Known-Revision") lastKnownRevision: Int,
-        @Body newItem: ToDoApiResponseElement
+        @Body newItem: ToDoApiRequestElement
     ): Response<ToDoApiResponseElement>
 
     @PUT("list/{id}")
-    suspend fun changeListItem(
+    suspend fun updateTask(
         @Header("X-Last-Known-Revision") lastKnownRevision: Int,
         @Path("id") itemId: String,
-        @Body updatedItem: ToDoItemResponseRequest,
-        D: Response<ToDoApiResponseElement>
-    )
+        @Body body: ToDoApiRequestElement
+    ): Response<ToDoApiResponseElement>
 
     @DELETE("list/{id}")
-    suspend fun deletelistItem(
-        @Header("X-Last-Known-Revision") LastKnownRevision: Int,
+    suspend fun deleteTask(
+        @Header("X-Last-Known-Revision") lastKnownRevision: Int,
         @Path("id") itemId: String,
     ): Response<ToDoApiResponseElement>
 }

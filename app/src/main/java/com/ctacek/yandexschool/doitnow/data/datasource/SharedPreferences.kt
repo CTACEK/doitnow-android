@@ -9,6 +9,10 @@ class SharedPreferencesAppSettings(
     private val sharedPreferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
     private val editor = sharedPreferences.edit()
 
+    init {
+        createDeviceId()
+    }
+
     fun setCurrentToken(token: String?) {
         if (token == null)
             editor.remove(PREF_CURRENT_ACCOUNT_TOKEN)
@@ -19,13 +23,15 @@ class SharedPreferencesAppSettings(
 
     fun getCurrentToken(): String? = sharedPreferences.getString(PREF_CURRENT_ACCOUNT_TOKEN, null)
 
-    fun createDeviceId() {
-        editor.putString(DEVICE_TAG, UUID.randomUUID().toString())
-        editor.apply()
+    private fun createDeviceId() {
+        if (getDeviceId() == null) {
+            editor.putString(DEVICE_TAG, UUID.randomUUID().toString())
+            editor.apply()
+        }
     }
 
-    fun getDeviceId() {
-        sharedPreferences.getString(DEVICE_TAG, null)
+    fun getDeviceId() : String? {
+        return sharedPreferences.getString(DEVICE_TAG, null)
     }
 
     fun putRevisionId(revision: Int) {
@@ -33,8 +39,8 @@ class SharedPreferencesAppSettings(
         editor.apply()
     }
 
-    fun getRevisionId() {
-        sharedPreferences.getString(REVISION_TAG, null)
+    fun getRevisionId() : Int {
+        return sharedPreferences.getInt(REVISION_TAG, 0)
     }
 
     companion object {

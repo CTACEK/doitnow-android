@@ -22,7 +22,7 @@ abstract class ToDoItemDatabase : RoomDatabase() {
                     ToDoItemDatabase::class.java,
                     "main_database"
                 )
-                    .addCallback(ToDoRandomItemCallback())
+//                    .addCallback(ToDoRandomItemCallback())
                     .build()
                 INSTANCE = instance
 

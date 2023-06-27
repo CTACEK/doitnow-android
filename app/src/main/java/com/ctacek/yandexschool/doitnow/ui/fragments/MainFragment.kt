@@ -1,5 +1,6 @@
 package com.ctacek.yandexschool.doitnow.ui.fragments
 
+import android.net.Network
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.ctacek.yandexschool.doitnow.R
+import com.ctacek.yandexschool.doitnow.data.datasource.retrofit.NetworkState
+import com.ctacek.yandexschool.doitnow.data.model.LoadingState
 import com.ctacek.yandexschool.doitnow.data.model.ToDoItem
 import com.ctacek.yandexschool.doitnow.databinding.FragmentMainBinding
 import com.ctacek.yandexschool.doitnow.factory
@@ -17,8 +20,10 @@ import com.ctacek.yandexschool.doitnow.ui.adapter.swipe.SwipeCallbackInterface
 import com.ctacek.yandexschool.doitnow.ui.adapter.swipe.SwipeHelper
 import com.ctacek.yandexschool.doitnow.ui.adapter.ToDoItemActionListener
 import com.ctacek.yandexschool.doitnow.ui.adapter.ToDoItemAdapter
+import com.ctacek.yandexschool.doitnow.utils.InternetConnectionChecker.hasInternetConnection
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -52,7 +57,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         super.onViewCreated(view, savedInstanceState)
 
         createListeners()
-
+        viewModel.loadData()
 
         binding.recyclerview.adapter = ToDoItemAdapter(object : ToDoItemActionListener {
             override fun onClickCheck(idItem: String, done: Boolean) {
@@ -67,7 +72,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
         val helper = SwipeHelper(object : SwipeCallbackInterface {
             override fun onDelete(todoItem: ToDoItem) {
-                viewModel.deleteTask(todoItem)
+                viewModel.deleteTask(todoItem, requireContext())
             }
 
             override fun onChangeDone(todoItem: ToDoItem) {
@@ -77,6 +82,26 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         }, requireContext())
 
         helper.attachToRecyclerView(binding.recyclerview)
+
+        lifecycleScope.launch {
+            viewModel.loadingState.collectLatest {
+                when (viewModel.loadingState.value) {
+                    is LoadingState.Loading -> {
+                        binding.recyclerview.visibility = View.GONE
+                        binding.noResultAnimationView.visibility = View.VISIBLE
+                    }
+                    is LoadingState.Success -> {
+                        binding.recyclerview.visibility = View.VISIBLE
+                        binding.noResultAnimationView.visibility = View.GONE
+                        Snackbar.make(requireView(), viewModel.loadingState.value.toString(), Snackbar.LENGTH_SHORT).show()
+                    }
+                    is LoadingState.Error -> {
+                        Snackbar.make(requireView(), viewModel.loadingState.value.toString(), Snackbar.LENGTH_SHORT).show()
+                    }
+                }
+
+            }
+        }
 
         lifecycleScope.launch {
             viewModel.tasks.collectLatest {
@@ -93,9 +118,9 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     }
 
     private fun updateUI(list: List<ToDoItem>) {
-        if(viewModel.modeAll) {
+        if (viewModel.modeAll) {
             adapter.submitList(list)
-        }else{
+        } else {
             adapter.submitList(list.filter { !it.done })
         }
     }
@@ -108,7 +133,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     private fun createListeners() {
 
         binding.swipeLayout.setOnRefreshListener {
-            viewModel.startPatch()
+            viewModel.startPatch(requireContext())
 
             binding.swipeLayout.isRefreshing = false
         }
@@ -139,6 +164,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                             R.drawable.visibility_off
                         )
                     )
+                    binding.recyclerview.scrollToPosition(0)
                 }
             }
 

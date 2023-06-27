@@ -91,6 +91,7 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
                 gson.fromJson(savedInstanceState.getString("currentTask"), ToDoItem::class.java)
             createInitData(currentTask)
             createListeners()
+
         }
         return binding.root
     }
@@ -140,7 +141,7 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
 
     private fun createListeners() {
         binding.buttonDeleteTask.setOnClickListener {
-            viewModel.deleteTask(currentTask)
+            viewModel.deleteTask(currentTask, requireContext())
             findNavController().popBackStack()
             Toast.makeText(context, "You are deleted item!", Toast.LENGTH_SHORT).show()
         }
@@ -168,11 +169,12 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
 
             binding.editText.error = null
             currentTask.description = binding.editText.text.toString()
+            currentTask.changedAt = Date()
 
             if (binding.buttonSaveCreate.text == getString(R.string.save_button)) {
-                viewModel.updateTask(currentTask)
+                viewModel.updateTask(currentTask, requireContext())
             } else {
-                viewModel.createTask(currentTask)
+                viewModel.createTask(currentTask, requireContext())
             }
 
             findNavController().popBackStack()

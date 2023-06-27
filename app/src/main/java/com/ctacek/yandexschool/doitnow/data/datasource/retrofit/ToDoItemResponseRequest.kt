@@ -23,6 +23,8 @@ data class ToDoApiRequestList(
 )
 
 data class ToDoApiResponseElement(
+    @SerializedName("revision")
+    val revision: Int,
     @SerializedName("status")
     val status: String,
     @SerializedName("element")
@@ -30,8 +32,6 @@ data class ToDoApiResponseElement(
 )
 
 data class ToDoApiRequestElement(
-    @SerializedName("status")
-    val status: String,
     @SerializedName("element")
     val element: ToDoItemResponseRequest
 )
@@ -75,7 +75,7 @@ data class ToDoItemResponseRequest(
         Date(changed_at)
     )
     companion object {
-        fun fromToDoTask(toDoItem: ToDoItem): ToDoItemResponseRequest {
+        fun fromToDoTask(toDoItem: ToDoItem, deviseId: String): ToDoItemResponseRequest {
             return ToDoItemResponseRequest(
                 id = toDoItem.id,
                 text = toDoItem.description,
@@ -84,7 +84,7 @@ data class ToDoItemResponseRequest(
                 done = toDoItem.done,
                 created_at = toDoItem.createdAt.time,
                 changed_at = toDoItem.changedAt?.time ?: 0,
-                last_updated_by = "d1",
+                last_updated_by = deviseId,
                 color = null
             )
         }

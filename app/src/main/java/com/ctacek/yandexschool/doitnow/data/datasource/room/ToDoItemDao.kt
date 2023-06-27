@@ -11,10 +11,10 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ToDoItemDao {
 
-    @Query("SELECT * FROM todo_items ORDER BY id")
+    @Query("SELECT * FROM todo_items ORDER BY deadline")
     fun getToDoItems(): Flow<List<ToDoItemEntity>>
 
-    @Query("SELECT * FROM todo_items ORDER BY id")
+    @Query("SELECT * FROM todo_items ORDER BY deadline")
     fun getToDoItemsNoFlow(): List<ToDoItemEntity>
 
     @Query("SELECT * FROM todo_items WHERE id = :id")
@@ -35,6 +35,6 @@ interface ToDoItemDao {
     @Query("DELETE FROM todo_items")
     suspend fun deleteAllToDoItems()
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun mergeToDoItems(todoItems: List<ToDoItemEntity>)
 }
