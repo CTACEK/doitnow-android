@@ -58,7 +58,21 @@
                 app:backgroundTint="@android:color/transparent"
                 app:elevation="0dp"
                 app:layout_collapseMode="pin"
-                app:srcCompat="@drawable/visibility" />
+                app:srcCompat="@drawable/visibility_24" />
+
+            <ImageView
+                android:id="@+id/network_status"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom|end"
+                android:layout_marginEnd="60dp"
+                android:adjustViewBounds="true"
+                android:importantForAccessibility="no"
+                android:maxWidth="18dp"
+                android:maxHeight="18dp"
+                android:scaleType="fitCenter"
+                app:layout_collapseMode="pin"
+                app:srcCompat="@drawable/baseline_circle_24" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -84,7 +98,7 @@
                 android:id="@+id/no_result_animation_view"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"
                 app:lottie_rawRes="@raw/noresultanim" />
@@ -95,9 +109,9 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
                 android:layout_marginBottom="10dp"
-                android:visibility="visible"
                 android:background="@drawable/tasks_background"
                 android:elevation="1dp"
+                android:visibility="gone"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:itemCount="4"
                 tools:listitem="@layout/item_task" />

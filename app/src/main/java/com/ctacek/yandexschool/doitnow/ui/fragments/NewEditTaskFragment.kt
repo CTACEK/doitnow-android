@@ -15,7 +15,6 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -24,13 +23,15 @@ import com.ctacek.yandexschool.doitnow.data.model.Importance
 import com.ctacek.yandexschool.doitnow.data.model.ToDoItem
 import com.ctacek.yandexschool.doitnow.databinding.FragmentNewEditTaskBinding
 import com.ctacek.yandexschool.doitnow.factory
+import com.ctacek.yandexschool.doitnow.utils.Constants.CURRENT_TASK_NAME
+import com.ctacek.yandexschool.doitnow.utils.internet_checker.ConnectivityObserver
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.gson.Gson
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
+import java.util.UUID
 
 
 class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
@@ -62,10 +63,10 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
             viewModel.loadTask(id)
 
             lifecycleScope.launch {
-                viewModel.oneTask.collectLatest {
-                    if (currentTask.id == "-1") {
-                        currentTask = it
-                        createInitData(currentTask)
+                viewModel.currentItem.collect {
+                    currentTask = it
+                    if (currentTask.id != "-1") {
+                        createInitData()
                         createListeners()
                     }
                 }
@@ -89,8 +90,8 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
         if (savedInstanceState != null) {
             val gson = Gson()
             currentTask =
-                gson.fromJson(savedInstanceState.getString("currentTask"), ToDoItem::class.java)
-            createInitData(currentTask)
+                gson.fromJson(savedInstanceState.getString(CURRENT_TASK_NAME), ToDoItem::class.java)
+            createInitData()
             createListeners()
 
         }
@@ -142,9 +143,20 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
 
     private fun createListeners() {
         binding.buttonDeleteTask.setOnClickListener {
+            if (viewModel.status.value == ConnectivityObserver.Status.Available) {
+                viewModel.deleteRemoteTask(currentTask.id)
+            } else {
+                Toast.makeText(
+                    context,
+                    R.string.unavailable_network_state_delete_later,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
             viewModel.deleteTask(currentTask)
+            viewModel.clearTask()
+
             findNavController().popBackStack()
-            Toast.makeText(context, "You are deleted item!", Toast.LENGTH_SHORT).show()
         }
 
         binding.textviewDateBefore.setOnClickListener {
@@ -163,8 +175,8 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
 
         binding.buttonSaveCreate.setOnClickListener {
             if (binding.editText.text.isNullOrBlank()) {
-                Toast.makeText(context, "Enter some words!", Toast.LENGTH_SHORT).show()
-                binding.editText.error = "Enter some words!"
+                Toast.makeText(context, R.string.error_enter_tasks_text, Toast.LENGTH_SHORT).show()
+                binding.editText.error = getString(R.string.error_enter_tasks_text)
                 return@setOnClickListener
             }
 
@@ -172,16 +184,38 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
             currentTask.description = binding.editText.text.toString()
             currentTask.changedAt = Date()
 
+
             if (binding.buttonSaveCreate.text == getString(R.string.save_button)) {
+                if (viewModel.status.value == ConnectivityObserver.Status.Available) {
+                    viewModel.createRemoteTask(currentTask)
+                } else {
+                    Toast.makeText(
+                        context,
+                        R.string.unavailable_network_state_update_later,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
                 viewModel.updateTask(currentTask)
             } else {
+                if (viewModel.status.value == ConnectivityObserver.Status.Available) {
+                    viewModel.updateRemoteTask(currentTask)
+                } else {
+                    Toast.makeText(
+                        context,
+                        R.string.unavailable_network_state_create_later,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                currentTask.id = UUID.randomUUID().toString()
                 viewModel.createTask(currentTask)
             }
 
+            viewModel.clearTask()
             findNavController().popBackStack()
         }
 
         binding.toolbar.setNavigationOnClickListener {
+            viewModel.clearTask()
             findNavController().popBackStack()
         }
 
@@ -207,14 +241,15 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
         }
     }
 
-    private fun createInitData(newItem: ToDoItem) {
-        currentTask.id = newItem.id
-        binding.editText.setText(newItem.description)
-        makeImportance(newItem.importance)
-        if (newItem.deadline != null) {
+    private fun createInitData() {
+        currentTask.id = currentTask.id
+        binding.editText.setText(currentTask.description)
+        makeImportance(currentTask.importance)
+
+        if (currentTask.deadline != null) {
             binding.switchDataVisible.isChecked = true
             binding.textviewDateBefore.visibility = View.VISIBLE
-            binding.textviewDateBefore.text = newItem.deadline?.let { dataFormat.format(it) }
+            binding.textviewDateBefore.text = currentTask.deadline?.let { dataFormat.format(it) }
         }
     }
 
@@ -268,6 +303,6 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         val gson = Gson()
-        outState.putString("currentTask", gson.toJson(currentTask))
+        outState.putString(CURRENT_TASK_NAME, gson.toJson(currentTask))
     }
 }

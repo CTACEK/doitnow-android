@@ -24,14 +24,14 @@ class SharedPreferencesAppSettings(
     fun getCurrentToken(): String? = sharedPreferences.getString(PREF_CURRENT_ACCOUNT_TOKEN, null)
 
     private fun createDeviceId() {
-        if (getDeviceId() == null) {
+        if (getDeviceId() == "0d") {
             editor.putString(DEVICE_TAG, UUID.randomUUID().toString())
             editor.apply()
         }
     }
 
-    fun getDeviceId() : String? {
-        return sharedPreferences.getString(DEVICE_TAG, null)
+    fun getDeviceId() : String {
+        return sharedPreferences.getString(DEVICE_TAG, "0d")?: "0d"
     }
 
     fun putRevisionId(revision: Int) {

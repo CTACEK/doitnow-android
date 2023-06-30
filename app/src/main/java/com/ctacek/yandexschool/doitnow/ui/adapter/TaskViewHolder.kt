@@ -47,7 +47,7 @@ class TaskViewHolder(private val binding: ItemTaskBinding) : RecyclerView.ViewHo
                     binding.priority.setImageDrawable(
                         AppCompatResources.getDrawable(
                             itemView.context,
-                            R.drawable.priority1
+                            R.drawable.priority_low_12
                         )
                     )
                     binding.isCompleted.buttonTintList =
@@ -66,7 +66,7 @@ class TaskViewHolder(private val binding: ItemTaskBinding) : RecyclerView.ViewHo
                     binding.priority.setImageDrawable(
                         AppCompatResources.getDrawable(
                             itemView.context,
-                            R.drawable.priority3
+                            R.drawable.priority_high_12
                         )
                     )
                     binding.isCompleted.buttonTintList = AppCompatResources.getColorStateList(
@@ -78,7 +78,7 @@ class TaskViewHolder(private val binding: ItemTaskBinding) : RecyclerView.ViewHo
         }
 
         binding.isCompleted.setOnClickListener {
-            listener.onClickCheck(item.id, binding.isCompleted.isChecked)
+            listener.onClickCheck(item)
         }
 
 

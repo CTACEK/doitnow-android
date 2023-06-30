@@ -54,14 +54,14 @@ class SwipeCallback(
                     R.color.color_light_red
                 )
             )
-            .addSwipeLeftActionIcon(R.drawable.delete)
+            .addSwipeLeftActionIcon(R.drawable.delete_24)
             .addSwipeRightBackgroundColor(
                 ContextCompat.getColor(
                     context,
                     R.color.color_light_green
                 )
             )
-            .addSwipeRightActionIcon(R.drawable.baseline_check)
+            .addSwipeRightActionIcon(R.drawable.baseline_check_24)
             .setActionIconTint(
                 ContextCompat.getColor(
                     recyclerView.context,

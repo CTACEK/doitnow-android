@@ -1,7 +1,6 @@
 package com.ctacek.yandexschool.doitnow.data.model
 
 import java.util.Date
-import java.util.UUID
 
 /**
  * Data model for todoitems
