@@ -11,6 +11,7 @@ import com.ctacek.yandexschool.doitnow.data.datasource.retrofit.ToDoItemResponse
 import com.ctacek.yandexschool.doitnow.data.datasource.room.ToDoItemDatabase
 import com.ctacek.yandexschool.doitnow.data.datasource.room.ToDoItemEntity
 import com.ctacek.yandexschool.doitnow.data.model.ToDoItem
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -32,8 +33,8 @@ class ToDoItemsRepository(
         return toDoItemDao.getToDoItems().map { it -> it.map { it.toToDoItem() } }
     }
 
-    fun getToDoItemById(id: String): Flow<ToDoItem> {
-        return toDoItemDao.getToDoItemById(id = id).map { it.toToDoItem() }
+    suspend fun getToDoItemById(id: String): ToDoItem {
+        return toDoItemDao.getToDoItemById(id = id).toToDoItem()
     }
 
     suspend fun updateStatusToDoItem(id: String, done: Boolean, time: Long) {

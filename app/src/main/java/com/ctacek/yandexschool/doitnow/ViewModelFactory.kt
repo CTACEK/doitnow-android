@@ -15,7 +15,7 @@ class ViewModelFactory(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         val viewModel = when (modelClass) {
             MainViewModel::class.java -> {
-                MainViewModel(ToDoItemsRepository(locale(), locale(), locale()))
+                MainViewModel(ToDoItemsRepository(locale(), locale(), locale()), locale())
             }
             else -> {
                 throw IllegalStateException("Unknown view model class")

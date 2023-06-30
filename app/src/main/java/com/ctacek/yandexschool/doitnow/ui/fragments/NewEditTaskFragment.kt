@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -34,7 +35,7 @@ import java.util.Date
 
 class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
 
-    private val viewModel: MainViewModel by viewModels { factory() }
+    private val viewModel: MainViewModel by activityViewModels { factory() }
     private lateinit var binding: FragmentNewEditTaskBinding
     private val args: NewEditTaskFragmentArgs by navArgs()
     private var currentTask = ToDoItem()
@@ -141,7 +142,7 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
 
     private fun createListeners() {
         binding.buttonDeleteTask.setOnClickListener {
-            viewModel.deleteTask(currentTask, requireContext())
+            viewModel.deleteTask(currentTask)
             findNavController().popBackStack()
             Toast.makeText(context, "You are deleted item!", Toast.LENGTH_SHORT).show()
         }
@@ -172,9 +173,9 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
             currentTask.changedAt = Date()
 
             if (binding.buttonSaveCreate.text == getString(R.string.save_button)) {
-                viewModel.updateTask(currentTask, requireContext())
+                viewModel.updateTask(currentTask)
             } else {
-                viewModel.createTask(currentTask, requireContext())
+                viewModel.createTask(currentTask)
             }
 
             findNavController().popBackStack()
@@ -257,6 +258,7 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
 
         popupMenu.show()
     }
+
 
     @SuppressLint("SimpleDateFormat")
     private fun showDateTimePicker() {

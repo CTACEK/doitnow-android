@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -20,7 +21,6 @@ import com.ctacek.yandexschool.doitnow.ui.adapter.swipe.SwipeCallbackInterface
 import com.ctacek.yandexschool.doitnow.ui.adapter.swipe.SwipeHelper
 import com.ctacek.yandexschool.doitnow.ui.adapter.ToDoItemActionListener
 import com.ctacek.yandexschool.doitnow.ui.adapter.ToDoItemAdapter
-import com.ctacek.yandexschool.doitnow.utils.InternetConnectionChecker.hasInternetConnection
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.google.android.material.snackbar.Snackbar
@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 
 class MainFragment : Fragment(R.layout.fragment_main) {
 
-    private val viewModel: MainViewModel by viewModels { factory() }
+    private val viewModel: MainViewModel by activityViewModels{ factory() }
     private lateinit var binding: FragmentMainBinding
     private val adapter: ToDoItemAdapter get() = binding.recyclerview.adapter as ToDoItemAdapter
 
@@ -72,7 +72,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
         val helper = SwipeHelper(object : SwipeCallbackInterface {
             override fun onDelete(todoItem: ToDoItem) {
-                viewModel.deleteTask(todoItem, requireContext())
+                viewModel.deleteTask(todoItem)
             }
 
             override fun onChangeDone(todoItem: ToDoItem) {
@@ -133,7 +133,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     private fun createListeners() {
 
         binding.swipeLayout.setOnRefreshListener {
-            viewModel.startPatch(requireContext())
+            viewModel.startPatch()
 
             binding.swipeLayout.isRefreshing = false
         }

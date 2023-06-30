@@ -18,7 +18,7 @@ interface ToDoItemDao {
     fun getToDoItemsNoFlow(): List<ToDoItemEntity>
 
     @Query("SELECT * FROM todo_items WHERE id = :id")
-    fun getToDoItemById(id: String): Flow<ToDoItemEntity>
+    fun getToDoItemById(id: String): ToDoItemEntity
 
     @Update
     suspend fun updateToDoItem(toDoItemEntity: ToDoItemEntity)
@@ -35,6 +35,6 @@ interface ToDoItemDao {
     @Query("DELETE FROM todo_items")
     suspend fun deleteAllToDoItems()
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun mergeToDoItems(todoItems: List<ToDoItemEntity>)
 }

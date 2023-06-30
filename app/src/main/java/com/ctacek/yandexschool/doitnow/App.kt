@@ -6,6 +6,7 @@ import com.ctacek.yandexschool.doitnow.data.datasource.SharedPreferencesAppSetti
 import com.ctacek.yandexschool.doitnow.data.datasource.retrofit.RetrofitToDoSource
 import com.ctacek.yandexschool.doitnow.data.datasource.room.ToDoItemDatabase
 import com.ctacek.yandexschool.doitnow.data.repository.ToDoItemsRepository
+import com.ctacek.yandexschool.doitnow.utils.InternetConnectionChecker
 import com.ctacek.yandexschool.doitnow.utils.ServiceLocator
 import com.ctacek.yandexschool.doitnow.utils.locale
 
@@ -18,6 +19,7 @@ class App : Application() {
         ServiceLocator.register(ToDoItemDatabase.getDatabase(locale()))
         ServiceLocator.register(RetrofitToDoSource().makeRetrofitService())
         ServiceLocator.register(SharedPreferencesAppSettings(locale()))
+        ServiceLocator.register(InternetConnectionChecker(locale()))
 
         ServiceLocator.register(ToDoItemsRepository(locale(), locale(), locale()))
     }
