@@ -34,6 +34,9 @@
     <string name="forgot_password">Fogot password?</string>
     <string name="enter_password">Enter password</string>
     <string name="guest_mode_button">Guest mode</string>
+    <string name="you_want_get_out">Are you sure you want to get out?</string>
+    <string name="you_want_get_out_offline">Are you sure you want to get out? Offline mode data loss is possible.</string>
+    <string name="logout_button">Log out</string>
 
 
 </resources>

@@ -139,6 +139,10 @@ class MainViewModel(
         }
     }
 
+    fun deleteToken(){
+        repository.deleteToken()
+    }
+
 
     override fun onCleared() {
         super.onCleared()

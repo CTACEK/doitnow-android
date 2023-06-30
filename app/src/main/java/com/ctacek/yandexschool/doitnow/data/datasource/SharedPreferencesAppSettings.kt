@@ -1,6 +1,9 @@
 package com.ctacek.yandexschool.doitnow.data.datasource
 
 import android.content.Context
+import com.ctacek.yandexschool.doitnow.utils.Constants.TOKEN_API
+import com.ctacek.yandexschool.doitnow.utils.Constants.NO_TOKEN
+
 import java.util.UUID
 
 class SharedPreferencesAppSettings(
@@ -10,28 +13,25 @@ class SharedPreferencesAppSettings(
     private val editor = sharedPreferences.edit()
 
     init {
-        createDeviceId()
-    }
-
-    fun setCurrentToken(token: String?) {
-        if (token == null)
-            editor.remove(PREF_CURRENT_ACCOUNT_TOKEN)
-        else
-            editor.putString(PREF_CURRENT_ACCOUNT_TOKEN, token)
-        editor.apply()
-    }
-
-    fun getCurrentToken(): String? = sharedPreferences.getString(PREF_CURRENT_ACCOUNT_TOKEN, null)
-
-    private fun createDeviceId() {
-        if (getDeviceId() == "0d") {
+        if (!sharedPreferences.contains(DEVICE_TAG)) {
             editor.putString(DEVICE_TAG, UUID.randomUUID().toString())
             editor.apply()
         }
+
+        if (!sharedPreferences.contains(PREF_CURRENT_ACCOUNT_TOKEN)) {
+            setCurrentToken(NO_TOKEN)
+        }
     }
 
+    fun setCurrentToken(token: String) {
+        editor.putString(PREF_CURRENT_ACCOUNT_TOKEN, token)
+        editor.apply()
+    }
+
+    fun getCurrentToken(): String = sharedPreferences.getString(PREF_CURRENT_ACCOUNT_TOKEN, null) ?: "Bearer $TOKEN_API"
+
     fun getDeviceId() : String {
-        return sharedPreferences.getString(DEVICE_TAG, "0d")?: "0d"
+        return sharedPreferences.getString(DEVICE_TAG, null)?: "0d"
     }
 
     fun putRevisionId(revision: Int) {
@@ -40,7 +40,7 @@ class SharedPreferencesAppSettings(
     }
 
     fun getRevisionId() : Int {
-        return sharedPreferences.getInt(REVISION_TAG, 0)
+        return sharedPreferences.getInt(REVISION_TAG, 1)
     }
 
     companion object {

@@ -239,6 +239,10 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
         datePicker.addOnNegativeButtonClickListener {
             if (currentTask.deadline == null) deleteDate()
         }
+
+        datePicker.addOnCancelListener {
+            if (currentTask.deadline == null) deleteDate()
+        }
     }
 
     private fun createInitData() {

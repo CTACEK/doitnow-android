@@ -8,9 +8,6 @@ import androidx.room.RoomDatabase
 @Database(entities = [ToDoItemEntity::class], version = 1)
 abstract class ToDoItemDatabase : RoomDatabase() {
     abstract fun toDoItemDao(): ToDoItemDao
-
-    private lateinit var applicationContext: Context
-
     companion object {
         @Volatile
         private var INSTANCE: ToDoItemDatabase? = null
@@ -22,7 +19,6 @@ abstract class ToDoItemDatabase : RoomDatabase() {
                     ToDoItemDatabase::class.java,
                     "main_database"
                 )
-                    .addCallback(ToDoRandomItemCallback())
                     .build()
                 INSTANCE = instance
 
@@ -34,10 +30,4 @@ abstract class ToDoItemDatabase : RoomDatabase() {
             return INSTANCE ?: throw IllegalStateException("Database not initialized")
         }
     }
-
-    fun init(context: Context) {
-        applicationContext = context
-    }
-
-
 }

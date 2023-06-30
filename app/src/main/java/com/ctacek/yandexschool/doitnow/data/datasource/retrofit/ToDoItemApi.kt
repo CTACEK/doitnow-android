@@ -12,10 +12,11 @@ import retrofit2.http.Path
 
 interface ToDoItemApi {
     @GET("list")
-    suspend fun getList(): Response<ToDoApiResponseList>
+    suspend fun getList(@Header("Authorization") token: String): Response<ToDoApiResponseList>
 
     @PATCH("list")
     suspend fun updateList(
+        @Header("Authorization") token: String,
         @Header("X-Last-Known-Revision") lastKnownRevision: Int,
         @Body body: ToDoApiRequestList
     ): Response<ToDoApiResponseList>
@@ -25,12 +26,14 @@ interface ToDoItemApi {
 
     @POST("list")
     suspend fun addTask(
+        @Header("Authorization") token: String,
         @Header("X-Last-Known-Revision") lastKnownRevision: Int,
         @Body newItem: ToDoApiRequestElement
     ): Response<ToDoApiResponseElement>
 
     @PUT("list/{id}")
     suspend fun updateTask(
+        @Header("Authorization") token: String,
         @Header("X-Last-Known-Revision") lastKnownRevision: Int,
         @Path("id") itemId: String,
         @Body body: ToDoApiRequestElement
@@ -38,6 +41,7 @@ interface ToDoItemApi {
 
     @DELETE("list/{id}")
     suspend fun deleteTask(
+        @Header("Authorization") token: String,
         @Header("X-Last-Known-Revision") lastKnownRevision: Int,
         @Path("id") itemId: String,
     ): Response<ToDoApiResponseElement>

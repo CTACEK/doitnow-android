@@ -56,7 +56,7 @@ class LoginFragment : Fragment() {
         binding.logInButton.setOnClickListener {
             if (sharedPreferences.getCurrentToken() != TOKEN_API) {
                 viewModel.deleteAll()
-                sharedPreferences.setCurrentToken(TOKEN_API)
+                sharedPreferences.setCurrentToken("Bearer $TOKEN_API")
                 sharedPreferences.putRevisionId(0)
             }
             findNavController().navigate(R.id.action_loginFragment_to_mainFragment)
@@ -78,10 +78,10 @@ class LoginFragment : Fragment() {
                     val curToken = yandexAuthToken.value
                     if (curToken != sharedPreferences.getCurrentToken()) {
                         viewModel.deleteAll()
-                        sharedPreferences.setCurrentToken(yandexAuthToken.value)
+                        sharedPreferences.setCurrentToken("OAuth ${yandexAuthToken.value}")
                         sharedPreferences.putRevisionId(0)
                     }
-                    sharedPreferences.setCurrentToken(yandexAuthToken.value)
+                    sharedPreferences.setCurrentToken("OAuth ${yandexAuthToken.value}")
                     findNavController().navigate(R.id.action_loginFragment_to_mainFragment)
                 }
             } catch (e: YandexAuthException) {

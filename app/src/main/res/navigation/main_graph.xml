@@ -16,6 +16,11 @@
             app:enterAnim="@anim/slide_up"
             app:popExitAnim="@anim/slide_down"
             app:launchSingleTop="true"/>
+        <action
+            android:id="@+id/action_mainFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/main_graph"
+            app:popUpToInclusive="true"/>
     </fragment>
 
 

@@ -10,6 +10,7 @@ import com.ctacek.yandexschool.doitnow.data.datasource.room.ToDoItemDatabase
 import com.ctacek.yandexschool.doitnow.data.datasource.room.ToDoItemEntity
 import com.ctacek.yandexschool.doitnow.data.model.LoadingState
 import com.ctacek.yandexschool.doitnow.data.model.ToDoItem
+import com.ctacek.yandexschool.doitnow.utils.Constants.NO_TOKEN
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -59,12 +60,17 @@ class ToDoItemsRepository(
         toDoItemDao.deleteAllToDoItems()
     }
 
+    fun deleteToken(){
+        sharedPreferences.setCurrentToken(NO_TOKEN)
+    }
+
     suspend fun updateRemoteTask(toDoTask: ToDoItem) {
         try {
             val response = remoteDataSource.updateTask(
                 lastKnownRevision = sharedPreferences.getRevisionId(),
+                token = sharedPreferences.getCurrentToken(),
                 itemId = toDoTask.id,
-                ToDoApiRequestElement(
+                body = ToDoApiRequestElement(
                     ToDoItemResponseRequest.fromToDoTask(
                         toDoTask,
                         sharedPreferences.getDeviceId()
@@ -83,14 +89,13 @@ class ToDoItemsRepository(
         } catch (e: Exception) {
             Log.e(LOG_TAG, e.message.toString())
         }
-
-
     }
 
     suspend fun deleteRemoteTask(taskId: String) {
         try {
             val response = remoteDataSource.deleteTask(
                 lastKnownRevision = sharedPreferences.getRevisionId(),
+                token = sharedPreferences.getCurrentToken(),
                 itemId = taskId
             )
 
@@ -112,7 +117,8 @@ class ToDoItemsRepository(
         try {
             val response = remoteDataSource.addTask(
                 lastKnownRevision = sharedPreferences.getRevisionId(),
-                ToDoApiRequestElement(
+                token = sharedPreferences.getCurrentToken(),
+                newItem = ToDoApiRequestElement(
                     ToDoItemResponseRequest.fromToDoTask(
                         newTask,
                         sharedPreferences.getDeviceId()
@@ -137,7 +143,8 @@ class ToDoItemsRepository(
         try {
             val response = remoteDataSource.updateList(
                 lastKnownRevision = sharedPreferences.getRevisionId(),
-                ToDoApiRequestList(status = "ok", mergedList)
+                token = sharedPreferences.getCurrentToken(),
+                body = ToDoApiRequestList(status = "ok", mergedList)
             )
 
             if (response.isSuccessful) {
@@ -161,7 +168,7 @@ class ToDoItemsRepository(
 
     suspend fun getRemoteTasks(): LoadingState<Any> {
         try {
-            val networkListResponse = remoteDataSource.getList()
+            val networkListResponse = remoteDataSource.getList(token = sharedPreferences.getCurrentToken())
 
             if (networkListResponse.isSuccessful) {
                 val body = networkListResponse.body()

@@ -25,7 +25,6 @@ class RetrofitToDoSource {
     private fun makeOkHttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(makeLoggingInterceptor())
-            .addInterceptor { chain -> addAuthorizationHeader(chain) }
             .connectTimeout(10, TimeUnit.SECONDS)
             .readTimeout(10, TimeUnit.SECONDS)
             .writeTimeout(10, TimeUnit.SECONDS)

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -28,6 +29,7 @@ import com.ctacek.yandexschool.doitnow.utils.internet_checker.ConnectivityObserv
 
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -157,10 +159,10 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             is LoadingState.Error -> {
                 binding.recyclerview.visibility = View.VISIBLE
                 binding.noResultAnimationView.visibility = View.GONE
-                Snackbar.make(
-                    requireView(),
+                Toast.makeText(
+                    requireContext(),
                     R.string.loading_failed_showing_local_data,
-                    Snackbar.LENGTH_SHORT
+                    Toast.LENGTH_SHORT
                 ).show()
             }
         }
@@ -214,6 +216,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     private fun updateUI(list: List<ToDoItem>) {
         if (viewModel.showAll) {
             adapter.submitList(list)
+            binding.recyclerview.scrollToPosition(0)
         } else {
             adapter.submitList(list.filter { !it.done })
         }
@@ -245,6 +248,31 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             binding.swipeLayout.isRefreshing = false
         }
 
+        binding.logoutButton.setOnClickListener {
+            val builder = MaterialAlertDialogBuilder(
+                ContextThemeWrapper(
+                    context,
+                    R.style.AlertDialogCustom
+                )
+            )
+            builder.apply {
+                val title = if (internetState == Available) {
+                    getString(R.string.you_want_get_out)
+                } else {
+                    getString(R.string.you_want_get_out_offline)
+                }
+                setMessage(title)
+                setPositiveButton(getString(R.string.logout_button)
+                ) { _, _ ->
+                    viewModel.deleteToken()
+                    findNavController().navigate(R.id.action_mainFragment_to_loginFragment)
+                }
+            }
+            builder.show()
+                .create()
+
+        }
+
         binding.fab.setOnClickListener {
             val action = MainFragmentDirections.actionMainFragmentToNewEditTaskFragment(null)
             findNavController().navigate(action)
@@ -261,6 +289,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                             R.drawable.visibility_24
                         )
                     )
+                    binding.recyclerview.scrollToPosition(0)
                 }
 
                 false -> {
