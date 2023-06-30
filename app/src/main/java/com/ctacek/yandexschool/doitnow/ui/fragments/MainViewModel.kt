@@ -133,6 +133,12 @@ class MainViewModel(
         }
     }
 
+    fun deleteAll() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteAll()
+        }
+    }
+
 
     override fun onCleared() {
         super.onCleared()

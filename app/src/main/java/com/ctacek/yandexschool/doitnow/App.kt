@@ -29,6 +29,7 @@ class App : Application() {
         ServiceLocator.register(NetworkConnectivityObserver(this))
 
         ServiceLocator.register(ToDoItemsRepository(locale(), locale(), locale()))
+
         periodicUpdate()
     }
 
@@ -41,8 +42,7 @@ class App : Application() {
         val myWorkRequest = PeriodicWorkRequest.Builder(
             PeriodWorkManager::class.java,
             8,
-            TimeUnit.HOURS
-        )
+            TimeUnit.HOURS)
             .setConstraints(constraints)
             .addTag("update_data")
             .build()

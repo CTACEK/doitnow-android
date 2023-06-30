@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_graph"
-    app:startDestination="@id/mainFragment">
+    app:startDestination="@id/loginFragment">
 
     <fragment
         android:id="@+id/mainFragment"
@@ -33,6 +33,17 @@
             android:id="@+id/action_newEditTaskFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
 
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.ctacek.yandexschool.doitnow.ui.fragments.LoginFragment"
+        android:label="LoginFragment"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:popUpTo="@id/main_graph"
+            app:popUpToInclusive="true"/>
     </fragment>
 
 

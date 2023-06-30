@@ -28,8 +28,12 @@
     <string name="unavailable_network_state_update_later">No network, will update later. Continue offline.</string>
     <string name="unavailable_network_state_create_later">No network, will create later. Continue offline.</string>
     <string name="loading_failed_showing_local_data">Something went wrong, showing local data</string>
-
-
+    <string name="login_title">LOGIN</string>
+    <string name="icon_application">Icon application</string>
+    <string name="enter_email">Enter email</string>
+    <string name="forgot_password">Fogot password?</string>
+    <string name="enter_password">Enter password</string>
+    <string name="guest_mode_button">Guest mode</string>
 
 
 </resources>

@@ -226,6 +226,8 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
     private fun createListeners() {
 
+        binding.swipeLayout.setDistanceToTriggerSync(200)
+
         binding.swipeLayout.setOnRefreshListener {
             if (internetState == Available) {
                 viewModel.loadRemoteList()

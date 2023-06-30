@@ -55,6 +55,10 @@ class ToDoItemsRepository(
         return toDoItemDao.deleteToDoItem(toDoItemEntity)
     }
 
+    suspend fun deleteAll() {
+        toDoItemDao.deleteAllToDoItems()
+    }
+
     suspend fun updateRemoteTask(toDoTask: ToDoItem) {
         try {
             val response = remoteDataSource.updateTask(
@@ -190,6 +194,8 @@ class ToDoItemsRepository(
 
                     return updateRemoteTasks(mergedList.values.toList())
                 }
+            } else {
+                networkListResponse.errorBody()?.close()
             }
 
         } catch (e: Exception) {
