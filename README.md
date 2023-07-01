@@ -9,4 +9,10 @@ ToDo App - это приложение, которое поможет вам э�
 
 Для начала работы с ToDo App вам необходимо установить приложение на телефон
 
-[Актуальная версия для скачивания APK](https://disk.yandex.ru/d/jl_IsXKjh997CQ)
+## Связаться со мной
+  <a href="https://www.t.me/CTACE4EK" target="_blank">
+    <img src="https://img.shields.io/static/v1?message=Telegram&logo=telegram&label=&color=2CA5E0&logoColor=white&labelColor=&style=for-the-badge" height="25" alt="telegram logo"  />
+  </a>
+
+## Ссылка на скачивание актуальной версии приложения
+[Тык](https://disk.yandex.ru/d/jl_IsXKjh997CQ)
