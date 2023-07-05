@@ -10,6 +10,7 @@
     <color name="dark_while">#F7F6F2</color>
     <color name="grey">#8E8E93</color>
     <color name="green">#34C759</color>
+    <color name="orange">#FF852E</color>
 
     <color name="support_light_separator">#33000000</color>
     <color name="support_light_overlay">#0F000000</color>

@@ -1,8 +1,25 @@
 package com.ctacek.yandexschool.doitnow
 
 import android.app.Application
-import com.ctacek.yandexschool.doitnow.data.repository.TodoItemsRepository
+import android.content.Context
+import com.ctacek.yandexschool.doitnow.data.datasource.SharedPreferencesAppSettings
+import com.ctacek.yandexschool.doitnow.data.datasource.retrofit.RetrofitToDoSource
+import com.ctacek.yandexschool.doitnow.data.datasource.room.ToDoItemDatabase
+import com.ctacek.yandexschool.doitnow.data.repository.ToDoItemsRepository
+import com.ctacek.yandexschool.doitnow.utils.ServiceLocator
+import com.ctacek.yandexschool.doitnow.utils.locale
+import com.ctacek.yandexschool.doitnow.utils.internet_checker.NetworkConnectivityObserver
 
 class App : Application() {
-    var repository = TodoItemsRepository()
+    override fun onCreate() {
+        super.onCreate()
+
+        ServiceLocator.register<Context>(this)
+
+        ServiceLocator.register(ToDoItemDatabase.getDatabase(locale()))
+        ServiceLocator.register(RetrofitToDoSource().makeRetrofitService())
+        ServiceLocator.register(SharedPreferencesAppSettings(locale()))
+        ServiceLocator.register(NetworkConnectivityObserver(this))
+        ServiceLocator.register(ToDoItemsRepository(locale(), locale(), locale()))
+    }
 }

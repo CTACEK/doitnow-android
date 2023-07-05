@@ -1,66 +1,152 @@
 package com.ctacek.yandexschool.doitnow.ui.fragments
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ctacek.yandexschool.doitnow.data.model.LoadingState
 import com.ctacek.yandexschool.doitnow.data.model.ToDoItem
-import com.ctacek.yandexschool.doitnow.data.repository.TodoItemsRepository
+import com.ctacek.yandexschool.doitnow.data.repository.ToDoItemsRepository
+import com.ctacek.yandexschool.doitnow.utils.internet_checker.ConnectivityObserver
+import com.ctacek.yandexschool.doitnow.utils.internet_checker.NetworkConnectivityObserver
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 
 class MainViewModel(
-    private val repository: TodoItemsRepository
+    private val repository: ToDoItemsRepository,
+    private val connection: NetworkConnectivityObserver
 ) : ViewModel() {
-    private val _tasks = MutableLiveData<List<ToDoItem>>()
-    val tasks: LiveData<List<ToDoItem>> = _tasks
 
-    private val _completedTasks = MutableLiveData<Int>()
-    val completedTasks: LiveData<Int> = _completedTasks
+    private var job: Job? = null
 
-    private var visibility = false
+    var showAll: Boolean = false
+
+    private val _status = MutableStateFlow(ConnectivityObserver.Status.Unavailable)
+    val status = _status.asStateFlow()
+
+    private val _tasks = MutableSharedFlow<List<ToDoItem>>()
+    val tasks: SharedFlow<List<ToDoItem>> = _tasks.asSharedFlow()
+
+    val countCompletedTask: Flow<Int> = _tasks.map { it -> it.count { it.done } }
+
+    private val _loadingState =
+        MutableStateFlow<LoadingState<Any>>(LoadingState.Success("Loaded from rood complete!"))
+    val loadingState: StateFlow<LoadingState<Any>> = _loadingState.asStateFlow()
+
+    private var _currentItem = MutableStateFlow(ToDoItem())
+    var currentItem = _currentItem.asStateFlow()
 
     init {
+        observeNetwork()
+        loadLocalData()
+    }
+
+    private fun observeNetwork() {
         viewModelScope.launch {
-            _tasks.value = repository.getItems().filter { !it.status }
-            _completedTasks.value = repository.getItems().filter { it.status }.size
+            connection.observe().collectLatest {
+                _status.emit(it)
+            }
         }
     }
 
-    fun updateStatusTask(id: String, status: Boolean) {
-        repository.updateStatusTask(id, status)
-        notifyUpdates()
+    fun changeDone() {
+        showAll = !showAll
+        job?.cancel()
+        loadLocalData()
     }
 
-    fun saveTask(newToDoItem: ToDoItem) {
-        repository.saveTask(newToDoItem)
-    }
-
-    fun createTask(newToDoItem: ToDoItem) {
-        repository.createTask(newToDoItem)
-    }
-
-    fun loadTask(id: String) : ToDoItem {
-        return repository.getTaskById(id)
-    }
-
-    fun deleteTask(id: String) {
-        repository.deleteTask(id)
-        notifyUpdates()
-    }
-
-    fun getTasks(isSwitched: Boolean) {
-        visibility = isSwitched
-        notifyUpdates()
-    }
-
-    private fun notifyUpdates() {
-        _completedTasks.postValue(repository.getItems().filter { it.status }.size)
-
-        when (visibility) {
-            true -> _tasks.postValue(repository.getItems())
-            false -> _tasks.postValue(repository.getItems().filter { !it.status })
+    fun loadLocalData() {
+        job = viewModelScope.launch(Dispatchers.IO) {
+            _tasks.emitAll(repository.getAllToDoItems())
         }
+    }
+
+    fun createTask(todoItem: ToDoItem) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.createItem(todoItem)
+        }
+    }
+
+    fun deleteTask(todoItem: ToDoItem) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteToDoItem(todoItem)
+        }
+    }
+
+    fun updateTask(newItem: ToDoItem) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateToDoItem(newItem)
+        }
+    }
+
+    fun changeTaskDone(task: ToDoItem) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateStatusToDoItem(task.id, !task.done)
+        }
+    }
+
+    fun loadTask(id: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _currentItem.emit(repository.getToDoItemById(id))
+        }
+    }
+
+    fun loadRemoteList() {
+        if (status.value == ConnectivityObserver.Status.Available) {
+            _loadingState.value = LoadingState.Loading(true)
+            viewModelScope.launch(Dispatchers.IO) {
+                _loadingState.emit(repository.getRemoteTasks())
+            }
+        }
+    }
+
+    fun createRemoteTask(todoItem: ToDoItem) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.createRemoteTask(todoItem)
+        }
+    }
+
+    fun clearTask() {
+        _currentItem.value = ToDoItem()
+    }
+
+    fun deleteRemoteTask(id: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteRemoteTask(id)
+        }
+    }
+
+    fun updateRemoteTask(todoItem: ToDoItem) {
+        val item = todoItem.copy(done = !todoItem.done)
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateRemoteTask(item)
+        }
+    }
+
+    fun deleteAll() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteAll()
+        }
+    }
+
+    fun deleteToken(){
+        repository.deleteToken()
+    }
+
+
+    override fun onCleared() {
+        super.onCleared()
+        job?.cancel()
     }
 
 

@@ -48,6 +48,19 @@
                 app:layout_collapseMode="pin" />
 
             <ImageView
+                android:id="@+id/logout_button"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_gravity="top|end"
+                android:layout_marginEnd="18dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:importantForAccessibility="no"
+                app:backgroundTint="@android:color/transparent"
+                app:layout_collapseMode="parallax"
+                app:srcCompat="@drawable/baseline_logout_24"
+                app:tint="?attr/colorOnSecondary" />
+
+            <ImageView
                 android:id="@+id/visibility"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
@@ -56,35 +69,68 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:importantForAccessibility="no"
                 app:backgroundTint="@android:color/transparent"
-                app:elevation="0dp"
                 app:layout_collapseMode="pin"
-                app:srcCompat="@drawable/visibility" />
+                app:srcCompat="@drawable/visibility_24" />
+
+            <ImageView
+                android:id="@+id/network_status"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom|end"
+                android:layout_marginEnd="60dp"
+                android:adjustViewBounds="true"
+                android:importantForAccessibility="no"
+                android:maxWidth="18dp"
+                android:maxHeight="18dp"
+                android:scaleType="fitCenter"
+                app:layout_collapseMode="pin"
+                app:srcCompat="@drawable/baseline_circle_24" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview"
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/tasks_background"
-        android:elevation="1dp"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/no_result_animation_view"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:visibility="gone"
-        app:lottie_autoPlay="true"
-        app:lottie_loop="true"
-        app:lottie_rawRes="@raw/noresultanim" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/no_result_animation_view"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:visibility="visible"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/noresultanim" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/tasks_background"
+                android:elevation="1dp"
+                android:visibility="gone"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:itemCount="4"
+                tools:listitem="@layout/item_task" />
+        </LinearLayout>
+
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"

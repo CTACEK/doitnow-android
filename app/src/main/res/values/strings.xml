@@ -2,13 +2,8 @@
     <string name="app_name">DoItNow</string>
     <string name="main_fragment_title">My tasks</string>
     <string name="completed_title">Completed - %1$d</string>
-    <string name="infoaboutitem">InfoAboutItem</string>
-    <string name="infodata">Do id before %1$s</string>
-    <string name="long_text">
-        Фьючерсный контракт — это договормежду покупателем и продавцом о покупке/продаже какого-то актива в будущем. Стороны заранее оговаривают, через какой срок и по какой цене состоится сделка.
-
-        Например, сейчас одна акция «Лукойла» стоит около 5700 рублей. Фьючерс на акции «Лукойла» — это, например, договор между покупателем и продавцом о том, что покупатель купит акции «Лукойла» у продавца по цене 5700 рублей через 3 месяца. При этом не важно, какая цена будет у акций через 3 месяца: цена сделки между покупателем и продавцом все равно останется 5700 рублей. Если реальная цена акции через три месяца не останется прежней, одна из сторон в любом случае понесет убытки.
-    </string>
+    <string name="info_about_item">InfoAboutItem</string>
+    <string name="info_data">Do id before %1$s</string>
     <string name="save_button">Save</string>
     <string name="create_button">Create</string>
     <string name="importance_title_text">Importance</string>
@@ -22,4 +17,26 @@
     <string name="low_title">Low</string>
     <string name="high_title">!!\ High</string>
     <string name="create_new_task_fab">Create new task fab</string>
+    <string name="merging_data">Merging data…</string>
+    <string name="available_network_state">Connected! Merging data…</string>
+    <string name="unavailable_network_state">Internet unavailable! Work offline</string>
+    <string name="no_internet_try_later">No internet connection, retry later :c</string>
+    <string name="losing_network_state">Losing Internet!</string>
+    <string name="lost_network_state">Internet Lost!</string>
+    <string name="error_enter_tasks_text">Enter some words!</string>
+    <string name="unavailable_network_state_delete_later">No network, will delete later. Continue offline.</string>
+    <string name="unavailable_network_state_update_later">No network, will update later. Continue offline.</string>
+    <string name="unavailable_network_state_create_later">No network, will create later. Continue offline.</string>
+    <string name="loading_failed_showing_local_data">Something went wrong, showing local data</string>
+    <string name="login_title">LOGIN</string>
+    <string name="icon_application">Icon application</string>
+    <string name="enter_email">Enter email</string>
+    <string name="forgot_password">Fogot password?</string>
+    <string name="enter_password">Enter password</string>
+    <string name="guest_mode_button">Guest mode</string>
+    <string name="you_want_get_out">Are you sure you want to get out?</string>
+    <string name="you_want_get_out_offline">Are you sure you want to get out? Offline mode data loss is possible.</string>
+    <string name="logout_button">Log out</string>
+
+
 </resources>
