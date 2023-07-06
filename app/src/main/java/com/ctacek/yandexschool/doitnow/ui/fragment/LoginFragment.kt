@@ -1,5 +1,6 @@
-package com.ctacek.yandexschool.doitnow.ui.fragments
+package com.ctacek.yandexschool.doitnow.ui.fragment
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,28 +11,30 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.ctacek.yandexschool.doitnow.R
+import com.ctacek.yandexschool.doitnow.appComponent
 import com.ctacek.yandexschool.doitnow.data.datasource.SharedPreferencesAppSettings
 import com.ctacek.yandexschool.doitnow.databinding.FragmentLoginBinding
-import com.ctacek.yandexschool.doitnow.factory
+import com.ctacek.yandexschool.doitnow.utils.Constants.REQUEST_LOGIN_SDK_CODE
 import com.ctacek.yandexschool.doitnow.utils.Constants.TOKEN_API
-import com.ctacek.yandexschool.doitnow.utils.localeLazy
 import com.yandex.authsdk.YandexAuthException
 import com.yandex.authsdk.YandexAuthLoginOptions
 import com.yandex.authsdk.YandexAuthOptions
 import com.yandex.authsdk.YandexAuthSdk
+import javax.inject.Inject
 
 
 class LoginFragment : Fragment() {
 
     private lateinit var binding: FragmentLoginBinding
-    private val REQUEST_LOGIN_SDK = 1
     private lateinit var sdk: YandexAuthSdk
-    private val sharedPreferences: SharedPreferencesAppSettings by localeLazy()
-    private val viewModel: MainViewModel by activityViewModels { factory() }
+    @Inject
+    lateinit var sharedPreferences: SharedPreferencesAppSettings
+    private val viewModel: MainViewModel by activityViewModels { requireContext().appComponent.findViewModelFactory() }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requireContext().appComponent.injectLoginFragment(this)
         binding = FragmentLoginBinding.inflate(layoutInflater)
         sdk = YandexAuthSdk(requireContext(), YandexAuthOptions(requireContext(), true))
     }
@@ -50,7 +53,7 @@ class LoginFragment : Fragment() {
         val intent = sdk.createLoginIntent(loginOptionsBuilder.build())
 
         binding.yandexAuthButton.setOnClickListener {
-            startActivityForResult(intent, REQUEST_LOGIN_SDK)
+            startActivityForResult(intent, REQUEST_LOGIN_SDK_CODE)
         }
 
         binding.logInButton.setOnClickListener {
@@ -71,7 +74,7 @@ class LoginFragment : Fragment() {
         resultCode: Int,
         data: Intent?
     ) {
-        if (requestCode == REQUEST_LOGIN_SDK) {
+        if (requestCode == REQUEST_LOGIN_SDK_CODE) {
             try {
                 val yandexAuthToken = sdk.extractToken(resultCode, data)
                 if (yandexAuthToken != null) {

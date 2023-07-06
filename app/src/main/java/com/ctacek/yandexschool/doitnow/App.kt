@@ -2,24 +2,38 @@ package com.ctacek.yandexschool.doitnow
 
 import android.app.Application
 import android.content.Context
-import com.ctacek.yandexschool.doitnow.data.datasource.SharedPreferencesAppSettings
-import com.ctacek.yandexschool.doitnow.data.datasource.retrofit.RetrofitToDoSource
-import com.ctacek.yandexschool.doitnow.data.datasource.room.ToDoItemDatabase
-import com.ctacek.yandexschool.doitnow.data.repository.ToDoItemsRepository
-import com.ctacek.yandexschool.doitnow.utils.ServiceLocator
-import com.ctacek.yandexschool.doitnow.utils.locale
+import com.ctacek.yandexschool.doitnow.di.AppComponent
+import com.ctacek.yandexschool.doitnow.di.DaggerAppComponent
 import com.ctacek.yandexschool.doitnow.utils.internet_checker.NetworkConnectivityObserver
+import javax.inject.Inject
 
 class App : Application() {
+
+    lateinit var appComponent: AppComponent
+
+    @Inject
     override fun onCreate() {
         super.onCreate()
 
-        ServiceLocator.register<Context>(this)
+        appComponent = DaggerAppComponent.builder()
+            .context(context = applicationContext)
+            .build()
 
-        ServiceLocator.register(ToDoItemDatabase.getDatabase(locale()))
-        ServiceLocator.register(RetrofitToDoSource().makeRetrofitService())
-        ServiceLocator.register(SharedPreferencesAppSettings(locale()))
-        ServiceLocator.register(NetworkConnectivityObserver(this))
-        ServiceLocator.register(ToDoItemsRepository(locale(), locale(), locale()))
+//        appComponent.injectApplication(this)
+
+
+//        ServiceLocator.register<Context>(this)
+
+//        ServiceLocator.register(ToDoItemDatabase.getDatabase(locale()))
+//        ServiceLocator.register(RetrofitToDoClient().makeRetrofitService())
+//        ServiceLocator.register(SharedPreferencesAppSettings(locale()))
+//        ServiceLocator.register(NetworkConnectivityObserver(this))
+//        ServiceLocator.register(ToDoItemsRepositoryImpl(locale(), locale(), locale()))
     }
 }
+
+val Context.appComponent: AppComponent
+    get() = when (this) {
+        is App -> appComponent
+        else -> this.applicationContext.appComponent
+    }

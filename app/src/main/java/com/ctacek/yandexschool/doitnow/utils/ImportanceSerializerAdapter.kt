@@ -1,4 +1,4 @@
-package com.ctacek.yandexschool.doitnow.data.datasource.retrofit
+package com.ctacek.yandexschool.doitnow.utils
 
 import com.ctacek.yandexschool.doitnow.data.model.Importance
 import com.google.gson.JsonDeserializationContext
@@ -10,7 +10,7 @@ import com.google.gson.JsonSerializer
 import java.lang.reflect.Type
 import java.util.Locale
 
-class ImportanceAdapter : JsonSerializer<Importance>, JsonDeserializer<Importance> {
+class ImportanceSerializerAdapter : JsonSerializer<Importance>, JsonDeserializer<Importance> {
     override fun serialize(
         src: Importance?,
         typeOfSrc: Type?,

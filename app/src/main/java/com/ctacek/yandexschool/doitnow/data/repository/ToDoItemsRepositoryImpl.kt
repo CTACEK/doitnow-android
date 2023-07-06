@@ -2,17 +2,18 @@ package com.ctacek.yandexschool.doitnow.data.repository
 
 import android.util.Log
 import com.ctacek.yandexschool.doitnow.data.datasource.SharedPreferencesAppSettings
-import com.ctacek.yandexschool.doitnow.data.datasource.retrofit.ToDoApiRequestElement
-import com.ctacek.yandexschool.doitnow.data.datasource.retrofit.ToDoApiRequestList
-import com.ctacek.yandexschool.doitnow.data.datasource.retrofit.ToDoItemApi
-import com.ctacek.yandexschool.doitnow.data.datasource.retrofit.ToDoItemResponseRequest
-import com.ctacek.yandexschool.doitnow.data.datasource.room.ToDoItemDatabase
-import com.ctacek.yandexschool.doitnow.data.datasource.room.ToDoItemEntity
+import com.ctacek.yandexschool.doitnow.data.datasource.remote.ToDoItemService
+import com.ctacek.yandexschool.doitnow.data.datasource.remote.dto.ToDoItemResponseRequest
+import com.ctacek.yandexschool.doitnow.data.datasource.local.ToDoItemDatabase
+import com.ctacek.yandexschool.doitnow.data.datasource.local.ToDoItemEntity
+import com.ctacek.yandexschool.doitnow.data.datasource.remote.dto.request.ToDoApiRequestElement
+import com.ctacek.yandexschool.doitnow.data.datasource.remote.dto.request.ToDoApiRequestList
 import com.ctacek.yandexschool.doitnow.data.model.LoadingState
-import com.ctacek.yandexschool.doitnow.data.model.ToDoItem
-import com.ctacek.yandexschool.doitnow.utils.Constants.NO_TOKEN
+import com.ctacek.yandexschool.doitnow.domain.model.ToDoItem
+import com.ctacek.yandexschool.doitnow.utils.Constants.SHARED_PREFERENCES_NO_TOKEN
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
 /**
  * Repository for todoitems
@@ -20,14 +21,14 @@ import kotlinx.coroutines.flow.map
  * @author Yudov Stanislav
  *
  */
-class ToDoItemsRepository(
+class ToDoItemsRepositoryImpl @Inject constructor(
     localDataSource: ToDoItemDatabase,
-    private val remoteDataSource: ToDoItemApi,
+    private val remoteDataSource: ToDoItemService,
     private val sharedPreferences: SharedPreferencesAppSettings
 ) {
 
-    private val toDoItemDao = localDataSource.toDoItemDao()
-    private val LOG_TAG = ToDoItemsRepository::class.simpleName.toString()
+    private val toDoItemDao = localDataSource.provideToDoDao()
+    private val LOG_TAG = ToDoItemsRepositoryImpl::class.simpleName.toString()
 
     fun getAllToDoItems(): Flow<List<ToDoItem>> {
         return toDoItemDao.getToDoItems().map { it -> it.map { it.toToDoItem() } }
@@ -37,7 +38,7 @@ class ToDoItemsRepository(
         return toDoItemDao.getToDoItemById(id = id).toToDoItem()
     }
 
-    suspend fun updateStatusToDoItem(id : String, done: Boolean) {
+    suspend fun updateStatusToDoItem(id: String, done: Boolean) {
         return toDoItemDao.updateDone(id, done, System.currentTimeMillis())
     }
 
@@ -60,8 +61,8 @@ class ToDoItemsRepository(
         toDoItemDao.deleteAllToDoItems()
     }
 
-    fun deleteToken(){
-        sharedPreferences.setCurrentToken(NO_TOKEN)
+    fun deleteToken() {
+        sharedPreferences.setCurrentToken(SHARED_PREFERENCES_NO_TOKEN)
     }
 
     suspend fun updateRemoteTask(toDoTask: ToDoItem) {
@@ -168,7 +169,8 @@ class ToDoItemsRepository(
 
     suspend fun getRemoteTasks(): LoadingState<Any> {
         try {
-            val networkListResponse = remoteDataSource.getList(token = sharedPreferences.getCurrentToken())
+            val networkListResponse =
+                remoteDataSource.getList(token = sharedPreferences.getCurrentToken())
 
             if (networkListResponse.isSuccessful) {
                 val body = networkListResponse.body()

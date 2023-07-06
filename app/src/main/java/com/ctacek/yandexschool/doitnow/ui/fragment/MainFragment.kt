@@ -1,4 +1,4 @@
-package com.ctacek.yandexschool.doitnow.ui.fragments
+package com.ctacek.yandexschool.doitnow.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,10 +12,10 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.ctacek.yandexschool.doitnow.R
+import com.ctacek.yandexschool.doitnow.appComponent
 import com.ctacek.yandexschool.doitnow.data.model.LoadingState
-import com.ctacek.yandexschool.doitnow.data.model.ToDoItem
 import com.ctacek.yandexschool.doitnow.databinding.FragmentMainBinding
-import com.ctacek.yandexschool.doitnow.factory
+import com.ctacek.yandexschool.doitnow.domain.model.ToDoItem
 import com.ctacek.yandexschool.doitnow.ui.adapter.swipe.SwipeCallbackInterface
 import com.ctacek.yandexschool.doitnow.ui.adapter.swipe.SwipeHelper
 import com.ctacek.yandexschool.doitnow.ui.adapter.ToDoItemActionListener
@@ -37,7 +37,7 @@ import kotlinx.coroutines.launch
 
 class MainFragment : Fragment(R.layout.fragment_main) {
 
-    private val viewModel: MainViewModel by activityViewModels { factory() }
+    private val viewModel: MainViewModel by activityViewModels { requireContext().appComponent.findViewModelFactory() }
     private lateinit var binding: FragmentMainBinding
     private val adapter: ToDoItemAdapter get() = binding.recyclerview.adapter as ToDoItemAdapter
     private var internetState = Unavailable
@@ -46,6 +46,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentMainBinding.inflate(layoutInflater)
+        requireContext().appComponent.injectMainFragment(this)
 
         if (savedInstanceState != null) {
             when (savedInstanceState.getBoolean("mode")) {
@@ -216,7 +217,6 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     private fun updateUI(list: List<ToDoItem>) {
         if (viewModel.showAll) {
             adapter.submitList(list)
-            binding.recyclerview.scrollToPosition(0)
         } else {
             adapter.submitList(list.filter { !it.done })
         }

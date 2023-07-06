@@ -2,7 +2,7 @@ package com.ctacek.yandexschool.doitnow.ui.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import com.ctacek.yandexschool.doitnow.data.model.ToDoItem
+import com.ctacek.yandexschool.doitnow.domain.model.ToDoItem
 import com.ctacek.yandexschool.doitnow.ui.adapter.diffutil.TaskDiffUtilCallback
 
 class ToDoItemAdapter(private val toDoItemActionListener: ToDoItemActionListener) :

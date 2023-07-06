@@ -7,7 +7,7 @@
     android:background="?attr/colorPrimary"
     android:fitsSystemWindows="true"
     android:theme="@style/Theme.DoItNow"
-    tools:context=".ui.fragments.MainFragment">
+    tools:context=".ui.fragment.MainFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"

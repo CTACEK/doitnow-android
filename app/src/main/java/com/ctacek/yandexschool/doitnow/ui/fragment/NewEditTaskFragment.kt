@@ -1,4 +1,4 @@
-package com.ctacek.yandexschool.doitnow.ui.fragments
+package com.ctacek.yandexschool.doitnow.ui.fragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -19,10 +19,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.ctacek.yandexschool.doitnow.R
+import com.ctacek.yandexschool.doitnow.appComponent
 import com.ctacek.yandexschool.doitnow.data.model.Importance
-import com.ctacek.yandexschool.doitnow.data.model.ToDoItem
 import com.ctacek.yandexschool.doitnow.databinding.FragmentNewEditTaskBinding
-import com.ctacek.yandexschool.doitnow.factory
+import com.ctacek.yandexschool.doitnow.domain.model.ToDoItem
 import com.ctacek.yandexschool.doitnow.utils.Constants.CURRENT_TASK_NAME
 import com.ctacek.yandexschool.doitnow.utils.internet_checker.ConnectivityObserver
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -36,7 +36,7 @@ import java.util.UUID
 
 class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
 
-    private val viewModel: MainViewModel by activityViewModels { factory() }
+    private val viewModel: MainViewModel by activityViewModels { requireContext().appComponent.findViewModelFactory() }
     private lateinit var binding: FragmentNewEditTaskBinding
     private val args: NewEditTaskFragmentArgs by navArgs()
     private var currentTask = ToDoItem()
@@ -49,6 +49,8 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentNewEditTaskBinding.inflate(layoutInflater)
+        requireContext().appComponent.injectAddEditFragment(this)
+
     }
 
 
@@ -280,21 +282,12 @@ class NewEditTaskFragment : Fragment(R.layout.fragment_new_edit_task) {
         popupMenu.setOnMenuItemClickListener { menuItem: MenuItem ->
 
             when (menuItem.itemId) {
-                R.id.menu_importance_no -> {
-                    makeImportance(Importance.BASIC)
-                }
-
-                R.id.menu_importance_low -> {
-                    makeImportance(Importance.LOW)
-                }
-
-                R.id.menu_importance_high -> {
-                    makeImportance(Importance.IMPORTANT)
-                }
+                R.id.menu_importance_no -> makeImportance(Importance.BASIC)
+                R.id.menu_importance_low -> makeImportance(Importance.LOW)
+                R.id.menu_importance_high -> makeImportance(Importance.IMPORTANT)
             }
             true
         }
-
         popupMenu.show()
     }
 

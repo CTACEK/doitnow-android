@@ -3,20 +3,23 @@ package com.ctacek.yandexschool.doitnow
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.ctacek.yandexschool.doitnow.data.repository.ToDoItemsRepository
-import com.ctacek.yandexschool.doitnow.ui.fragments.MainViewModel
-import com.ctacek.yandexschool.doitnow.utils.locale
+import com.ctacek.yandexschool.doitnow.data.repository.ToDoItemsRepositoryImpl
+import com.ctacek.yandexschool.doitnow.ui.fragment.MainViewModel
+import com.ctacek.yandexschool.doitnow.utils.internet_checker.NetworkConnectivityObserver
+import javax.inject.Inject
 
-class ViewModelFactory(
-    private val app: App
+class ViewModelFactory @Inject constructor(
+    private val repositoryImpl: ToDoItemsRepositoryImpl,
+    private val connectivityObserver: NetworkConnectivityObserver
 ) : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         val viewModel = when (modelClass) {
             MainViewModel::class.java -> {
-                MainViewModel(ToDoItemsRepository(locale(), locale(), locale()), locale())
+                MainViewModel(repositoryImpl, connectivityObserver)
             }
+
             else -> {
                 throw IllegalStateException("Unknown view model class")
             }
@@ -25,5 +28,3 @@ class ViewModelFactory(
     }
 
 }
-
-fun Fragment.factory() = ViewModelFactory(requireContext().applicationContext as App)

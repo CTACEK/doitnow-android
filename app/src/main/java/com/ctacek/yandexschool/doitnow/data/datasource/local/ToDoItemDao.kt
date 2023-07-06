@@ -1,4 +1,4 @@
-package com.ctacek.yandexschool.doitnow.data.datasource.room
+package com.ctacek.yandexschool.doitnow.data.datasource.local
 
 import androidx.room.Dao
 import androidx.room.Delete

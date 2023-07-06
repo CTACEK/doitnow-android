@@ -1,14 +1,15 @@
-package com.ctacek.yandexschool.doitnow.ui.fragments
+package com.ctacek.yandexschool.doitnow.ui.fragment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ctacek.yandexschool.doitnow.data.model.LoadingState
-import com.ctacek.yandexschool.doitnow.data.model.ToDoItem
-import com.ctacek.yandexschool.doitnow.data.repository.ToDoItemsRepository
+import com.ctacek.yandexschool.doitnow.data.repository.ToDoItemsRepositoryImpl
+import com.ctacek.yandexschool.doitnow.domain.model.ToDoItem
 import com.ctacek.yandexschool.doitnow.utils.internet_checker.ConnectivityObserver
 import com.ctacek.yandexschool.doitnow.utils.internet_checker.NetworkConnectivityObserver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,10 +21,11 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
-class MainViewModel(
-    private val repository: ToDoItemsRepository,
+class MainViewModel @Inject constructor(
+    private val repository: ToDoItemsRepositoryImpl,
     private val connection: NetworkConnectivityObserver
 ) : ViewModel() {
 
@@ -46,6 +48,8 @@ class MainViewModel(
     private var _currentItem = MutableStateFlow(ToDoItem())
     var currentItem = _currentItem.asStateFlow()
 
+    private val scope = Dispatchers.IO
+
     init {
         observeNetwork()
         loadLocalData()
@@ -66,7 +70,7 @@ class MainViewModel(
     }
 
     fun loadLocalData() {
-        job = viewModelScope.launch(Dispatchers.IO) {
+        job = viewModelScope.launch(scope) {
             _tasks.emitAll(repository.getAllToDoItems())
         }
     }
@@ -78,25 +82,25 @@ class MainViewModel(
     }
 
     fun deleteTask(todoItem: ToDoItem) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(scope) {
             repository.deleteToDoItem(todoItem)
         }
     }
 
     fun updateTask(newItem: ToDoItem) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(scope) {
             repository.updateToDoItem(newItem)
         }
     }
 
     fun changeTaskDone(task: ToDoItem) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(scope) {
             repository.updateStatusToDoItem(task.id, !task.done)
         }
     }
 
     fun loadTask(id: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(scope) {
             _currentItem.emit(repository.getToDoItemById(id))
         }
     }
@@ -104,14 +108,14 @@ class MainViewModel(
     fun loadRemoteList() {
         if (status.value == ConnectivityObserver.Status.Available) {
             _loadingState.value = LoadingState.Loading(true)
-            viewModelScope.launch(Dispatchers.IO) {
+            viewModelScope.launch(scope) {
                 _loadingState.emit(repository.getRemoteTasks())
             }
         }
     }
 
     fun createRemoteTask(todoItem: ToDoItem) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(scope) {
             repository.createRemoteTask(todoItem)
         }
     }
@@ -121,25 +125,25 @@ class MainViewModel(
     }
 
     fun deleteRemoteTask(id: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(scope) {
             repository.deleteRemoteTask(id)
         }
     }
 
     fun updateRemoteTask(todoItem: ToDoItem) {
         val item = todoItem.copy(done = !todoItem.done)
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(scope) {
             repository.updateRemoteTask(item)
         }
     }
 
     fun deleteAll() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(scope) {
             repository.deleteAll()
         }
     }
 
-    fun deleteToken(){
+    fun deleteToken() {
         repository.deleteToken()
     }
 
@@ -147,6 +151,7 @@ class MainViewModel(
     override fun onCleared() {
         super.onCleared()
         job?.cancel()
+        scope.cancel()
     }
 
 

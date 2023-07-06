@@ -7,11 +7,11 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import com.ctacek.yandexschool.doitnow.R
 import com.ctacek.yandexschool.doitnow.data.model.Importance
-import com.ctacek.yandexschool.doitnow.data.model.ToDoItem
 import com.ctacek.yandexschool.doitnow.databinding.ItemTaskBinding
 import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.ctacek.yandexschool.doitnow.domain.model.ToDoItem
 
 @SuppressLint("SimpleDateFormat")
 class TaskViewHolder(private val binding: ItemTaskBinding) : RecyclerView.ViewHolder(binding.root){

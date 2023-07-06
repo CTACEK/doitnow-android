@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.ctacek.yandexschool.doitnow.ui.fragments.MainFragment"
+        android:name="com.ctacek.yandexschool.doitnow.ui.fragment.MainFragment"
         android:label="fragment_main"
         tools:layout="@layout/fragment_main">
         <action
@@ -26,7 +26,7 @@
 
     <fragment
         android:id="@+id/newEditTaskFragment"
-        android:name="com.ctacek.yandexschool.doitnow.ui.fragments.NewEditTaskFragment"
+        android:name="com.ctacek.yandexschool.doitnow.ui.fragment.NewEditTaskFragment"
         android:label="fragment_new_edit_task"
         tools:layout="@layout/fragment_new_edit_task">
 
@@ -41,7 +41,7 @@
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.ctacek.yandexschool.doitnow.ui.fragments.LoginFragment"
+        android:name="com.ctacek.yandexschool.doitnow.ui.fragment.LoginFragment"
         android:label="LoginFragment"
         tools:layout="@layout/fragment_login">
         <action

@@ -1,5 +1,9 @@
-package com.ctacek.yandexschool.doitnow.data.datasource.retrofit
+package com.ctacek.yandexschool.doitnow.data.datasource.remote
 
+import com.ctacek.yandexschool.doitnow.data.datasource.remote.dto.request.ToDoApiRequestElement
+import com.ctacek.yandexschool.doitnow.data.datasource.remote.dto.request.ToDoApiRequestList
+import com.ctacek.yandexschool.doitnow.data.datasource.remote.dto.response.ToDoApiResponseElement
+import com.ctacek.yandexschool.doitnow.data.datasource.remote.dto.response.ToDoApiResponseList
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -10,7 +14,7 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 
-interface ToDoItemApi {
+interface ToDoItemService {
     @GET("list")
     suspend fun getList(@Header("Authorization") token: String): Response<ToDoApiResponseList>
 

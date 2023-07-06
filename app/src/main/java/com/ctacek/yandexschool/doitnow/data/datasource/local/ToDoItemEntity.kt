@@ -1,10 +1,10 @@
-package com.ctacek.yandexschool.doitnow.data.datasource.room
+package com.ctacek.yandexschool.doitnow.data.datasource.local
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.ctacek.yandexschool.doitnow.data.model.Importance
-import com.ctacek.yandexschool.doitnow.data.model.ToDoItem
+import com.ctacek.yandexschool.doitnow.domain.model.ToDoItem
 import java.util.Date
 
 @Entity(tableName = "todo_items")

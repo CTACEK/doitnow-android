@@ -1,5 +1,6 @@
-package com.ctacek.yandexschool.doitnow.data.model
+package com.ctacek.yandexschool.doitnow.domain.model
 
+import com.ctacek.yandexschool.doitnow.data.model.Importance
 import java.util.Date
 
 /**

@@ -1,7 +1,7 @@
 package com.ctacek.yandexschool.doitnow.ui.adapter.diffutil
 
 import androidx.recyclerview.widget.DiffUtil
-import com.ctacek.yandexschool.doitnow.data.model.ToDoItem
+import com.ctacek.yandexschool.doitnow.domain.model.ToDoItem
 
 class TaskDiffUtilCallback : DiffUtil.ItemCallback<ToDoItem>() {
 

@@ -1,40 +1,11 @@
-package com.ctacek.yandexschool.doitnow.data.datasource.retrofit
+package com.ctacek.yandexschool.doitnow.data.datasource.remote.dto
 
+import com.ctacek.yandexschool.doitnow.utils.ImportanceSerializerAdapter
 import com.ctacek.yandexschool.doitnow.data.model.Importance
-import com.ctacek.yandexschool.doitnow.data.model.ToDoItem
+import com.ctacek.yandexschool.doitnow.domain.model.ToDoItem
 import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
 import java.util.Date
-
-data class ToDoApiResponseList(
-    @SerializedName("status")
-    val status: String,
-    @SerializedName("revision")
-    val revision: Int,
-    @SerializedName("list")
-    val list: List<ToDoItemResponseRequest>
-)
-
-data class ToDoApiRequestList(
-    @SerializedName("status")
-    val status: String,
-    @SerializedName("list")
-    val list: List<ToDoItemResponseRequest>
-)
-
-data class ToDoApiResponseElement(
-    @SerializedName("revision")
-    val revision: Int,
-    @SerializedName("status")
-    val status: String,
-    @SerializedName("element")
-    val element: ToDoItemResponseRequest
-)
-
-data class ToDoApiRequestElement(
-    @SerializedName("element")
-    val element: ToDoItemResponseRequest
-)
 
 data class ToDoItemResponseRequest(
     @SerializedName("id")
@@ -50,7 +21,7 @@ data class ToDoItemResponseRequest(
     val color: String?,
 
     @SerializedName("importance")
-    @JsonAdapter(ImportanceAdapter::class)
+    @JsonAdapter(ImportanceSerializerAdapter::class)
     val importance: Importance,
 
     @SerializedName("created_at")

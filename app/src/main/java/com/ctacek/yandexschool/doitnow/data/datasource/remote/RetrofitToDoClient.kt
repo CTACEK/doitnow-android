@@ -1,4 +1,4 @@
-package com.ctacek.yandexschool.doitnow.data.datasource.retrofit
+package com.ctacek.yandexschool.doitnow.data.datasource.remote
 
 import com.ctacek.yandexschool.doitnow.utils.Constants.TOKEN_API
 import com.ctacek.yandexschool.doitnow.utils.Constants.BASE_URL
@@ -11,15 +11,15 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-class RetrofitToDoSource {
+class RetrofitToDoClient {
 
-    fun makeRetrofitService(): ToDoItemApi {
+    fun makeRetrofitService(): ToDoItemService {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(makeOkHttpClient())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(ToDoItemApi::class.java)
+            .create(ToDoItemService::class.java)
     }
 
     private fun makeOkHttpClient(): OkHttpClient {
