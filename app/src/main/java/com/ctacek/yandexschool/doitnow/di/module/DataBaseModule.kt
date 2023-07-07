@@ -4,31 +4,25 @@ import android.content.Context
 import androidx.room.Room
 import com.ctacek.yandexschool.doitnow.data.datasource.local.ToDoItemDao
 import com.ctacek.yandexschool.doitnow.data.datasource.local.ToDoItemDatabase
+import com.ctacek.yandexschool.doitnow.di.AppScope
 import dagger.Module
 import dagger.Provides
-import javax.inject.Singleton
+import dagger.Reusable
 
 @Module
-object DataBaseModule {
+interface DataBaseModule {
+    companion object {
+        @Reusable
+        @Provides
+        fun provideToDoDao(database: ToDoItemDatabase): ToDoItemDao {
+            return database.provideToDoDao()
+        }
 
-    @Singleton
-    @Provides
-    fun provideToDoDao(database: ToDoItemDatabase): ToDoItemDao {
-        return database.provideToDoDao()
+        @AppScope
+        @Provides
+        fun provideDataBase(context: Context): ToDoItemDatabase {
+            return Room.databaseBuilder(context, ToDoItemDatabase::class.java, "main_database")
+                .build()
+        }
     }
-
-    @Singleton
-    @Provides
-    fun provideDataBase(context: Context): ToDoItemDatabase {
-        return Room.databaseBuilder(context, ToDoItemDatabase::class.java, "main_database")
-//        .addCallback(callback)
-        .build()
-    }
-
-//    @Singleton
-//    @Provides
-//    fun provideToDoCallback(toDoItemDao: ToDoItemDao): ToDoRandomItemCallback {
-//        return ToDoRandomItemCallback(toDoItemDao)
-//    }
-
 }

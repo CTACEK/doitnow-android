@@ -1,4 +1,4 @@
-package com.ctacek.yandexschool.doitnow.utils.internet_checker
+package com.ctacek.yandexschool.doitnow.utils.internetchecker
 
 import kotlinx.coroutines.flow.Flow
 
@@ -10,3 +10,5 @@ interface ConnectivityObserver {
         Available, Unavailable, Losing, Lost
     }
 }
+
+

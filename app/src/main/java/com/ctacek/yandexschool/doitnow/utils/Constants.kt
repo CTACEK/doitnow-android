@@ -4,8 +4,6 @@ object Constants {
     const val BASE_URL = "https://beta.mrdekk.ru/todobackend/"
     const val TOKEN_API = "wiseacreish"
 
-    const val CURRENT_TASK_NAME = "current_task"
-
     const val WORK_MANAGER_TAG = "update_data"
 
     const val SHARED_PREFERENCES_NAME = "settings"
@@ -16,5 +14,6 @@ object Constants {
 
     const val REQUEST_LOGIN_SDK_CODE = -1
 
-
+    const val REPEAT_INTERVAL: Long = 8
+    const val RETROFIT_TIMEOUT : Long = 10
 }

@@ -2,35 +2,41 @@ package com.ctacek.yandexschool.doitnow
 
 import android.app.Application
 import android.content.Context
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkManager
 import com.ctacek.yandexschool.doitnow.di.AppComponent
 import com.ctacek.yandexschool.doitnow.di.DaggerAppComponent
-import com.ctacek.yandexschool.doitnow.utils.internet_checker.NetworkConnectivityObserver
+import com.ctacek.yandexschool.doitnow.utils.Constants.WORK_MANAGER_TAG
 import javax.inject.Inject
 
 class App : Application() {
 
+    @Inject
+    lateinit var myWorkRequest: PeriodicWorkRequest
+
     lateinit var appComponent: AppComponent
 
-    @Inject
     override fun onCreate() {
         super.onCreate()
 
-        appComponent = DaggerAppComponent.builder()
-            .context(context = applicationContext)
-            .build()
+        appComponent = DaggerAppComponent.factory()
+            .create(context = applicationContext)
 
-//        appComponent.injectApplication(this)
+        appComponent.injectApplication(this)
 
+        periodicUpdate()
+    }
 
-//        ServiceLocator.register<Context>(this)
-
-//        ServiceLocator.register(ToDoItemDatabase.getDatabase(locale()))
-//        ServiceLocator.register(RetrofitToDoClient().makeRetrofitService())
-//        ServiceLocator.register(SharedPreferencesAppSettings(locale()))
-//        ServiceLocator.register(NetworkConnectivityObserver(this))
-//        ServiceLocator.register(ToDoItemsRepositoryImpl(locale(), locale(), locale()))
+    private fun periodicUpdate() {
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            WORK_MANAGER_TAG,
+            ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE,
+            myWorkRequest
+        )
     }
 }
+
 
 val Context.appComponent: AppComponent
     get() = when (this) {

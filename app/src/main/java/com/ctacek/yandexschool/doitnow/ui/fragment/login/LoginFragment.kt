@@ -33,14 +33,15 @@ class LoginFragment : Fragment() {
     lateinit var sharedPreferences: SharedPreferencesAppSettings
 
     @Inject
-    lateinit var yandexSdk : YandexAuthSdk
+    lateinit var yandexAuthSdk: YandexAuthSdk
+
 
     private val viewModel: LoginViewModel by viewModels { requireContext().appComponent.findViewModelFactory() }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requireContext().appComponent.injectLoginFragment(this)
+        requireContext().appComponent.loginComponent().create().injectYandexAuth(this)
         binding = FragmentLoginBinding.inflate(layoutInflater)
     }
 
@@ -61,7 +62,7 @@ class LoginFragment : Fragment() {
                     val data: Intent? = result.data
                     if (data != null) {
                         try {
-                            val yandexAuthToken = yandexSdk.extractToken(result.resultCode, data)
+                            val yandexAuthToken = yandexAuthSdk.extractToken(result.resultCode, data)
                             if (yandexAuthToken != null) {
                                 val curToken = yandexAuthToken.value
                                 if (curToken != sharedPreferences.getCurrentToken()) {
@@ -79,11 +80,11 @@ class LoginFragment : Fragment() {
                 }
             }
 
-        binding.yandexAuthButton.setOnClickListener {
-            register.launch(yandexSdk.createLoginIntent(YandexAuthLoginOptions.Builder().build()))
+        binding.loginWithYandexButton.setOnClickListener {
+            register.launch(yandexAuthSdk.createLoginIntent(YandexAuthLoginOptions.Builder().build()))
         }
 
-        binding.logInButton.setOnClickListener {
+        binding.loginButton.setOnClickListener {
             if (sharedPreferences.getCurrentToken() != TOKEN_API) {
                 viewModel.deleteCurrentItems()
                 sharedPreferences.setCurrentToken("Bearer $TOKEN_API")

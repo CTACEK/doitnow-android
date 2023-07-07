@@ -1,8 +1,6 @@
 package com.ctacek.yandexschool.doitnow.ui.activity
 
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -34,15 +32,17 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        applicationContext.appComponent.injectMainActivity(this)
         setContentView(R.layout.activity_main)
+        applicationContext.appComponent.injectMainActivity(this)
+
+        navController = getRootNavController()
 
         if (savedInstanceState != null) {
             navController.restoreState(savedInstanceState.getBundle("navControllerState"))
+        } else {
+            prepareRootNavController(isSignedIn(), navController)
         }
 
-        navController = getRootNavController()
-        prepareRootNavController(isSignedIn(), navController)
     }
 
     override fun onDestroy() {
@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
 
         val myWorkRequest = PeriodicWorkRequest.Builder(
             PeriodWorkManager::class.java,
-            8,
+            Constants.REPEAT_INTERVAL,
             TimeUnit.HOURS
         )
             .setConstraints(constraints)

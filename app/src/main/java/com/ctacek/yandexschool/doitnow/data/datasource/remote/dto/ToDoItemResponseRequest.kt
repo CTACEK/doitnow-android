@@ -25,13 +25,13 @@ data class ToDoItemResponseRequest(
     val importance: Importance,
 
     @SerializedName("created_at")
-    val created_at: Long,
+    val createdAt: Long,
 
     @SerializedName("changed_at")
-    val changed_at: Long,
+    val changedAt: Long,
 
     @SerializedName("last_updated_by")
-    val last_updated_by: String,
+    val lastUpdatedBy: String,
 
     @SerializedName("text")
     val text: String
@@ -42,8 +42,8 @@ data class ToDoItemResponseRequest(
         importance,
         deadline?.let { Date(it) },
         done,
-        Date(created_at),
-        Date(changed_at)
+        Date(createdAt),
+        Date(changedAt)
     )
     companion object {
         fun fromToDoTask(toDoItem: ToDoItem, deviseId: String): ToDoItemResponseRequest {
@@ -53,9 +53,9 @@ data class ToDoItemResponseRequest(
                 importance = toDoItem.importance,
                 deadline = toDoItem.deadline?.time,
                 done = toDoItem.done,
-                created_at = toDoItem.createdAt.time,
-                changed_at = toDoItem.changedAt?.time ?: 0,
-                last_updated_by = deviseId,
+                createdAt = toDoItem.createdAt.time,
+                changedAt = toDoItem.changedAt?.time ?: 0,
+                lastUpdatedBy = deviseId,
                 color = null
             )
         }

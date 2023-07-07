@@ -25,9 +25,6 @@ interface ToDoItemService {
         @Body body: ToDoApiRequestList
     ): Response<ToDoApiResponseList>
 
-    @GET("list/{id}")
-    suspend fun getTaskById(@Path("id") itemId: String): Response<ToDoApiResponseElement>
-
     @POST("list")
     suspend fun addTask(
         @Header("Authorization") token: String,

@@ -6,8 +6,10 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.view.ContextThemeWrapper
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import com.ctacek.yandexschool.doitnow.R
 import com.ctacek.yandexschool.doitnow.databinding.FragmentMainBinding
@@ -17,15 +19,14 @@ import com.ctacek.yandexschool.doitnow.ui.adapter.ToDoItemActionListener
 import com.ctacek.yandexschool.doitnow.ui.adapter.ToDoItemAdapter
 import com.ctacek.yandexschool.doitnow.ui.adapter.swipe.SwipeCallbackInterface
 import com.ctacek.yandexschool.doitnow.ui.adapter.swipe.SwipeHelper
-import com.ctacek.yandexschool.doitnow.utils.internet_checker.ConnectivityObserver
+import com.ctacek.yandexschool.doitnow.utils.internetchecker.ConnectivityObserver
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class MainFragmentViewComponent(
+class MainFragmentViewController(
     private val context: Context,
     private val navController: NavController,
     private val binding: FragmentMainBinding,
@@ -47,7 +48,8 @@ class MainFragmentViewComponent(
                     viewModel.loadNetworkList()
                     Toast.makeText(context, R.string.merging_data, Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(context, R.string.no_internet_try_later, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, R.string.no_internet_try_later, Toast.LENGTH_SHORT)
+                        .show()
                 }
                 swipeLayout.isRefreshing = false
             }
@@ -60,11 +62,7 @@ class MainFragmentViewComponent(
                 }
 
                 override fun onClickCheck(item: ToDoItem) {
-                    viewModel.updateItem(
-                        item.copy(
-                            done = !item.done
-                        )
-                    )
+                    viewModel.updateItem(item.copy(done = !item.done))
                 }
             })
             val helper = SwipeHelper(object : SwipeCallbackInterface {
@@ -73,11 +71,7 @@ class MainFragmentViewComponent(
                 }
 
                 override fun onChangeDone(todoItem: ToDoItem) {
-                    viewModel.updateItem(
-                        todoItem.copy(
-                            done = !todoItem.done
-                        )
-                    )
+                    viewModel.updateItem(todoItem.copy(done = !todoItem.done))
                 }
             }, context)
 
@@ -86,8 +80,7 @@ class MainFragmentViewComponent(
             logoutButton.setOnClickListener {
                 val builder = MaterialAlertDialogBuilder(
                     ContextThemeWrapper(
-                        context,
-                        R.style.AlertDialogCustom
+                        context, R.style.AlertDialogCustom
                     )
                 )
                 builder.apply {
@@ -97,15 +90,11 @@ class MainFragmentViewComponent(
                         context.getString(R.string.you_want_get_out_offline)
                     }
                     setMessage(title)
-                    setPositiveButton(
-                        context.getString(R.string.logout_button)
-                    ) { _, _ ->
+                    setPositiveButton(context.getString(R.string.logout_button)) { _, _ ->
                         navController.navigate(R.id.action_mainFragment_to_loginFragment)
                     }
                 }
-                builder.show()
-                    .create()
-
+                builder.show().create()
             }
 
             fab.setOnClickListener {
@@ -138,29 +127,33 @@ class MainFragmentViewComponent(
                         binding.recyclerview.scrollToPosition(0)
                     }
                 }
-
             }
         }
     }
 
     private fun setUpViewModel() {
         lifecycleOwner.lifecycleScope.launch {
-            viewModel.status.collectLatest {
-                updateNetworkState(it)
+            lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.status.collectLatest {
+                    updateNetworkState(it)
+                }
             }
         }
         lifecycleOwner.lifecycleScope.launch {
-            viewModel.visibility.collectLatest { visibilityState ->
-                updateStateUI(visibilityState)
+            lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.visibility.collectLatest { visibilityState ->
+                    updateStateUI(visibilityState)
+                }
             }
         }
 
         lifecycleOwner.lifecycleScope.launch {
-            viewModel.countComplete.collectLatest {
-                binding.completedTasks.text = context.getString(R.string.completed_title, it)
+            lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.countComplete.collectLatest {
+                    binding.completedTasks.text = context.getString(R.string.completed_title, it)
+                }
             }
         }
-
         internetState = viewModel.status.value
     }
 
@@ -201,7 +194,6 @@ class MainFragmentViewComponent(
                         .show()
                     viewModel.loadNetworkList()
                 }
-
             }
 
             else -> {
@@ -209,7 +201,8 @@ class MainFragmentViewComponent(
                     AppCompatResources.getColorStateList(context, R.color.color_light_red)
 
                 if (internetState != status) {
-                    Toast.makeText(context, "Internet Lost!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, R.string.no_internet_try_later, Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         }

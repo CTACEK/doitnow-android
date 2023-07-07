@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import com.ctacek.yandexschool.doitnow.data.repository.ToDoItemsRepositoryImpl
 import com.ctacek.yandexschool.doitnow.domain.model.ToDoItem
 import com.ctacek.yandexschool.doitnow.domain.model.UiState
-import com.ctacek.yandexschool.doitnow.utils.internet_checker.ConnectivityObserver
-import com.ctacek.yandexschool.doitnow.utils.internet_checker.NetworkConnectivityObserver
+import com.ctacek.yandexschool.doitnow.utils.internetchecker.ConnectivityObserver
+import com.ctacek.yandexschool.doitnow.utils.internetchecker.NetworkConnectivityObserver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

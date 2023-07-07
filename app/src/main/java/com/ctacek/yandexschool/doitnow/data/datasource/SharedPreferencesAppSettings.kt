@@ -48,6 +48,4 @@ class SharedPreferencesAppSettings @Inject constructor(context: Context) {
     fun getRevisionId(): Int {
         return sharedPreferences.getInt(SHARED_PREFERENCES_REVISION_TAG, 1)
     }
-
-
 }

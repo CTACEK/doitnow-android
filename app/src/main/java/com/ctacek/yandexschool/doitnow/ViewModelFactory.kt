@@ -6,7 +6,7 @@ import com.ctacek.yandexschool.doitnow.data.repository.ToDoItemsRepositoryImpl
 import com.ctacek.yandexschool.doitnow.ui.fragment.login.LoginViewModel
 import com.ctacek.yandexschool.doitnow.ui.fragment.main.MainViewModel
 import com.ctacek.yandexschool.doitnow.ui.fragment.managetask.ManageTaskViewModel
-import com.ctacek.yandexschool.doitnow.utils.internet_checker.NetworkConnectivityObserver
+import com.ctacek.yandexschool.doitnow.utils.internetchecker.NetworkConnectivityObserver
 import kotlinx.coroutines.CoroutineScope
 import javax.inject.Inject
 
@@ -19,22 +19,20 @@ class ViewModelFactory @Inject constructor(
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         val viewModel = when (modelClass) {
-            MainViewModel::class.java -> {
-                MainViewModel(repositoryImpl, connectivityObserver, coroutineScope)
-            }
-            LoginViewModel::class.java -> {
-                LoginViewModel(repositoryImpl, coroutineScope)
-            }
+            MainViewModel::class.java -> MainViewModel(
+                repositoryImpl, connectivityObserver, coroutineScope
+            )
 
-            ManageTaskViewModel::class.java -> {
-                ManageTaskViewModel(repositoryImpl, connectivityObserver, coroutineScope)
-            }
+            LoginViewModel::class.java ->
+                LoginViewModel(repositoryImpl, coroutineScope)
+
+            ManageTaskViewModel::class.java ->
+                ManageTaskViewModel(repositoryImpl, coroutineScope)
 
             else -> {
-                throw IllegalStateException("Unknown view model class")
+                error("Unknown view model class")
             }
         }
         return viewModel as T
     }
-
 }

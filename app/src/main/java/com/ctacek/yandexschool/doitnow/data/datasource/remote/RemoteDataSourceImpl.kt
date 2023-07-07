@@ -6,15 +6,15 @@ import com.ctacek.yandexschool.doitnow.data.datasource.remote.dto.ToDoItemRespon
 import com.ctacek.yandexschool.doitnow.data.datasource.remote.dto.request.ToDoApiRequestElement
 import com.ctacek.yandexschool.doitnow.data.datasource.remote.dto.request.ToDoApiRequestList
 import com.ctacek.yandexschool.doitnow.domain.model.DataState
-import com.ctacek.yandexschool.doitnow.domain.model.ResponseState
 import com.ctacek.yandexschool.doitnow.domain.model.ToDoItem
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class RemoteDataSourceImpl @Inject constructor(
     private val sharedPreferences: SharedPreferencesAppSettings,
     private val service: ToDoItemService
@@ -52,6 +52,8 @@ class RemoteDataSourceImpl @Inject constructor(
                         }
                     }
 
+                    sharedPreferences.putRevisionId(revision)
+
                     val mergedList = mergedMap.values.toList().map {
                         ToDoItemResponseRequest.fromToDoTask(
                             it,
@@ -59,16 +61,18 @@ class RemoteDataSourceImpl @Inject constructor(
                         )
                     }
 
-                    sharedPreferences.putRevisionId(revision)
-
                     emitAll(updateRemoteTasks(mergedList))
                 }
             } else {
                 networkListResponse.errorBody()?.close()
             }
 
-        } catch (e: Exception) {
-            emit(DataState.Exception(e))
+        } catch (exception: SocketTimeoutException) {
+            emit(DataState.Exception(exception))
+        } catch (exception: UnknownHostException) {
+            emit(DataState.Exception(exception))
+        } catch (exception: HttpException) {
+            emit(DataState.Exception(exception))
         }
     }
 
@@ -88,8 +92,12 @@ class RemoteDataSourceImpl @Inject constructor(
                         emit(DataState.Result(responseBody.list.map { it.toToDoItem() }))
                     }
                 }
-            } catch (e: Exception) {
-                emit(DataState.Exception(e))
+            }  catch (exception: SocketTimeoutException) {
+                emit(DataState.Exception(exception))
+            } catch (exception: UnknownHostException) {
+                emit(DataState.Exception(exception))
+            } catch (exception: HttpException) {
+                emit(DataState.Exception(exception))
             }
         }
 
@@ -116,8 +124,12 @@ class RemoteDataSourceImpl @Inject constructor(
             } else {
                 response.errorBody()?.close()
             }
-        } catch (e: Exception) {
-            Log.e(TAG, e.message.toString())
+        } catch (exception: SocketTimeoutException) {
+            Log.d(TAG, exception.toString())
+        } catch (exception: UnknownHostException){
+            Log.d(TAG, exception.toString())
+        } catch (exception: HttpException){
+            Log.d(TAG, exception.toString())
         }
     }
 
@@ -137,8 +149,12 @@ class RemoteDataSourceImpl @Inject constructor(
             } else {
                 response.errorBody()?.close()
             }
-        } catch (e: Exception) {
-            Log.e(TAG, e.message.toString())
+        } catch (exception: SocketTimeoutException) {
+            Log.d(TAG, exception.toString())
+        } catch (exception: UnknownHostException){
+            Log.d(TAG, exception.toString())
+        } catch (exception: HttpException){
+            Log.d(TAG, exception.toString())
         }
 
     }
@@ -162,8 +178,12 @@ class RemoteDataSourceImpl @Inject constructor(
                     sharedPreferences.putRevisionId(responseBody.revision)
                 }
             }
-        } catch (e: Exception) {
-            Log.e(TAG, e.message.toString())
+        } catch (exception: SocketTimeoutException) {
+            Log.d(TAG, exception.toString())
+        } catch (exception: UnknownHostException){
+            Log.d(TAG, exception.toString())
+        } catch (exception: HttpException){
+            Log.d(TAG, exception.toString())
         }
     }
 }

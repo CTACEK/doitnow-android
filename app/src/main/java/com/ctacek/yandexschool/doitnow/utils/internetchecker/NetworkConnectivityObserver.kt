@@ -1,4 +1,4 @@
-package com.ctacek.yandexschool.doitnow.utils.internet_checker
+package com.ctacek.yandexschool.doitnow.utils.internetchecker
 
 import android.content.Context
 import android.net.ConnectivityManager

@@ -3,24 +3,25 @@ package com.ctacek.yandexschool.doitnow.utils
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.ctacek.yandexschool.doitnow.App
+import com.ctacek.yandexschool.doitnow.data.repository.ToDoItemsRepositoryImpl
+import kotlinx.coroutines.runBlocking
+import javax.inject.Inject
 
-class PeriodWorkManager(context: Context, workerParameters: WorkerParameters) :
+class PeriodWorkManager(private val context: Context, workerParameters: WorkerParameters) :
     Worker(context, workerParameters) {
 
-//    private val repository: ToDoItemsRepositoryImpl
+    @Inject
+    lateinit var repository: ToDoItemsRepositoryImpl
 
     override fun doWork(): Result {
-//        return when (mergeData()) {
-//            is LoadingState.Success<*> -> Result.success()
-//            else -> {
-//                Result.failure()
-//            }
-//        }
+        (context.applicationContext as App).appComponent.injectWorkManager(this)
+        mergeData()
         return Result.success()
     }
 
-//    private fun mergeData() = runBlocking {
-//        return@runBlocking repository.getRemoteTasks()
-//    }
+    private fun mergeData() = runBlocking {
+        return@runBlocking repository.getNetworkTasks()
+    }
 
 }
