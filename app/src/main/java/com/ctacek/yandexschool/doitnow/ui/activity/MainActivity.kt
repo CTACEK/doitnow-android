@@ -1,6 +1,8 @@
 package com.ctacek.yandexschool.doitnow.ui.activity
 
 import android.os.Bundle
+import android.os.PersistableBundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -21,12 +23,25 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var sharedPreferencesAppSettings: SharedPreferencesAppSettings
+
+
+    private lateinit var navController: NavController
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBundle("navControllerState", navController.saveState())
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         applicationContext.appComponent.injectMainActivity(this)
         setContentView(R.layout.activity_main)
 
-        val navController = getRootNavController()
+        if (savedInstanceState != null) {
+            navController.restoreState(savedInstanceState.getBundle("navControllerState"))
+        }
+
+        navController = getRootNavController()
         prepareRootNavController(isSignedIn(), navController)
     }
 

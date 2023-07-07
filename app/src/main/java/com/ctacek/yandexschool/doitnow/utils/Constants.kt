@@ -14,7 +14,7 @@ object Constants {
     const val SHARED_PREFERENCES_DEVICE_TAG = "current_device_id"
     const val SHARED_PREFERENCES_NO_TOKEN = "no_token"
 
-    const val REQUEST_LOGIN_SDK_CODE = 1
+    const val REQUEST_LOGIN_SDK_CODE = -1
 
 
 }

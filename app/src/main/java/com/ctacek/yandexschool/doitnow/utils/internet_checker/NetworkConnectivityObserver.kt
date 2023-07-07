@@ -8,8 +8,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class NetworkConnectivityObserver(
+@Singleton
+class NetworkConnectivityObserver @Inject constructor(
     context: Context
 ) : ConnectivityObserver {
 

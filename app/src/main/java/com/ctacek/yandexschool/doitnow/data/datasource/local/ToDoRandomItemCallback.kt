@@ -1,4 +1,4 @@
-//package com.ctacek.yandexschool.doitnow.data.datasource.room
+//package com.ctacek.yandexschool.doitnow.data.datasource.local
 //
 //import androidx.room.RoomDatabase
 //import androidx.sqlite.db.SupportSQLiteDatabase
@@ -8,9 +8,10 @@
 //import kotlinx.coroutines.Dispatchers
 //import kotlinx.coroutines.launch
 //import java.util.UUID
+//import javax.inject.Inject
 //import kotlin.random.Random
 //
-//class ToDoRandomItemCallback() : RoomDatabase.Callback() {
+//class ToDoRandomItemCallback @Inject constructor(private val itemDao: ToDoItemDao) : RoomDatabase.Callback() {
 //
 //    override fun onCreate(db: SupportSQLiteDatabase) {
 //        super.onCreate(db)
@@ -19,11 +20,11 @@
 //        // Запускаем корутину для заполнения базы данных
 //        CoroutineScope(Dispatchers.IO)
 //            .launch(Dispatchers.IO) {
-//                val todoItemDao = ToDoItemDatabase.getDatabaseInstance().provideToDoDao()
+//
 //                val faker = Faker.instance()
 //
 //                // Генерируем случайные данные и добавляем их в базу данных
-//                for (i in 1..5) {
+//                for (i in 1..30) {
 //                    val tempItem = ToDoItemEntity(
 //                        UUID.randomUUID().toString(),
 //                        if (Random.nextBoolean()) faker.backToTheFuture().character()
@@ -35,7 +36,7 @@
 //                        null
 //                    )
 //
-//                    todoItemDao.createItem(tempItem)
+//                    itemDao.createItem(tempItem)
 //                }
 //            }
 //    }

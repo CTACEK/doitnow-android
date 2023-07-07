@@ -1,18 +1,16 @@
 package com.ctacek.yandexschool.doitnow.data.repository
 
-import android.util.Log
 import com.ctacek.yandexschool.doitnow.data.datasource.SharedPreferencesAppSettings
-import com.ctacek.yandexschool.doitnow.data.datasource.remote.ToDoItemService
-import com.ctacek.yandexschool.doitnow.data.datasource.remote.dto.ToDoItemResponseRequest
-import com.ctacek.yandexschool.doitnow.data.datasource.local.ToDoItemDatabase
+import com.ctacek.yandexschool.doitnow.data.datasource.local.ToDoItemDao
 import com.ctacek.yandexschool.doitnow.data.datasource.local.ToDoItemEntity
-import com.ctacek.yandexschool.doitnow.data.datasource.remote.dto.request.ToDoApiRequestElement
-import com.ctacek.yandexschool.doitnow.data.datasource.remote.dto.request.ToDoApiRequestList
-import com.ctacek.yandexschool.doitnow.data.model.LoadingState
+import com.ctacek.yandexschool.doitnow.data.datasource.remote.RemoteDataSourceImpl
+import com.ctacek.yandexschool.doitnow.domain.model.DataState
+import com.ctacek.yandexschool.doitnow.domain.model.ResponseState
 import com.ctacek.yandexschool.doitnow.domain.model.ToDoItem
-import com.ctacek.yandexschool.doitnow.utils.Constants.SHARED_PREFERENCES_NO_TOKEN
+import com.ctacek.yandexschool.doitnow.domain.model.UiState
+import com.ctacek.yandexschool.doitnow.domain.repository.Repository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 /**
@@ -22,195 +20,67 @@ import javax.inject.Inject
  *
  */
 class ToDoItemsRepositoryImpl @Inject constructor(
-    localDataSource: ToDoItemDatabase,
-    private val remoteDataSource: ToDoItemService,
-    private val sharedPreferences: SharedPreferencesAppSettings
-) {
+    private val dao: ToDoItemDao,
+    private val networkSource: RemoteDataSourceImpl
+) : Repository {
 
-    private val toDoItemDao = localDataSource.provideToDoDao()
-    private val LOG_TAG = ToDoItemsRepositoryImpl::class.simpleName.toString()
-
-    fun getAllToDoItems(): Flow<List<ToDoItem>> {
-        return toDoItemDao.getToDoItems().map { it -> it.map { it.toToDoItem() } }
-    }
-
-    fun getToDoItemById(id: String): ToDoItem {
-        return toDoItemDao.getToDoItemById(id = id).toToDoItem()
-    }
-
-    suspend fun updateStatusToDoItem(id: String, done: Boolean) {
-        return toDoItemDao.updateDone(id, done, System.currentTimeMillis())
-    }
-
-    suspend fun updateToDoItem(toDoItem: ToDoItem) {
-        val toDoItemEntity = ToDoItemEntity.fromToDoTask(toDoItem)
-        return toDoItemDao.updateToDoItem(toDoItemEntity)
-    }
-
-    suspend fun createItem(toDoItem: ToDoItem) {
-        val toDoItemEntity = ToDoItemEntity.fromToDoTask(toDoItem)
-        return toDoItemDao.createItem(toDoItemEntity)
-    }
-
-    suspend fun deleteToDoItem(toDoItem: ToDoItem) {
-        val toDoItemEntity = ToDoItemEntity.fromToDoTask(toDoItem)
-        return toDoItemDao.deleteToDoItem(toDoItemEntity)
-    }
-
-    suspend fun deleteAll() {
-        toDoItemDao.deleteAllToDoItems()
-    }
-
-    fun deleteToken() {
-        sharedPreferences.setCurrentToken(SHARED_PREFERENCES_NO_TOKEN)
-    }
-
-    suspend fun updateRemoteTask(toDoTask: ToDoItem) {
-        try {
-            val response = remoteDataSource.updateTask(
-                lastKnownRevision = sharedPreferences.getRevisionId(),
-                token = sharedPreferences.getCurrentToken(),
-                itemId = toDoTask.id,
-                body = ToDoApiRequestElement(
-                    ToDoItemResponseRequest.fromToDoTask(
-                        toDoTask,
-                        sharedPreferences.getDeviceId()
-                    )
-                )
-            )
-
-            if (response.isSuccessful) {
-                val responseBody = response.body()
-                if (responseBody != null) {
-                    sharedPreferences.putRevisionId(responseBody.revision)
-                }
-            } else {
-                response.errorBody()?.close()
-            }
-        } catch (e: Exception) {
-            Log.e(LOG_TAG, e.message.toString())
+    override fun getAllData(): Flow<UiState<List<ToDoItem>>> = flow {
+        emit(UiState.Start)
+        dao.getToDoItems().collect { list ->
+            emit(UiState.Success(list.map { it.toToDoItem() }))
         }
     }
 
-    suspend fun deleteRemoteTask(taskId: String) {
-        try {
-            val response = remoteDataSource.deleteTask(
-                lastKnownRevision = sharedPreferences.getRevisionId(),
-                token = sharedPreferences.getCurrentToken(),
-                itemId = taskId
-            )
+    override suspend fun addItem(todoItem: ToDoItem) {
+        val toDoItemEntity = ToDoItemEntity.fromToDoTask(todoItem)
+        dao.createItem(toDoItemEntity)
 
-            if (response.isSuccessful) {
-                val responseBody = response.body()
-                if (responseBody != null) {
-                    sharedPreferences.putRevisionId(responseBody.revision)
-                }
-            } else {
-                response.errorBody()?.close()
-            }
-        } catch (e: Exception) {
-            Log.e(LOG_TAG, e.toString())
-        }
-
+        networkSource.createRemoteTask(todoItem)
     }
 
-    suspend fun createRemoteTask(newTask: ToDoItem) {
+    override suspend fun deleteItem(todoItem: ToDoItem) {
+        val toDoItemEntity = ToDoItemEntity.fromToDoTask(todoItem)
+        dao.deleteToDoItem(toDoItemEntity)
         try {
-            val response = remoteDataSource.addTask(
-                lastKnownRevision = sharedPreferences.getRevisionId(),
-                token = sharedPreferences.getCurrentToken(),
-                newItem = ToDoApiRequestElement(
-                    ToDoItemResponseRequest.fromToDoTask(
-                        newTask,
-                        sharedPreferences.getDeviceId()
-                    )
-                )
-            )
-
-            if (response.isSuccessful) {
-                val responseBody = response.body()
-                if (responseBody != null) {
-                    sharedPreferences.putRevisionId(responseBody.revision)
-                }
-            } else {
-                response.errorBody()?.close()
-            }
-        } catch (e: Exception) {
-            Log.e(LOG_TAG, e.toString())
+            networkSource.deleteRemoteTask(todoItem.id)
+        } catch (exception: Exception) {
+            //exception
         }
     }
 
-    private suspend fun updateRemoteTasks(mergedList: List<ToDoItemResponseRequest>): LoadingState<Any> {
+    override suspend fun changeItem(todoItem: ToDoItem) {
+        val toDoItemEntity = ToDoItemEntity.fromToDoTask(todoItem)
+        dao.updateToDoItem(toDoItemEntity)
         try {
-            val response = remoteDataSource.updateList(
-                lastKnownRevision = sharedPreferences.getRevisionId(),
-                token = sharedPreferences.getCurrentToken(),
-                body = ToDoApiRequestList(status = "ok", mergedList)
-            )
-
-            if (response.isSuccessful) {
-                val responseBody = response.body()
-                if (responseBody != null) {
-                    sharedPreferences.putRevisionId(responseBody.revision)
-                    toDoItemDao.mergeToDoItems(responseBody.list.map {
-                        ToDoItemEntity.fromToDoTask(it.toToDoItem())
-                    })
-                    return LoadingState.Success(responseBody.list)
-                }
-            } else {
-                response.errorBody()?.close()
-            }
-        } catch (e: Exception) {
-            return LoadingState.Error("Merge failed, continue offline.")
+            networkSource.updateRemoteTask(todoItem)
+        } catch (exception: Exception) {
+            //exception
         }
-
-        return LoadingState.Error("Merge failed, continue offline.")
     }
 
-    suspend fun getRemoteTasks(): LoadingState<Any> {
-        try {
-            val networkListResponse =
-                remoteDataSource.getList(token = sharedPreferences.getCurrentToken())
 
-            if (networkListResponse.isSuccessful) {
-                val body = networkListResponse.body()
-                if (body != null) {
-                    val revision = body.revision
-                    val networkList = body.list
-                    val currentList = toDoItemDao.getToDoItemsNoFlow().map {
-                        ToDoItemResponseRequest.fromToDoTask(
-                            it.toToDoItem(),
-                            sharedPreferences.getDeviceId()
-                        )
+    override fun getNetworkTasks(): Flow<UiState<List<ToDoItem>>> = flow {
+        emit(UiState.Start)
+        networkSource.getMergedList(
+            dao.getToDoItemsNoFlow().map { it.toToDoItem() })
+            .collect { state ->
+                when (state) {
+                    DataState.Initial -> emit(UiState.Start)
+                    is DataState.Exception -> emit(UiState.Error(state.cause.message.toString()))
+                    is DataState.Result -> {
+                        dao.mergeToDoItems(state.data.map { ToDoItemEntity.fromToDoTask(it) })
+                        emit(UiState.Success(state.data))
                     }
-                    val mergedList = HashMap<String, ToDoItemResponseRequest>()
-
-                    for (item in currentList) {
-                        mergedList[item.id] = item
-                    }
-                    for (item in networkList) {
-                        if (mergedList.containsKey(item.id)) {
-                            val item1 = mergedList[item.id]
-                            if (item.changed_at > item1!!.changed_at) {
-                                mergedList[item.id] = item
-                            } else {
-                                mergedList[item.id] = item1
-                            }
-                        } else if (revision != sharedPreferences.getRevisionId()) {
-                            mergedList[item.id] = item
-                        }
-                    }
-
-                    return updateRemoteTasks(mergedList.values.toList())
                 }
-            } else {
-                networkListResponse.errorBody()?.close()
             }
+    }
 
-        } catch (e: Exception) {
-            return LoadingState.Error("Merge failed, continue offline.")
-        }
-        return LoadingState.Error("Merge failed, continue offline.")
+
+    override fun getItem(itemId: String): ToDoItem = dao.getToDoItemById(itemId).toToDoItem()
+
+
+    override suspend fun deleteCurrentItems() {
+        dao.deleteAllToDoItems()
     }
 
 }

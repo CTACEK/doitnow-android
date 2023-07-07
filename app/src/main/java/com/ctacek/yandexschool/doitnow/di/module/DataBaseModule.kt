@@ -20,8 +20,15 @@ object DataBaseModule {
     @Singleton
     @Provides
     fun provideDataBase(context: Context): ToDoItemDatabase {
-        return Room.databaseBuilder(
-            context, ToDoItemDatabase::class.java, "main_database"
-        ).build()
+        return Room.databaseBuilder(context, ToDoItemDatabase::class.java, "main_database")
+//        .addCallback(callback)
+        .build()
     }
+
+//    @Singleton
+//    @Provides
+//    fun provideToDoCallback(toDoItemDao: ToDoItemDao): ToDoRandomItemCallback {
+//        return ToDoRandomItemCallback(toDoItemDao)
+//    }
+
 }
