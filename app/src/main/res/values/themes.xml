@@ -55,6 +55,22 @@
 
     <style name="TextAppearance.Title" parent="TextAppearance.MaterialComponents.Headline4">
         <item name="textAllCaps">true</item>
+        <item name="fontFamily">@font/roboto_bold</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+    </style>
+
+    <style name="TextAppearance.CollapsingToolBar" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="textAllCaps">true</item>
+        <item name="fontFamily">@font/roboto_bold</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+    </style>
+
+    <style name="TextAppearance.ExpandedToolBar" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="textAllCaps">true</item>
+        <item name="android:textSize">20sp</item>
+        <item name="fontFamily">@font/roboto_bold</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">?attr/colorPrimary</item>
     </style>
@@ -76,6 +92,12 @@
 
     <style name="MaterialAlertDialogText" parent="MaterialAlertDialog.MaterialComponents.Body.Text">
         <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="customRoundedImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">5dp</item>
+        <item name="cornerSizeTopRight">8dp</item>
     </style>
 
 </resources>

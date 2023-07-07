@@ -37,6 +37,13 @@
     <string name="you_want_get_out">Are you sure you want to get out?</string>
     <string name="you_want_get_out_offline">Are you sure you want to get out? Offline mode data loss is possible.</string>
     <string name="logout_button">Log out</string>
+    <string name="add_task_button_recycler">Add task</string>
+    <string name="welcome_title">Welcome!</string>
+    <string name="login_disc">Log in with Yandex ID or use guest mode</string>
+    <string name="guest_mode_button_disc">Guest mode button</string>
+    <string name="yandex_id_button_disc">Yandex id button</string>
+    <string name="yandex_id_button">Sign in with Yandex ID</string>
+    <string name="something_went_wrong">Something went wrong!</string>
 
 
 </resources>

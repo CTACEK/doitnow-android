@@ -29,6 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
+                android:fontFamily="@font/roboto_medium"
                 android:background="?android:attr/selectableItemBackground"
                 android:text="@string/save_button"
                 android:textColor="@color/color_light_blue"
@@ -53,11 +54,12 @@
             android:paddingBottom="20dp">
 
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
+                android:fontFamily="@font/roboto_medium"
                 android:background="@drawable/tasks_background"
                 android:elevation="2dp"
                 android:gravity="top|start"
@@ -83,11 +85,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/edit_text">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/text_importance_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="28dp"
+                    android:fontFamily="@font/roboto_medium"
                     android:gravity="start"
                     android:text="@string/importance_title_text"
                     android:textColor="?attr/colorOnSecondary"
@@ -95,7 +98,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/text_importance_body"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -118,12 +121,14 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/menu_importance" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/textview_do_before"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="28dp"
+                android:fontFamily="@font/roboto_medium"
+
                 android:text="@string/do_before_title"
                 android:textColor="?attr/colorOnSecondary"
                 android:textSize="@dimen/title"
@@ -177,6 +182,8 @@
                 android:background="?android:attr/selectableItemBackground"
                 android:drawablePadding="12dp"
                 android:padding="5dp"
+                android:fontFamily="@font/roboto_medium"
+
                 android:text="@string/delete_button"
                 android:textColor="@color/color_light_gray"
                 android:textSize="@dimen/title"
