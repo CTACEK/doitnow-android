@@ -3,6 +3,7 @@ package com.ctacek.yandexschool.doitnow.di
 import android.content.Context
 import com.ctacek.yandexschool.doitnow.App
 import com.ctacek.yandexschool.doitnow.ViewModelFactory
+import com.ctacek.yandexschool.doitnow.di.customscope.AppScope
 import com.ctacek.yandexschool.doitnow.di.module.ApplicationModule
 import com.ctacek.yandexschool.doitnow.di.module.DataBaseModule
 import com.ctacek.yandexschool.doitnow.di.module.DataSourceModule
@@ -16,7 +17,6 @@ import com.ctacek.yandexschool.doitnow.ui.fragment.managetask.ManageTaskFragment
 import com.ctacek.yandexschool.doitnow.utils.PeriodWorkManager
 import dagger.BindsInstance
 import dagger.Component
-import javax.inject.Scope
 
 @AppScope
 @Component(
@@ -32,7 +32,6 @@ interface AppComponent {
 
     fun loginComponent(): LoginComponent.Factory
     fun injectApplication(app: App)
-
     fun injectWorkManager(workManager: PeriodWorkManager)
     fun findViewModelFactory(): ViewModelFactory
     fun injectManageTaskFragment(fragment: ManageTaskFragment)
@@ -47,5 +46,3 @@ interface AppComponent {
     }
 }
 
-@Scope
-annotation class AppScope

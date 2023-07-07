@@ -6,6 +6,8 @@ object Constants {
 
     const val WORK_MANAGER_TAG = "update_data"
 
+    const val DATABASE_NAME = "main_database"
+
     const val SHARED_PREFERENCES_NAME = "settings"
     const val SHARED_PREFERENCES_TOKEN = "current_token"
     const val SHARED_PREFERENCES_REVISION_TAG = "current_revision"

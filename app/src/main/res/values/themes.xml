@@ -77,12 +77,17 @@
 
     <style name="AlertDialogCustom" parent="@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <!-- Used for the buttons -->
-        <item name="colorAccent">@color/color_light_blue</item>
+        <item name="colorPrimary">@color/color_light_red</item>
         <!-- Used for the title and text -->
-        <item name="materialAlertDialogTitleTextStyle">@style/MaterialAlertDialogText</item>
-        <item name="materialAlertDialogBodyTextStyle">@style/MaterialAlertDialogText</item>
+        <item name="materialAlertDialogTitleTextStyle">@style/MaterialAlertDialog.Body</item>
+        <item name="materialAlertDialogBodyTextStyle">@style/MaterialAlertDialog.Body</item>
         <!-- Used for the background -->=
         <item name="shapeAppearanceOverlay">@style/MaterialAlertDialogCorners</item>
+    </style>
+
+    <style name="MaterialAlertDialog.Body" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="fontFamily">@font/roboto_medium</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
     </style>
 
     <style name="MaterialAlertDialogCorners">

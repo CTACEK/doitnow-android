@@ -3,7 +3,7 @@ package com.ctacek.yandexschool.doitnow.di.module
 import androidx.work.Constraints
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequest
-import com.ctacek.yandexschool.doitnow.di.AppScope
+import com.ctacek.yandexschool.doitnow.di.customscope.AppScope
 import com.ctacek.yandexschool.doitnow.utils.Constants.REPEAT_INTERVAL
 import com.ctacek.yandexschool.doitnow.utils.Constants.WORK_MANAGER_TAG
 import com.ctacek.yandexschool.doitnow.utils.PeriodWorkManager

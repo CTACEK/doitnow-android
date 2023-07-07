@@ -1,7 +1,7 @@
 package com.ctacek.yandexschool.doitnow.di.module
 
 import com.ctacek.yandexschool.doitnow.data.datasource.remote.ToDoItemService
-import com.ctacek.yandexschool.doitnow.di.AppScope
+import com.ctacek.yandexschool.doitnow.di.customscope.AppScope
 import com.ctacek.yandexschool.doitnow.utils.Constants.RETROFIT_TIMEOUT
 import com.ctacek.yandexschool.doitnow.utils.Constants.BASE_URL
 import dagger.Module

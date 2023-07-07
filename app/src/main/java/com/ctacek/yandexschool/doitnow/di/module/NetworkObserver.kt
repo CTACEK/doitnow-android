@@ -1,7 +1,7 @@
 package com.ctacek.yandexschool.doitnow.di.module
 
 import android.content.Context
-import com.ctacek.yandexschool.doitnow.di.AppScope
+import com.ctacek.yandexschool.doitnow.di.customscope.AppScope
 import com.ctacek.yandexschool.doitnow.utils.internetchecker.NetworkConnectivityObserver
 import dagger.Module
 import dagger.Provides

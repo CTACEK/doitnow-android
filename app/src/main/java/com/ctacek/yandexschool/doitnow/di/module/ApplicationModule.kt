@@ -1,7 +1,6 @@
 package com.ctacek.yandexschool.doitnow.di.module
 
-import android.content.Context
-import com.ctacek.yandexschool.doitnow.di.AppScope
+import com.ctacek.yandexschool.doitnow.di.customscope.AppScope
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.CoroutineScope
@@ -12,6 +11,6 @@ interface ApplicationModule {
     companion object {
         @AppScope
         @Provides
-        fun provideScope(context: Context) = CoroutineScope(SupervisorJob())
+        fun provideScope() = CoroutineScope(SupervisorJob())
     }
 }

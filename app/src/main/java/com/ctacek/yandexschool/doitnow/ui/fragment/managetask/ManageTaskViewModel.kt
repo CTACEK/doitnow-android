@@ -36,7 +36,7 @@ class ManageTaskViewModel @Inject constructor(
 
     fun addItem(todoItem: ToDoItem){
         coroutineScope.launch(Dispatchers.IO) {
-            repository.addItem(todoItem)
+            repository.addItem(todoItem.copy())
         }
     }
 

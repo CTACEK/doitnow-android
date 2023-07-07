@@ -113,9 +113,7 @@ class MainFragmentViewController(
                                 R.drawable.visibility_24
                             )
                         )
-                        binding.recyclerview.scrollToPosition(0)
                     }
-
                     false -> {
                         YoYo.with(Techniques.ZoomIn).playOn(binding.visibility)
                         binding.visibility.setImageDrawable(
@@ -124,7 +122,6 @@ class MainFragmentViewController(
                                 R.drawable.visibility_off_24
                             )
                         )
-                        binding.recyclerview.scrollToPosition(0)
                     }
                 }
             }
@@ -162,9 +159,9 @@ class MainFragmentViewController(
             when (uiState) {
                 is UiState.Success -> {
                     if (visibilityState) {
-                        adapter.submitList(uiState.data)
+                        adapter.submitList(uiState.data.sortedBy { it.createdAt })
                     } else {
-                        adapter.submitList(uiState.data.filter { !it.done })
+                        adapter.submitList(uiState.data.filter { !it.done }.sortedBy { it.createdAt })
                     }
                     with(binding) {
                         recyclerview.visibility = View.VISIBLE

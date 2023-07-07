@@ -100,6 +100,9 @@ class ManageTaskViewController(
                     R.color.color_light_red
                 )
             )
+            binding.buttonDeleteTask.isActivated = false
+        } else {
+            binding.buttonSaveCreate.text = context.getString(R.string.create_button)
         }
 
     }
@@ -166,7 +169,7 @@ class ManageTaskViewController(
                 toDoItem.description = binding.editText.text.toString()
                 toDoItem.changedAt = java.sql.Date(System.currentTimeMillis())
 
-                if (toDoItem.id != "-1") {
+                if (toDoItem.id == "-1") {
                     saveNewTask(toDoItem)
                 } else {
                     updateTask(toDoItem)
