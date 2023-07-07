@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
+import java.lang.Exception
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import javax.inject.Inject
@@ -73,6 +74,8 @@ class RemoteDataSourceImpl @Inject constructor(
             emit(DataState.Exception(exception))
         } catch (exception: HttpException) {
             emit(DataState.Exception(exception))
+        } catch (exception : Exception) {
+            emit(DataState.Exception(exception))
         }
     }
 
@@ -97,6 +100,8 @@ class RemoteDataSourceImpl @Inject constructor(
             } catch (exception: UnknownHostException) {
                 emit(DataState.Exception(exception))
             } catch (exception: HttpException) {
+                emit(DataState.Exception(exception))
+            } catch (exception : Exception) {
                 emit(DataState.Exception(exception))
             }
         }
@@ -130,6 +135,8 @@ class RemoteDataSourceImpl @Inject constructor(
             Log.d(TAG, exception.toString())
         } catch (exception: HttpException){
             Log.d(TAG, exception.toString())
+        } catch (exception : Exception) {
+            Log.d(TAG, exception.toString())
         }
     }
 
@@ -154,6 +161,8 @@ class RemoteDataSourceImpl @Inject constructor(
         } catch (exception: UnknownHostException){
             Log.d(TAG, exception.toString())
         } catch (exception: HttpException){
+            Log.d(TAG, exception.toString())
+        } catch (exception : Exception) {
             Log.d(TAG, exception.toString())
         }
 
@@ -183,6 +192,8 @@ class RemoteDataSourceImpl @Inject constructor(
         } catch (exception: UnknownHostException){
             Log.d(TAG, exception.toString())
         } catch (exception: HttpException){
+            Log.d(TAG, exception.toString())
+        } catch (exception : Exception) {
             Log.d(TAG, exception.toString())
         }
     }
