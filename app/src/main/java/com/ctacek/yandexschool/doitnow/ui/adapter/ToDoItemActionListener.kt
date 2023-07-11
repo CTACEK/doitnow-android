@@ -1,6 +1,7 @@
 package com.ctacek.yandexschool.doitnow.ui.adapter
 
-import com.ctacek.yandexschool.doitnow.data.model.ToDoItem
+import com.ctacek.yandexschool.doitnow.domain.model.ToDoItem
+
 
 interface ToDoItemActionListener {
     fun onClickCheck(item: ToDoItem)

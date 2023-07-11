@@ -10,21 +10,39 @@ import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.ctacek.yandexschool.doitnow.R
+import com.ctacek.yandexschool.doitnow.appComponent
 import com.ctacek.yandexschool.doitnow.data.datasource.SharedPreferencesAppSettings
 import com.ctacek.yandexschool.doitnow.utils.Constants
 import com.ctacek.yandexschool.doitnow.utils.PeriodWorkManager
-import com.ctacek.yandexschool.doitnow.utils.localeLazy
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
-    private val sharedPreferencesAppSettings: SharedPreferencesAppSettings by localeLazy()
+    @Inject
+    lateinit var sharedPreferencesAppSettings: SharedPreferencesAppSettings
+
+
+    private lateinit var navController: NavController
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBundle("navControllerState", navController.saveState())
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        applicationContext.appComponent.injectMainActivity(this)
 
-        val navController = getRootNavController()
-        prepareRootNavController(isSignedIn(), navController)
+        navController = getRootNavController()
+
+        if (savedInstanceState != null) {
+            navController.restoreState(savedInstanceState.getBundle("navControllerState"))
+        } else {
+            prepareRootNavController(isSignedIn(), navController)
+        }
+
     }
 
     override fun onDestroy() {
@@ -40,7 +58,7 @@ class MainActivity : AppCompatActivity() {
 
         val myWorkRequest = PeriodicWorkRequest.Builder(
             PeriodWorkManager::class.java,
-            8,
+            Constants.REPEAT_INTERVAL,
             TimeUnit.HOURS
         )
             .setConstraints(constraints)
@@ -79,7 +97,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun isSignedIn(): Boolean {
         val currentUser = sharedPreferencesAppSettings.getCurrentToken()
-        if (currentUser != Constants.NO_TOKEN) return true
+        if (currentUser != Constants.SHARED_PREFERENCES_NO_TOKEN) return true
         return false
     }
 }

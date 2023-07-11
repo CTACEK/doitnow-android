@@ -7,12 +7,12 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.ctacek.yandexschool.doitnow.ui.fragments.MainFragment"
+        android:name="com.ctacek.yandexschool.doitnow.ui.fragment.main.MainFragment"
         android:label="fragment_main"
         tools:layout="@layout/fragment_main">
         <action
             android:id="@+id/action_mainFragment_to_newEditTaskFragment"
-            app:destination="@id/newEditTaskFragment"
+            app:destination="@id/manageTaskFragment"
             app:enterAnim="@anim/slide_up"
             app:popExitAnim="@anim/slide_down"
             app:launchSingleTop="true"/>
@@ -25,23 +25,23 @@
 
 
     <fragment
-        android:id="@+id/newEditTaskFragment"
-        android:name="com.ctacek.yandexschool.doitnow.ui.fragments.NewEditTaskFragment"
-        android:label="fragment_new_edit_task"
-        tools:layout="@layout/fragment_new_edit_task">
+        android:id="@+id/manageTaskFragment"
+        android:name="com.ctacek.yandexschool.doitnow.ui.fragment.managetask.ManageTaskFragment"
+        android:label="fragment_manage_task"
+        tools:layout="@layout/fragment_manage_task">
 
         <argument
             android:name="newTaskArg"
             app:argType="string"
             app:nullable="true" />
         <action
-            android:id="@+id/action_newEditTaskFragment_to_mainFragment"
+            android:id="@+id/action_manageTaskFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
 
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.ctacek.yandexschool.doitnow.ui.fragments.LoginFragment"
+        android:name="com.ctacek.yandexschool.doitnow.ui.fragment.login.LoginFragment"
         android:label="LoginFragment"
         tools:layout="@layout/fragment_login">
         <action

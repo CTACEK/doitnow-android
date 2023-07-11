@@ -7,7 +7,7 @@
     android:background="?attr/colorPrimary"
     android:fitsSystemWindows="true"
     android:theme="@style/Theme.DoItNow"
-    tools:context=".ui.fragments.MainFragment">
+    tools:context=".ui.fragment.main.MainFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
@@ -24,6 +24,8 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:collapsedTitleTextColor="?attr/colorOnSecondary"
+            app:expandedTitleTextAppearance="@style/TextAppearance.CollapsingToolBar"
+            app:collapsedTitleTextAppearance="@style/TextAppearance.ExpandedToolBar"
             app:contentScrim="?attr/colorSecondary"
             app:expandedTitleMarginBottom="50dp"
             app:expandedTitleTextColor="?attr/colorOnSecondary"
@@ -36,6 +38,7 @@
                 android:layout_height="50dp"
                 android:layout_gravity="bottom"
                 android:layout_marginStart="32dp"
+                android:fontFamily="@font/roboto_medium"
                 android:gravity="center"
                 android:text="@string/completed_title"
                 android:textColor="@color/grey"
@@ -127,6 +130,17 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:itemCount="4"
                 tools:listitem="@layout/item_task" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:gravity="center"
+                android:visibility="gone"
+                android:fontFamily="@font/roboto_medium"
+                android:text="@string/add_task_button_recycler"
+                android:textColor="?attr/colorOnSecondary"
+                android:textSize="16sp" />
         </LinearLayout>
 
 

@@ -18,6 +18,7 @@
         android:name=".App"
         tools:targetApi="31">
         <activity
+            android:configChanges="screenSize|orientation"
             android:name=".ui.activity.MainActivity"
             android:exported="true">
             <intent-filter>
