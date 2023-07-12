@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.DoItNow" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.DoItNow" parent="Theme.MaterialComponents.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/label_light_tertiary</item>
         <item name="colorPrimaryVariant">@color/label_light_secondary</item>
