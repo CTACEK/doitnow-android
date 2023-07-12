@@ -51,4 +51,10 @@ class ManageTaskFragment : Fragment(R.layout.fragment_manage_task) {
         }
         return root
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        fragmentViewComponent = null
+    }
+
 }

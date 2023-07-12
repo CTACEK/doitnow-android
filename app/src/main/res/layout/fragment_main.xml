@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorPrimary"
+    android:background="?attr/colorSecondary"
     android:fitsSystemWindows="true"
-    android:theme="@style/Theme.DoItNow"
     tools:context=".ui.fragment.main.MainFragment">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -14,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:fitsSystemWindows="true"
+        android:background="?attr/colorSecondary"
         android:theme="@style/Theme.DoItNow"
         app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
@@ -51,7 +51,7 @@
                 app:layout_collapseMode="pin" />
 
             <ImageView
-                android:id="@+id/logout_button"
+                android:id="@+id/settings_button"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_gravity="top|end"
@@ -60,7 +60,7 @@
                 android:importantForAccessibility="no"
                 app:backgroundTint="@android:color/transparent"
                 app:layout_collapseMode="parallax"
-                app:srcCompat="@drawable/baseline_logout_24"
+                app:srcCompat="@drawable/baseline_settings_24"
                 app:tint="?attr/colorOnSecondary" />
 
             <ImageView
@@ -154,6 +154,8 @@
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="@dimen/fab_margin"
         android:contentDescription="@string/create_new_task_fab"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
         app:backgroundTint="@color/color_light_blue"
         app:srcCompat="@drawable/baseline_add_24"
         app:tint="@color/white" />

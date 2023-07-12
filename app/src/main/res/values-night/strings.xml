@@ -2,4 +2,6 @@
 <resources>
     <string name="importance_title_text">Importance</string>
     <string name="data_sample">2 JUNE 2023</string>
+    <string name="app_theme_title">Application theme</string>
+    <string name="choose_theme_title">Choose theme</string>
 </resources>

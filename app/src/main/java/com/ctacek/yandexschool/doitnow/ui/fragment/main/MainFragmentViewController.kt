@@ -77,29 +77,13 @@ class MainFragmentViewController(
 
             helper.attachToRecyclerView(recyclerview)
 
-            logoutButton.setOnClickListener {
-                val builder = MaterialAlertDialogBuilder(
-                    ContextThemeWrapper(
-                        context, R.style.AlertDialogCustom
-                    )
-                )
-                builder.apply {
-                    val title = if (internetState == ConnectivityObserver.Status.Available) {
-                        context.getString(R.string.you_want_get_out)
-                    } else {
-                        context.getString(R.string.you_want_get_out_offline)
-                    }
-                    setMessage(title)
-                    setPositiveButton(context.getString(R.string.logout_button)) { _, _ ->
-                        navController.navigate(R.id.action_mainFragment_to_loginFragment)
-                    }
-                }
-                builder.show().create()
-            }
-
             fab.setOnClickListener {
                 val action = MainFragmentDirections.actionMainFragmentToNewEditTaskFragment(null)
                 navController.navigate(action)
+            }
+
+            settingsButton.setOnClickListener {
+                navController.navigate(R.id.action_mainFragment_to_settingsFragment)
             }
 
             visibility.setOnClickListener {

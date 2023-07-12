@@ -68,6 +68,7 @@
                 android:inputType="textMultiLine"
                 android:minLines="6"
                 android:padding="8dp"
+                android:textColor="?attr/colorOnPrimary"
                 android:textColorHint="?attr/colorOnPrimary"
                 android:textCursorDrawable="?attr/colorOnPrimary"
                 android:textSize="@dimen/title"

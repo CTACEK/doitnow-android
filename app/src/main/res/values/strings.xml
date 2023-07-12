@@ -44,6 +44,9 @@
     <string name="yandex_id_button_disc">Yandex id button</string>
     <string name="yandex_id_button">Sign in with Yandex ID</string>
     <string name="something_went_wrong">Something went wrong!</string>
+    <string name="app_theme_title">Application theme</string>
+    <string name="choose_theme_title">Choose theme</string>
+    <string name="key_theme">theme_option</string>
 
 
 </resources>

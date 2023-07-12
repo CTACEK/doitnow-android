@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="theme_options">
+        <item>light</item>
+        <item>dark</item>
+        <item>system</item>
+    </string-array>
+
+    <string-array name="theme_labels">
+        <item>Light theme</item>
+        <item>Dark theme</item>
+        <item>System theme</item>
+    </string-array>
+</resources>

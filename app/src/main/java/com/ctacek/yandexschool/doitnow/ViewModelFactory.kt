@@ -6,6 +6,7 @@ import com.ctacek.yandexschool.doitnow.data.repository.ToDoItemsRepositoryImpl
 import com.ctacek.yandexschool.doitnow.ui.fragment.login.LoginViewModel
 import com.ctacek.yandexschool.doitnow.ui.fragment.main.MainViewModel
 import com.ctacek.yandexschool.doitnow.ui.fragment.managetask.ManageTaskViewModel
+import com.ctacek.yandexschool.doitnow.ui.fragment.settings.SettingsFragment
 import com.ctacek.yandexschool.doitnow.utils.internetchecker.NetworkConnectivityObserver
 import kotlinx.coroutines.CoroutineScope
 import javax.inject.Inject
@@ -28,6 +29,11 @@ class ViewModelFactory @Inject constructor(
 
             ManageTaskViewModel::class.java ->
                 ManageTaskViewModel(repositoryImpl, coroutineScope)
+
+            SettingsFragment::class.java ->
+                MainViewModel(
+                    repositoryImpl, connectivityObserver, coroutineScope
+                )
 
             else -> {
                 error("Unknown view model class")
