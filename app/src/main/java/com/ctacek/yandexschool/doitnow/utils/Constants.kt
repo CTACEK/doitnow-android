@@ -6,13 +6,11 @@ object Constants {
 
     const val WORK_MANAGER_TAG = "update_data"
 
-    const val TAG_NOTIFICATION_CHANNEL_ID = "Tasks"
-    const val TAG_NOTIFICATION_TASK = "task_id"
-    const val TAG_NOTIFICATION_DEADLINE = "task_deadline"
-    const val TAG_NOTIFICATION_IMPORTANCE = "task_importance"
-    const val TAG_NOTIFICATION_DESCRIPTION = "task_description"
+    const val NOTIFICATION_CHANNEL_ID = "deadlines"
+    const val NOTIFICATION_CHANNEL_NAME = "Task's deadlines"
 
 
+    const val TAG_NOTIFICATION_TASK = "task"
 
     const val DATABASE_NAME = "main_database"
 
@@ -21,6 +19,9 @@ object Constants {
     const val SHARED_PREFERENCES_REVISION_TAG = "current_revision"
     const val SHARED_PREFERENCES_DEVICE_TAG = "current_device_id"
     const val SHARED_PREFERENCES_NO_TOKEN = "no_token"
+    const val SHARED_PREFERENCES_NOTIFICATION_STATUS = "notification_status"
+    const val NOTIFICATION_PERMISSION_REQUEST_CODE = 1001
+
 
     const val SHARED_PREFERENCES_THEME_OPTION = "theme_option"
 
@@ -29,4 +30,7 @@ object Constants {
 
     const val REPEAT_INTERVAL: Long = 8
     const val RETROFIT_TIMEOUT : Long = 10
+
+    const val ONE_HOUR_IN_MILLIS = 3600000
+    const val ONE_DAY_IN_MILLIS = 86400000
 }

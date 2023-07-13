@@ -1,6 +1,5 @@
 package com.ctacek.yandexschool.doitnow.data.repository
 
-import android.util.Log
 import com.ctacek.yandexschool.doitnow.data.datasource.local.ToDoItemDao
 import com.ctacek.yandexschool.doitnow.data.datasource.local.ToDoItemEntity
 import com.ctacek.yandexschool.doitnow.data.datasource.remote.RemoteDataSourceImpl
@@ -8,11 +7,9 @@ import com.ctacek.yandexschool.doitnow.domain.model.DataState
 import com.ctacek.yandexschool.doitnow.domain.model.ToDoItem
 import com.ctacek.yandexschool.doitnow.domain.model.UiState
 import com.ctacek.yandexschool.doitnow.domain.repository.Repository
+import com.ctacek.yandexschool.doitnow.utils.notificationmanager.NotificationSchedulerImpl
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import retrofit2.HttpException
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
 import javax.inject.Inject
 
 /**
@@ -23,7 +20,8 @@ import javax.inject.Inject
  */
 class ToDoItemsRepositoryImpl @Inject constructor(
     private val dao: ToDoItemDao,
-    private val networkSource: RemoteDataSourceImpl
+    private val networkSource: RemoteDataSourceImpl,
+    private val notificationsScheduler: NotificationSchedulerImpl
 ) : Repository {
 
     private val TAG = ToDoItemsRepositoryImpl::class.simpleName
@@ -39,35 +37,24 @@ class ToDoItemsRepositoryImpl @Inject constructor(
         val toDoItemEntity = ToDoItemEntity.fromToDoTask(todoItem)
         dao.createItem(toDoItemEntity)
 
+        notificationsScheduler.schedule(todoItem)
         networkSource.createRemoteTask(todoItem)
     }
 
     override suspend fun deleteItem(todoItem: ToDoItem) {
         val toDoItemEntity = ToDoItemEntity.fromToDoTask(todoItem)
         dao.deleteToDoItem(toDoItemEntity)
-        try {
-            networkSource.deleteRemoteTask(todoItem.id)
-        } catch (exception: SocketTimeoutException) {
-            Log.d(TAG, exception.toString())
-        } catch (exception: UnknownHostException){
-            Log.d(TAG, exception.toString())
-        } catch (exception: HttpException){
-            Log.d(TAG, exception.toString())
-        }
+
+        notificationsScheduler.cancel(todoItem)
+        networkSource.deleteRemoteTask(todoItem.id)
     }
 
     override suspend fun changeItem(todoItem: ToDoItem) {
         val toDoItemEntity = ToDoItemEntity.fromToDoTask(todoItem)
         dao.updateToDoItem(toDoItemEntity)
-        try {
-            networkSource.updateRemoteTask(todoItem)
-        } catch (exception: SocketTimeoutException) {
-            Log.d(TAG, exception.toString())
-        } catch (exception: UnknownHostException){
-            Log.d(TAG, exception.toString())
-        } catch (exception: HttpException){
-            Log.d(TAG, exception.toString())
-        }
+
+        networkSource.updateRemoteTask(todoItem)
+        notificationsScheduler.schedule(todoItem)
     }
 
     override fun getNetworkTasks(): Flow<UiState<List<ToDoItem>>> = flow {
@@ -80,15 +67,22 @@ class ToDoItemsRepositoryImpl @Inject constructor(
                     is DataState.Exception -> emit(UiState.Error(state.cause.message.toString()))
                     is DataState.Result -> {
                         dao.mergeToDoItems(state.data.map { ToDoItemEntity.fromToDoTask(it) })
+                        updateNotifications(state.data)
                         emit(UiState.Success(state.data))
                     }
                 }
             }
     }
 
+    private fun updateNotifications(items: List<ToDoItem>) {
+        for (item in items){
+            notificationsScheduler.schedule(item)
+        }
+    }
+
     override fun getItem(itemId: String): ToDoItem = dao.getToDoItemById(itemId).toToDoItem()
 
-    override suspend fun deleteCurrentItems() {
+    override suspend fun deleteCurrentLocalItems() {
         dao.deleteAllToDoItems()
     }
 }

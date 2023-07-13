@@ -10,6 +10,7 @@ import com.ctacek.yandexschool.doitnow.utils.Constants.SHARED_PREFERENCES_DEVICE
 import com.ctacek.yandexschool.doitnow.utils.Constants.SHARED_PREFERENCES_TOKEN
 import com.ctacek.yandexschool.doitnow.utils.Constants.SHARED_PREFERENCES_REVISION_TAG
 import com.ctacek.yandexschool.doitnow.utils.Constants.SHARED_PREFERENCES_THEME_OPTION
+import com.ctacek.yandexschool.doitnow.utils.Constants.SHARED_PREFERENCES_NOTIFICATION_STATUS
 
 
 
@@ -68,5 +69,14 @@ class SharedPreferencesAppSettings @Inject constructor(private val context: Cont
 
     fun getThemeMode() : String {
         return sharedPreferences.getString(SHARED_PREFERENCES_THEME_OPTION, null) ?: "system"
+    }
+
+    fun putNotificationStatus(status: String) {
+        editor.putString(SHARED_PREFERENCES_NOTIFICATION_STATUS, status)
+        editor.apply()
+    }
+
+    fun getNotificationStatus() : String? {
+        return sharedPreferences.getString(SHARED_PREFERENCES_NOTIFICATION_STATUS, null)
     }
 }

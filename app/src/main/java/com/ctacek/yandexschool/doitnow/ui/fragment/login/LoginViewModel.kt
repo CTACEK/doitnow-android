@@ -14,7 +14,7 @@ class LoginViewModel @Inject constructor(
 
     fun deleteCurrentItems() {
         coroutineScope.launch(Dispatchers.IO) {
-            repository.deleteCurrentItems()
+            repository.deleteCurrentLocalItems()
         }
     }
 }

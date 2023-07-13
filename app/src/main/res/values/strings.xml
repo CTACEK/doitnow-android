@@ -47,6 +47,10 @@
     <string name="app_theme_title">Application theme</string>
     <string name="choose_theme_title">Choose theme</string>
     <string name="key_theme">theme_option</string>
+    <string name="hour_before_task">Hour before task!</string>
+    <string name="postpone_for_a_day">Postpone for a day</string>
+    <string name="notification_text">Your notification is %1$s and importance is %2$s</string>
+
 
 
 </resources>

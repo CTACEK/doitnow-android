@@ -52,6 +52,4 @@ class ManageTaskViewModel @Inject constructor(
             repository.changeItem(task)
         }
     }
-
-
 }

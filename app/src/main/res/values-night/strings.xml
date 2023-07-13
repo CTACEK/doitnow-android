@@ -4,4 +4,6 @@
     <string name="data_sample">2 JUNE 2023</string>
     <string name="app_theme_title">Application theme</string>
     <string name="choose_theme_title">Choose theme</string>
+    <string name="hour_before_task">Hour before task!</string>
+    <string name="postpone_for_a_day">Postpone for a day</string>
 </resources>
