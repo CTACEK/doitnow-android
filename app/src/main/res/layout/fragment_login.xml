@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/loginlayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="?attr/colorPrimary"
     android:fitsSystemWindows="true"
-    android:theme="@style/Theme.DoItNow"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:theme="@style/Theme.DoItNow">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -15,7 +15,6 @@
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/imageView"
-            app:shapeAppearanceOverlay="@style/customRoundedImageView"
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_marginTop="96dp"
@@ -24,31 +23,30 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.501"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/customRoundedImageView" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/title"
+            style="@style/Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="30dp"
-            android:fontFamily="@font/roboto_medium"
             android:text="@string/welcome_title"
-            android:textSize="30sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView"
             app:layout_constraintVertical_bias="0.25" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/title_"
+            android:id="@+id/title_desc"
+            style="@style/Body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
             android:fontFamily="@font/roboto_medium"
             android:paddingTop="3dp"
             android:text="@string/login_disc"
-            android:textColor="#757575"
-            android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title" />
 
@@ -62,20 +60,17 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/title_"
+            app:layout_constraintTop_toBottomOf="@+id/title_desc"
             app:layout_constraintVertical_bias="0.6">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/login_button"
+                style="@style/ButtonLogin"
                 android:layout_width="300dp"
                 android:layout_height="48dp"
                 android:layout_marginHorizontal="30dp"
-                android:backgroundTint="@color/color_light_gray_light"
                 android:contentDescription="@string/guest_mode_button_disc"
-                android:fontFamily="@font/roboto_medium"
                 android:text="@string/guest_mode_button"
-                android:textColor="@color/black"
-                app:cornerRadius="10dp"
                 app:layout_constraintBottom_toTopOf="@+id/or"
                 app:layout_constraintEnd_toEndOf="@+id/or"
                 app:layout_constraintHorizontal_bias="0.502"
@@ -97,16 +92,12 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/login_with_yandex_button"
+                style="@style/ButtonYandex"
                 android:layout_width="300dp"
                 android:layout_height="48dp"
                 android:layout_marginHorizontal="30dp"
-                android:backgroundTint="@color/black"
                 android:contentDescription="@string/yandex_id_button_disc"
-                android:drawableLeft="@drawable/yandex_logo"
-                android:fontFamily="@font/roboto_medium"
                 android:text="@string/yandex_id_button"
-                android:textColor="@color/white"
-                app:cornerRadius="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/or"

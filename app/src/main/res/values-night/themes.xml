@@ -1,14 +1,16 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Theme.DoItNow" parent="Theme.MaterialComponents.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/label_light_tertiary</item>
+        <item name="colorPrimary">@color/back_dark_primary</item>
         <item name="colorPrimaryVariant">@color/label_light_secondary</item>
-        <item name="colorOnPrimary">@color/color_light_gray</item>
+        <item name="colorOnPrimary">@color/label_dark_primary</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/back_dark_secondary</item>
         <item name="colorSecondaryVariant">@color/color_dark_blue</item>
         <item name="colorOnSecondary">@color/color_light_gray</item>
+
+        <item name="colorTertiary">@color/color_light_gray</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->

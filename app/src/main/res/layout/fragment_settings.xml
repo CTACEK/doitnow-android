@@ -16,8 +16,8 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:background="?attr/colorSecondary"
             android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
             app:navigationIcon="@drawable/close_24"
             app:navigationIconTint="?attr/colorOnSecondary">
 
@@ -31,7 +31,7 @@
                 android:importantForAccessibility="no"
                 app:backgroundTint="@android:color/transparent"
                 app:srcCompat="@drawable/baseline_logout_24"
-                app:tint="?attr/colorOnSecondary" />
+                app:tint="?attr/colorOnPrimary" />
         </com.google.android.material.appbar.MaterialToolbar>
 
 
@@ -56,14 +56,12 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/theme_options_value"
+                style="@style/SettingsValueText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginEnd="20dp"
-                android:fontFamily="@font/roboto_medium"
                 android:text="@string/value_temp"
-                android:textColor="@color/color_light_gray"
-                android:textSize="14sp"
                 app:layout_anchorGravity="end|bottom"
                 app:layout_constraintBottom_toBottomOf="@+id/theme_options_title"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -71,29 +69,25 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/theme_options_title"
+                style="@style/SettingsTitleText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|top"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="36dp"
-                android:fontFamily="@font/roboto_medium"
                 android:text="@string/app_theme_title"
-                android:textColor="?attr/colorOnSecondary"
-                android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/allow_notification"
+                style="@style/SettingsTitleText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:fontFamily="@font/roboto_medium"
-                android:text="@string/allow_notification_setting_title"
-                android:textColor="?attr/colorOnSecondary"
-                android:textSize="18sp"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="40dp"
+                android:text="@string/allow_notification_setting_title"
                 app:layout_anchorGravity="end|bottom"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/theme_options_title" />

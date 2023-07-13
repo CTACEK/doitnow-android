@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorPrimary"
-    tools:context=".ui.fragment.managetask.ManageTaskFragment">
+    tools:context=".ui.fragment.managetask.view.ManageTaskFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
@@ -29,8 +29,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:fontFamily="@font/roboto_medium"
                 android:background="?android:attr/selectableItemBackground"
+                android:fontFamily="@font/roboto_medium"
                 android:text="@string/save_button"
                 android:textColor="@color/color_light_blue"
                 app:layout_constraintBottom_toBottomOf="@+id/toolbar"
@@ -59,9 +59,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
-                android:fontFamily="@font/roboto_medium"
                 android:background="@drawable/tasks_background"
                 android:elevation="2dp"
+                android:fontFamily="@font/roboto_medium"
                 android:gravity="top|start"
                 android:hint="@string/enter_your_task_hint"
                 android:importantForAutofill="no"
@@ -113,11 +113,11 @@
                 android:id="@+id/short_separator_line"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:dividerThickness="0.5dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="20dp"
                 android:background="@color/color_light_gray"
+                app:dividerThickness="0.5dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/menu_importance" />
@@ -166,9 +166,9 @@
                 android:id="@+id/end_separator_line"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:dividerThickness="0.5dp"
                 android:layout_marginTop="20dp"
                 android:background="@color/color_light_gray"
+                app:dividerThickness="0.5dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/switch_data_visible" />
 
@@ -182,8 +182,8 @@
                 android:layout_marginTop="20dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:drawablePadding="12dp"
-                android:padding="5dp"
                 android:fontFamily="@font/roboto_medium"
+                android:padding="5dp"
 
                 android:text="@string/delete_button"
                 android:textColor="@color/color_light_gray"
