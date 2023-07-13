@@ -34,4 +34,10 @@ object Constants {
 
     const val ONE_HOUR_IN_MILLIS = 3600000
     const val ONE_DAY_IN_MILLIS = 86400000
+
+    const val TIMER_START : Long = 5000
+    const val TIMER_END : Long = 1000
+    const val TIMER_ONE_SECOND : Long = 1000
+
+
 }
