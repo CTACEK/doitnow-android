@@ -91,6 +91,11 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun addItem(todoItem: ToDoItem){
+        coroutineScope.launch(Dispatchers.IO) {
+            repository.addItem(todoItem.copy())
+        }
+    }
     fun getStatusNotifications() = sharedPreferences.getNotificationStatus()
 
     fun putStatusNotification(status : Boolean) = sharedPreferences.putNotificationStatus(status)

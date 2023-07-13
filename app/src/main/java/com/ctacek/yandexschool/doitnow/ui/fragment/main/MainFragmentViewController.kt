@@ -1,8 +1,12 @@
 package com.ctacek.yandexschool.doitnow.ui.fragment.main
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.os.CountDownTimer
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.view.ContextThemeWrapper
@@ -19,10 +23,15 @@ import com.ctacek.yandexschool.doitnow.ui.adapter.ToDoItemActionListener
 import com.ctacek.yandexschool.doitnow.ui.adapter.ToDoItemAdapter
 import com.ctacek.yandexschool.doitnow.ui.adapter.swipe.SwipeCallbackInterface
 import com.ctacek.yandexschool.doitnow.ui.adapter.swipe.SwipeHelper
+import com.ctacek.yandexschool.doitnow.utils.Constants.TIMER_START
+import com.ctacek.yandexschool.doitnow.utils.Constants.TIMER_END
+import com.ctacek.yandexschool.doitnow.utils.Constants.TIMER_ONE_SECOND
 import com.ctacek.yandexschool.doitnow.utils.internetchecker.ConnectivityObserver
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -32,6 +41,7 @@ class MainFragmentViewController(
     private val binding: FragmentMainBinding,
     private val lifecycleOwner: LifecycleOwner,
     private val viewModel: MainViewModel,
+    private val layoutInflater: LayoutInflater
 ) {
     private var internetState = viewModel.status.value
     private val adapter: ToDoItemAdapter get() = binding.recyclerview.adapter as ToDoItemAdapter
@@ -42,26 +52,28 @@ class MainFragmentViewController(
         checkStatusNotification()
     }
 
-    private fun checkStatusNotification(){
-        if (viewModel.getStatusNotifications() == null){
+    private fun checkStatusNotification() {
+        if (viewModel.getStatusNotifications() == null) {
+
             val builder = MaterialAlertDialogBuilder(
                 ContextThemeWrapper(
                     context, R.style.AlertDialogCustom
                 )
             )
             builder.apply {
-                val title = context.getString(R.string.allow_notifications_dialog_title)
-                setMessage(title)
-                setPositiveButton("Allow") { _, _ ->
+                setTitle(context.getString(R.string.allow_notifications_dialog_title))
+                setMessage(context.getString(R.string.allow_notification_dialog_body))
+                setPositiveButton(context.getString(R.string.allow_button)) { _, _ ->
                     viewModel.putStatusNotification(true)
                 }
-                setNegativeButton("Deny") { _, _ ->
+                setNegativeButton(context.getString(R.string.deny_button)) { _, _ ->
                     viewModel.putStatusNotification(false)
                 }
             }
             builder.show().create()
         }
     }
+
 
     private fun createListeners() {
         with(binding) {
@@ -90,6 +102,7 @@ class MainFragmentViewController(
             val helper = SwipeHelper(object : SwipeCallbackInterface {
                 override fun onDelete(todoItem: ToDoItem) {
                     viewModel.deleteItem(todoItem)
+                    showSnackbar(todoItem)
                 }
 
                 override fun onChangeDone(todoItem: ToDoItem) {
@@ -120,6 +133,7 @@ class MainFragmentViewController(
                             )
                         )
                     }
+
                     false -> {
                         YoYo.with(Techniques.ZoomIn).playOn(binding.visibility)
                         binding.visibility.setImageDrawable(
@@ -167,7 +181,8 @@ class MainFragmentViewController(
                     if (visibilityState) {
                         adapter.submitList(uiState.data.sortedBy { it.createdAt })
                     } else {
-                        adapter.submitList(uiState.data.filter { !it.done }.sortedBy { it.createdAt })
+                        adapter.submitList(uiState.data.filter { !it.done }
+                            .sortedBy { it.createdAt })
                     }
                     with(binding) {
                         recyclerview.visibility = View.VISIBLE
@@ -175,7 +190,11 @@ class MainFragmentViewController(
                     }
                 }
 
-                is UiState.Error -> Log.d("1", uiState.cause)
+                is UiState.Error -> Log.d(
+                    MainFragmentViewController::class.simpleName,
+                    uiState.cause
+                )
+
                 is UiState.Start -> {
                     with(binding) {
                         recyclerview.visibility = View.GONE
@@ -210,5 +229,42 @@ class MainFragmentViewController(
             }
         }
         internetState = status
+    }
+
+    @SuppressLint("InflateParams")
+    private fun showSnackbar(deletedTask: ToDoItem) {
+        val snackbar = Snackbar.make(binding.recyclerview, "", Snackbar.LENGTH_INDEFINITE)
+
+        snackbar.animationMode = BaseTransientBottomBar.ANIMATION_MODE_SLIDE
+        val customize = layoutInflater.inflate(R.layout.custom_snackbar, null)
+        snackbar.view.setBackgroundColor(context.getColor(android.R.color.transparent))
+
+        val snackBarLayout = snackbar.view as Snackbar.SnackbarLayout
+        val timerText = customize.findViewById<TextView>(R.id.timer)
+        val timerTitle = customize.findViewById<TextView>(R.id.title)
+
+        timerTitle.text = context.getString(R.string.cancel_deleting, deletedTask.description)
+        val cancel = customize.findViewById<TextView>(R.id.cancel)
+
+        cancel.setOnClickListener {
+            viewModel.addItem(deletedTask)
+            snackbar.dismiss()
+        }
+
+        snackBarLayout.addView(customize, 0)
+
+        val timer = object : CountDownTimer(TIMER_START, TIMER_END) {
+            @SuppressLint("SetTextI18n")
+            override fun onTick(millisUntilFinished: Long) {
+                timerText.text = (millisUntilFinished / TIMER_ONE_SECOND + 1).toString()
+            }
+
+            override fun onFinish() {
+                snackbar.dismiss()
+            }
+        }
+
+        timer.start()
+        snackbar.show()
     }
 }

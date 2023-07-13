@@ -6,4 +6,5 @@
     <string name="choose_theme_title">Choose theme</string>
     <string name="hour_before_task">Hour before task!</string>
     <string name="postpone_for_a_day">Postpone for a day</string>
+    <string name="allow_notification_dialog_body">The notifications will show you the text of the task and its importance. Also, by clicking on it, you can proceed to editing.</string>
 </resources>

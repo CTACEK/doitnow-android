@@ -53,6 +53,12 @@
     <string name="allow_notifications_dialog_title">Do you allow notifications to be displayed?</string>
     <string name="value_temp">Value</string>
     <string name="allow_notification_setting_title">Allow notification</string>
+    <string name="manage_fragment_title">Manage fragment</string>
+    <string name="allow_notification_dialog_body">The notifications will show you the text of the task and its importance. Also, by clicking on it, you can proceed to editing.</string>
+    <string name="allow_button">Allow</string>
+    <string name="deny_button">Deny</string>
+    <string name="cancel_deleting">Cancel deleting a task: %1$s?</string>
+    <string name="cancel_button">Cancel</string>
 
 
 </resources>
