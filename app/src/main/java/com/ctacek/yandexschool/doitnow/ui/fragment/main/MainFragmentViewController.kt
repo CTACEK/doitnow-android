@@ -39,6 +39,28 @@ class MainFragmentViewController(
     fun setUpViews() {
         createListeners()
         setUpViewModel()
+        checkStatusNotification()
+    }
+
+    private fun checkStatusNotification(){
+        if (viewModel.getStatusNotifications() == null){
+            val builder = MaterialAlertDialogBuilder(
+                ContextThemeWrapper(
+                    context, R.style.AlertDialogCustom
+                )
+            )
+            builder.apply {
+                val title = context.getString(R.string.allow_notifications_dialog_title)
+                setMessage(title)
+                setPositiveButton("Allow") { _, _ ->
+                    viewModel.putStatusNotification(true)
+                }
+                setNegativeButton("Deny") { _, _ ->
+                    viewModel.putStatusNotification(false)
+                }
+            }
+            builder.show().create()
+        }
     }
 
     private fun createListeners() {

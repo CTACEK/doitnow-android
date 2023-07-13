@@ -50,7 +50,9 @@
     <string name="hour_before_task">Hour before task!</string>
     <string name="postpone_for_a_day">Postpone for a day</string>
     <string name="notification_text">Your notification is %1$s and importance is %2$s</string>
-
+    <string name="allow_notifications_dialog_title">Do you allow notifications to be displayed?</string>
+    <string name="value_temp">Value</string>
+    <string name="allow_notification_setting_title">Allow notification</string>
 
 
 </resources>

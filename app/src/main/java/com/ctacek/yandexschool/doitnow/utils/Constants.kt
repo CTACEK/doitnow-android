@@ -20,7 +20,8 @@ object Constants {
     const val SHARED_PREFERENCES_DEVICE_TAG = "current_device_id"
     const val SHARED_PREFERENCES_NO_TOKEN = "no_token"
     const val SHARED_PREFERENCES_NOTIFICATION_STATUS = "notification_status"
-    const val NOTIFICATION_PERMISSION_REQUEST_CODE = 1001
+    const val SHARED_PREFERENCES_NOTIFICATIONS_IDS = "notifications_id"
+
 
 
     const val SHARED_PREFERENCES_THEME_OPTION = "theme_option"

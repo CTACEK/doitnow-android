@@ -167,7 +167,7 @@ class ManageTaskViewController(
                 }
                 binding.editText.error = null
                 toDoItem.description = binding.editText.text.toString()
-                toDoItem.changedAt = java.sql.Date(System.currentTimeMillis())
+                toDoItem.changedAt = Date(System.currentTimeMillis())
 
                 if (toDoItem.id == "-1") {
                     saveNewTask(toDoItem)

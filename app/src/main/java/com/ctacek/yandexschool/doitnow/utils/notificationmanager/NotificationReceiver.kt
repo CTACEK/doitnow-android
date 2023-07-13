@@ -82,10 +82,10 @@ class NotificationReceiver : BroadcastReceiver() {
         }
     }
 
-    private fun deepLinkIntent(context: Context, id: String): PendingIntent =
+    private fun deepLinkIntent(context: Context, newTaskArg: String): PendingIntent =
         NavDeepLinkBuilder(context)
             .setGraph(R.navigation.main_graph)
-            .setDestination(R.id.manageTaskFragment, bundleOf("id" to id))
+            .setDestination(R.id.manageTaskFragment, bundleOf("newTaskArg" to newTaskArg))
             .createPendingIntent()
 
     private fun postponeIntent(context: Context, item: ToDoItem): PendingIntent =

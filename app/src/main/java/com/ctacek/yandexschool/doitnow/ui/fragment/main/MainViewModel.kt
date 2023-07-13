@@ -1,6 +1,7 @@
 package com.ctacek.yandexschool.doitnow.ui.fragment.main
 
 import androidx.lifecycle.ViewModel
+import com.ctacek.yandexschool.doitnow.data.datasource.SharedPreferencesAppSettings
 import com.ctacek.yandexschool.doitnow.data.repository.ToDoItemsRepositoryImpl
 import com.ctacek.yandexschool.doitnow.domain.model.ToDoItem
 import com.ctacek.yandexschool.doitnow.domain.model.UiState
@@ -21,6 +22,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val repository: ToDoItemsRepositoryImpl,
     private val connection: NetworkConnectivityObserver,
+    private val sharedPreferences: SharedPreferencesAppSettings,
     private val coroutineScope: CoroutineScope
 ) : ViewModel() {
 
@@ -88,4 +90,8 @@ class MainViewModel @Inject constructor(
             repository.changeItem(task)
         }
     }
+
+    fun getStatusNotifications() = sharedPreferences.getNotificationStatus()
+
+    fun putStatusNotification(status : Boolean) = sharedPreferences.putNotificationStatus(status)
 }

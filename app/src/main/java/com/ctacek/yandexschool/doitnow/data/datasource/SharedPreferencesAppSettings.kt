@@ -1,19 +1,18 @@
 package com.ctacek.yandexschool.doitnow.data.datasource
 
+
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import com.ctacek.yandexschool.doitnow.R
-import com.ctacek.yandexschool.doitnow.utils.Constants.TOKEN_API
-import com.ctacek.yandexschool.doitnow.utils.Constants.SHARED_PREFERENCES_NO_TOKEN
-import com.ctacek.yandexschool.doitnow.utils.Constants.SHARED_PREFERENCES_NAME
 import com.ctacek.yandexschool.doitnow.utils.Constants.SHARED_PREFERENCES_DEVICE_TAG
-import com.ctacek.yandexschool.doitnow.utils.Constants.SHARED_PREFERENCES_TOKEN
+import com.ctacek.yandexschool.doitnow.utils.Constants.SHARED_PREFERENCES_NAME
+import com.ctacek.yandexschool.doitnow.utils.Constants.SHARED_PREFERENCES_NOTIFICATIONS_IDS
+import com.ctacek.yandexschool.doitnow.utils.Constants.SHARED_PREFERENCES_NOTIFICATION_STATUS
+import com.ctacek.yandexschool.doitnow.utils.Constants.SHARED_PREFERENCES_NO_TOKEN
 import com.ctacek.yandexschool.doitnow.utils.Constants.SHARED_PREFERENCES_REVISION_TAG
 import com.ctacek.yandexschool.doitnow.utils.Constants.SHARED_PREFERENCES_THEME_OPTION
-import com.ctacek.yandexschool.doitnow.utils.Constants.SHARED_PREFERENCES_NOTIFICATION_STATUS
-
-
-
+import com.ctacek.yandexschool.doitnow.utils.Constants.SHARED_PREFERENCES_TOKEN
+import com.ctacek.yandexschool.doitnow.utils.Constants.TOKEN_API
 import java.util.UUID
 import javax.inject.Inject
 
@@ -54,7 +53,7 @@ class SharedPreferencesAppSettings @Inject constructor(private val context: Cont
         return sharedPreferences.getInt(SHARED_PREFERENCES_REVISION_TAG, 1)
     }
 
-    fun putThemeMode(themeMode : String){
+    fun putThemeMode(themeMode: String) {
         val themeOptions = context.resources.getStringArray(R.array.theme_options)
 
         when (themeOptions.indexOf(themeMode)) {
@@ -67,16 +66,43 @@ class SharedPreferencesAppSettings @Inject constructor(private val context: Cont
         editor.apply()
     }
 
-    fun getThemeMode() : String {
+    fun getThemeMode(): String {
         return sharedPreferences.getString(SHARED_PREFERENCES_THEME_OPTION, null) ?: "system"
     }
 
-    fun putNotificationStatus(status: String) {
-        editor.putString(SHARED_PREFERENCES_NOTIFICATION_STATUS, status)
+    fun putNotificationStatus(status: Boolean) {
+        if (status) editor.putString(SHARED_PREFERENCES_NOTIFICATION_STATUS, "yes")
+        else editor.putString(SHARED_PREFERENCES_NOTIFICATION_STATUS, "no")
+
         editor.apply()
     }
 
-    fun getNotificationStatus() : String? {
-        return sharedPreferences.getString(SHARED_PREFERENCES_NOTIFICATION_STATUS, null)
+    fun getNotificationStatus(): Boolean? {
+        return when (sharedPreferences.getString(SHARED_PREFERENCES_NOTIFICATION_STATUS, null)) {
+            "yes" -> true
+            "no" -> false
+            else -> null
+        }
+    }
+
+    fun addNotification(id: String): String {
+        editor.putString(SHARED_PREFERENCES_NOTIFICATIONS_IDS, getNotificationsIds() + " $id")
+        editor.apply()
+        return sharedPreferences.getString(SHARED_PREFERENCES_NOTIFICATIONS_IDS, "").toString()
+    }
+
+    fun removeNotification(id: String) {
+        val s = getNotificationsIds()
+        val arr = ArrayList(s.trim().split(" "))
+        if (arr.contains(id)) {
+            arr.remove(id)
+        }
+        val res = arr.fold("") { previous, next -> "$previous $next" }
+        editor.putString(SHARED_PREFERENCES_NOTIFICATIONS_IDS, res)
+        editor.apply()
+    }
+
+    fun getNotificationsIds(): String {
+        return sharedPreferences.getString(SHARED_PREFERENCES_NOTIFICATIONS_IDS, "").toString().trim()
     }
 }

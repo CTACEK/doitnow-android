@@ -7,7 +7,7 @@ import com.ctacek.yandexschool.doitnow.domain.model.DataState
 import com.ctacek.yandexschool.doitnow.domain.model.ToDoItem
 import com.ctacek.yandexschool.doitnow.domain.model.UiState
 import com.ctacek.yandexschool.doitnow.domain.repository.Repository
-import com.ctacek.yandexschool.doitnow.utils.notificationmanager.NotificationSchedulerImpl
+import com.ctacek.yandexschool.doitnow.utils.notificationmanager.NotificationScheduler
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -21,10 +21,8 @@ import javax.inject.Inject
 class ToDoItemsRepositoryImpl @Inject constructor(
     private val dao: ToDoItemDao,
     private val networkSource: RemoteDataSourceImpl,
-    private val notificationsScheduler: NotificationSchedulerImpl
+    private val notificationsScheduler: NotificationScheduler
 ) : Repository {
-
-    private val TAG = ToDoItemsRepositoryImpl::class.simpleName
 
     override fun getAllData(): Flow<UiState<List<ToDoItem>>> = flow {
         emit(UiState.Start)
@@ -53,8 +51,8 @@ class ToDoItemsRepositoryImpl @Inject constructor(
         val toDoItemEntity = ToDoItemEntity.fromToDoTask(todoItem)
         dao.updateToDoItem(toDoItemEntity)
 
-        networkSource.updateRemoteTask(todoItem)
         notificationsScheduler.schedule(todoItem)
+        networkSource.updateRemoteTask(todoItem)
     }
 
     override fun getNetworkTasks(): Flow<UiState<List<ToDoItem>>> = flow {
@@ -75,6 +73,7 @@ class ToDoItemsRepositoryImpl @Inject constructor(
     }
 
     private fun updateNotifications(items: List<ToDoItem>) {
+        notificationsScheduler.cancelAll()
         for (item in items){
             notificationsScheduler.schedule(item)
         }

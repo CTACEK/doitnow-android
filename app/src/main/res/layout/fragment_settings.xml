@@ -1,6 +1,5 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorPrimary"
@@ -18,7 +17,9 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:background="?attr/colorSecondary"
-            android:layout_height="?attr/actionBarSize">
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/close_24"
+            app:navigationIconTint="?attr/colorOnSecondary">
 
             <ImageView
                 android:id="@+id/logout_button"
@@ -60,7 +61,7 @@
                 android:layout_gravity="end"
                 android:layout_marginEnd="20dp"
                 android:fontFamily="@font/roboto_medium"
-                android:text="Value"
+                android:text="@string/value_temp"
                 android:textColor="@color/color_light_gray"
                 android:textSize="14sp"
                 app:layout_anchorGravity="end|bottom"
@@ -81,6 +82,33 @@
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/allow_notification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:fontFamily="@font/roboto_medium"
+                android:text="@string/allow_notification_setting_title"
+                android:textColor="?attr/colorOnSecondary"
+                android:textSize="18sp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="40dp"
+                app:layout_anchorGravity="end|bottom"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/theme_options_title" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_allow_notification"
+                android:layout_width="51dp"
+                android:layout_height="26dp"
+                android:checked="false"
+                android:gravity="top"
+                android:theme="@style/Switch"
+                app:layout_constraintBottom_toBottomOf="@+id/allow_notification"
+                app:layout_constraintEnd_toEndOf="@+id/theme_options_value"
+                app:layout_constraintStart_toStartOf="@+id/theme_options_value"
+                app:layout_constraintTop_toTopOf="@+id/allow_notification" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

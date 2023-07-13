@@ -1,22 +1,17 @@
 package com.ctacek.yandexschool.doitnow.ui.fragment.settings
 
-import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.preference.ListPreference
-import androidx.preference.PreferenceFragmentCompat
 import com.ctacek.yandexschool.doitnow.R
 import com.ctacek.yandexschool.doitnow.appComponent
 import com.ctacek.yandexschool.doitnow.data.datasource.SharedPreferencesAppSettings
 import com.ctacek.yandexschool.doitnow.databinding.FragmentSettingsBinding
+import com.ctacek.yandexschool.doitnow.utils.notificationmanager.NotificationScheduler
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import javax.inject.Inject
 
@@ -27,6 +22,9 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     @Inject
     lateinit var sharedPreferences: SharedPreferencesAppSettings
+
+    @Inject
+    lateinit var notificationScheduler: NotificationScheduler
 
     private val themeOptions: Array<String> by lazy {
         resources.getStringArray(R.array.theme_options)
@@ -39,6 +37,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         super.onCreate(savedInstanceState)
         binding = FragmentSettingsBinding.inflate(layoutInflater)
         requireContext().appComponent.injectSettingsFragment(this)
+        prepareSwitchStatus()
     }
 
     override fun onCreateView(
@@ -48,6 +47,11 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         return binding.root
     }
 
+    private fun prepareSwitchStatus() {
+        val status = sharedPreferences.getNotificationStatus()
+        binding.switchAllowNotification.isChecked = status ?: false
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -55,6 +59,19 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         with(binding) {
 
             themeOptionsValue.text = sharedPreferences.getThemeMode()
+
+            switchAllowNotification.setOnCheckedChangeListener { _, status ->
+                if (status) {
+                    sharedPreferences.putNotificationStatus(true)
+                } else {
+                    sharedPreferences.putNotificationStatus(false)
+                    notificationScheduler.cancelAll()
+                }
+            }
+
+            toolbar.setNavigationOnClickListener {
+                findNavController().popBackStack()
+            }
 
             themeOption.setOnClickListener {
                 val builder = MaterialAlertDialogBuilder(
@@ -86,11 +103,6 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
                     )
                 )
                 builder.apply {
-//                    val title = if (internetState == ConnectivityObserver.Status.Available) {
-//                        context.getString(R.string.you_want_get_out)
-//                    } else {
-//                        context.getString(R.string.you_want_get_out_offline)
-//                    }
                     val title = context.getString(R.string.you_want_get_out)
                     setMessage(title)
                     setPositiveButton(context.getString(R.string.logout_button)) { _, _ ->
