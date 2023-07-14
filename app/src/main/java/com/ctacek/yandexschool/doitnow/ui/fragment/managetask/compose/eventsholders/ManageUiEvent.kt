@@ -9,7 +9,6 @@ sealed interface ManageUiEvent {
     data class ChangeDeadline(val deadline: Date?) : ManageUiEvent
     object ClearDeadline : ManageUiEvent
     object SaveTask : ManageUiEvent
-    object CreateTask : ManageUiEvent
     object DeleteTodo : ManageUiEvent
     object Close : ManageUiEvent
 }

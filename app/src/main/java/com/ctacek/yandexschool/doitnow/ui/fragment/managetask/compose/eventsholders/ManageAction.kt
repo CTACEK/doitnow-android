@@ -3,5 +3,4 @@ package com.ctacek.yandexschool.doitnow.ui.fragment.managetask.compose.eventshol
 
 sealed interface ManageAction {
     object NavigateBack : ManageAction
-    object ShowDatePicker : ManageAction
 }

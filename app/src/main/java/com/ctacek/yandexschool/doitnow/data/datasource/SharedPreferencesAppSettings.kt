@@ -3,7 +3,7 @@ package com.ctacek.yandexschool.doitnow.data.datasource
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
-import com.ctacek.yandexschool.doitnow.R
+import com.ctacek.yandexschool.doitnow.domain.model.ThemeMode
 import com.ctacek.yandexschool.doitnow.utils.Constants.SHARED_PREFERENCES_DEVICE_TAG
 import com.ctacek.yandexschool.doitnow.utils.Constants.SHARED_PREFERENCES_NAME
 import com.ctacek.yandexschool.doitnow.utils.Constants.SHARED_PREFERENCES_NOTIFICATIONS_IDS
@@ -53,21 +53,19 @@ class SharedPreferencesAppSettings @Inject constructor(private val context: Cont
         return sharedPreferences.getInt(SHARED_PREFERENCES_REVISION_TAG, 1)
     }
 
-    fun putThemeMode(themeMode: String) {
-        val themeOptions = context.resources.getStringArray(R.array.theme_options)
-
-        when (themeOptions.indexOf(themeMode)) {
-            0 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+    fun putThemeMode(themeMode: ThemeMode) {
+        when (themeMode) {
+            ThemeMode.LIGHT -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            ThemeMode.DARK -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         }
-
-        editor.putString(SHARED_PREFERENCES_THEME_OPTION, themeMode)
+        editor.putString(SHARED_PREFERENCES_THEME_OPTION, themeMode.toString().lowercase())
         editor.apply()
     }
 
-    fun getThemeMode(): String {
-        return sharedPreferences.getString(SHARED_PREFERENCES_THEME_OPTION, null) ?: "system"
+    fun getThemeMode(): ThemeMode {
+        val mode = sharedPreferences.getString(SHARED_PREFERENCES_THEME_OPTION, null) ?: "system"
+        return ThemeMode.valueOf(mode.uppercase())
     }
 
     fun putNotificationStatus(status: Boolean) {
@@ -103,6 +101,7 @@ class SharedPreferencesAppSettings @Inject constructor(private val context: Cont
     }
 
     fun getNotificationsIds(): String {
-        return sharedPreferences.getString(SHARED_PREFERENCES_NOTIFICATIONS_IDS, "").toString().trim()
+        return sharedPreferences.getString(SHARED_PREFERENCES_NOTIFICATIONS_IDS, "").toString()
+            .trim()
     }
 }

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.Switch
+import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material3.Icon
@@ -19,10 +20,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ctacek.yandexschool.doitnow.R
+import com.ctacek.yandexschool.doitnow.ui.fragment.managetask.compose.theme.Typography
+import com.ctacek.yandexschool.doitnow.ui.fragment.managetask.compose.theme.YandexTodoTheme
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.Date
 
 @Composable
@@ -47,6 +50,8 @@ fun DeadlinePanel(
         ) {
             Text(
                 text = stringResource(id = R.string.do_before_title),
+                style = Typography.body1,
+                color = YandexTodoTheme.colors.labelPrimary,
                 modifier = Modifier
                     .weight(1f)
                     .wrapContentWidth(Alignment.Start)
@@ -60,7 +65,13 @@ fun DeadlinePanel(
                     else
                         clearDeadline()
                 },
-                modifier = Modifier.padding(end = 16.dp)
+                modifier = Modifier.padding(end = 16.dp),
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = YandexTodoTheme.colors.colorBlue,
+                    checkedTrackColor = Color(0x4D007AFF),
+                    uncheckedThumbColor = YandexTodoTheme.colors.backElevated,
+                    uncheckedTrackColor = YandexTodoTheme.colors.supportOverlay
+                )
             )
         }
         if (deadline != null) {
@@ -75,13 +86,42 @@ fun DeadlinePanel(
                 Icon(
                     Icons.Default.CalendarMonth,
                     contentDescription = null,
-                    tint = Color.Blue
+                    tint = YandexTodoTheme.colors.colorBlue,
                 )
                 Text(
                     text = dataFormat.format(deadline),
-                    color = Color.Blue,
+                    style = Typography.body2,
+                    color = YandexTodoTheme.colors.colorBlue,
                 )
             }
         }
+    }
+}
+
+@Composable
+@Preview
+private fun DeadlinePanelPreviewLight(){
+    YandexTodoTheme(
+        darkTheme = false
+    ){
+        DeadlinePanel(
+            Date(),
+            {},
+            {}
+        )
+    }
+}
+
+@Composable
+@Preview
+private fun DeadlinePanelPreviewDark(){
+    YandexTodoTheme(
+        darkTheme = true
+    ){
+        DeadlinePanel(
+            null,
+            {},
+            {}
+        )
     }
 }

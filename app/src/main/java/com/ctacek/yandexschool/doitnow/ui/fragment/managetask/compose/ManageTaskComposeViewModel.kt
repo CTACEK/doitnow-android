@@ -1,6 +1,5 @@
 package com.ctacek.yandexschool.doitnow.ui.fragment.managetask.compose
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.ctacek.yandexschool.doitnow.data.model.Importance
 import com.ctacek.yandexschool.doitnow.data.repository.ToDoItemsRepositoryImpl
@@ -76,8 +75,15 @@ class ManageTaskComposeViewModel @Inject constructor(
             is ManageUiEvent.ChangeDescription -> changeTitle(event.text)
             is ManageUiEvent.ChangeImportance -> changeImportance(event.importance)
             is ManageUiEvent.ChangeDeadline -> changeDeadline(event.deadline)
-            ManageUiEvent.SaveTask -> updateItem(_todoItem.value)
-            ManageUiEvent.CreateTask -> addItem(_todoItem.value)
+            ManageUiEvent.SaveTask -> {
+            if (_todoItem.value.id == "-1") {
+                addItem(_todoItem.value)
+                _actions.trySend(ManageAction.NavigateBack)
+            } else {
+                updateItem(_todoItem.value)
+                _actions.trySend(ManageAction.NavigateBack)
+            }
+        }
             ManageUiEvent.DeleteTodo -> deleteItem(_todoItem.value)
             ManageUiEvent.ClearDeadline -> changeDeadline(null)
             ManageUiEvent.Close -> _actions.trySend(ManageAction.NavigateBack)

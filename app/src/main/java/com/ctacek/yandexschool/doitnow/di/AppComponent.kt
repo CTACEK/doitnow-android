@@ -4,17 +4,17 @@ import android.content.Context
 import com.ctacek.yandexschool.doitnow.App
 import com.ctacek.yandexschool.doitnow.ViewModelFactory
 import com.ctacek.yandexschool.doitnow.di.customscope.AppScope
-import com.ctacek.yandexschool.doitnow.di.module.NotificationSchedulerModule
 import com.ctacek.yandexschool.doitnow.di.module.ApplicationModule
 import com.ctacek.yandexschool.doitnow.di.module.DataBaseModule
 import com.ctacek.yandexschool.doitnow.di.module.DataSourceModule
 import com.ctacek.yandexschool.doitnow.di.module.NetworkModule
 import com.ctacek.yandexschool.doitnow.di.module.NetworkObserver
+import com.ctacek.yandexschool.doitnow.di.module.NotificationSchedulerModule
 import com.ctacek.yandexschool.doitnow.di.module.RepositoryModule
 import com.ctacek.yandexschool.doitnow.di.module.WorkManagerModule
 import com.ctacek.yandexschool.doitnow.di.subcomp.LoginComponent
 import com.ctacek.yandexschool.doitnow.ui.activity.MainActivity
-import com.ctacek.yandexschool.doitnow.ui.fragment.managetask.view.ManageTaskFragment
+import com.ctacek.yandexschool.doitnow.ui.fragment.managetask.compose.ManageItemFragmentCompose
 import com.ctacek.yandexschool.doitnow.ui.fragment.settings.SettingsFragment
 import com.ctacek.yandexschool.doitnow.utils.PeriodWorkManager
 import com.ctacek.yandexschool.doitnow.utils.notificationmanager.NotificationPostponeReceiver
@@ -43,7 +43,7 @@ interface AppComponent {
     fun injectNotificationReceiver(receiver: NotificationReceiver)
     fun injectNotificationPostponeReceiver(receiver: NotificationPostponeReceiver)
     fun findViewModelFactory(): ViewModelFactory
-    fun injectManageTaskFragment(fragment: ManageTaskFragment)
+    fun injectManageTaskFragment(fragment: ManageItemFragmentCompose)
     fun injectMainActivity(activity: MainActivity)
 
     @Component.Factory

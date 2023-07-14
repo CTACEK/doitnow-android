@@ -59,6 +59,9 @@
     <string name="deny_button">Deny</string>
     <string name="cancel_deleting">Cancel deleting a task: %1$s?</string>
     <string name="cancel_button">Cancel</string>
+    <string name="ok_button">OK</string>
+    <string name="select_time_time_picker_tittle">"Select Time "</string>
+    <string name="enter_time_time_picker_tittle">Enter Time</string>
 
 
 </resources>

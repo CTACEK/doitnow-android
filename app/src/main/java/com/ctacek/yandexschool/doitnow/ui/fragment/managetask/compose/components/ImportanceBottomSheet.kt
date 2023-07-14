@@ -4,36 +4,17 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SheetState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ctacek.yandexschool.doitnow.data.model.Importance
-import java.util.Locale
-
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Composable
-//fun ImportanceModalBottomSheet(
-//    bottomSheetState: SheetState,
-//    onDismissRequest: () -> Unit,
-//) {
-//
-//    fun ModalBottomSheet(
-//        sheetState = bottomSheetState,
-//        onDismissRequest = { onDismissRequest() },
-//    ) {
-//        ImportanceBottomSheet { importance ->
-//            selectedImportance.value = importance
-//            onPriorityItemClick(Importance.valueOf(importance.toUpperCase()))
-//            if (bottomSheetState.isVisible) {
-//                openBottomSheet = false
-//            }
-//        }
-//    }
-//}
+import com.ctacek.yandexschool.doitnow.data.model.toName
+import com.ctacek.yandexschool.doitnow.ui.fragment.managetask.compose.theme.Typography
+import com.ctacek.yandexschool.doitnow.ui.fragment.managetask.compose.theme.YandexTodoTheme
 
 @Composable
 fun ImportanceBottomSheet(
@@ -41,16 +22,50 @@ fun ImportanceBottomSheet(
 ) {
     val importanceValues = Importance.values()
 
-    Column(modifier = Modifier.padding(16.dp, bottom = 30.dp)) {
-        importanceValues.forEach { importance ->
-            Text(
-                text = importance.toString().lowercase().capitalize(Locale.ROOT),
-                color = if (importance == Importance.IMPORTANT) Color.Red else Color.Gray,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onImportanceSelected(importance) }
-                    .padding(vertical = 8.dp)
-            )
+    Surface(
+        shape = RoundedCornerShape(12.dp, 12.dp, 0.dp, 0.dp),
+        color = YandexTodoTheme.colors.backPrimary
+    ) {
+        Column(
+            modifier =
+            Modifier.padding(bottom = 10.dp)
+        ) {
+            importanceValues.forEach { importance ->
+                Text(
+                    text = importance.toName(),
+                    color = if (importance == Importance.IMPORTANT)
+                        YandexTodoTheme.colors.colorRed else YandexTodoTheme.colors.labelPrimary,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { onImportanceSelected(importance) }
+                        .padding(horizontal = 20.dp, vertical = 15.dp),
+                    style = Typography.body1
+                )
+            }
         }
+    }
+}
+
+@Composable
+@Preview
+private fun ImportancePreviewLight(){
+    YandexTodoTheme(
+        darkTheme = false
+    ){
+        ImportanceBottomSheet(
+            {}
+        )
+    }
+}
+
+@Composable
+@Preview
+private fun ImportancePreviewDark(){
+    YandexTodoTheme(
+        darkTheme = true
+    ){
+        ImportanceBottomSheet(
+            {}
+        )
     }
 }
