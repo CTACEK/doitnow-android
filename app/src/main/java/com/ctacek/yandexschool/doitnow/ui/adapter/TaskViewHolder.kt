@@ -36,7 +36,7 @@ class TaskViewHolder(private val binding: ItemTaskBinding) : RecyclerView.ViewHo
             binding.title.paintFlags = binding.title.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             if (item.deadline != null) {
                 binding.data.visibility = View.VISIBLE
-                binding.data.text = DateFormat.format("MMM dd, yyyy", item.deadline!!).toString()
+                binding.data.text = DateFormat.format("HH:mm, MMM dd yyyy", item.deadline!!).toString()
             } else {
                 binding.data.visibility = View.GONE
             }

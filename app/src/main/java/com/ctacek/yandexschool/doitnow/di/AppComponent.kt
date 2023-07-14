@@ -14,7 +14,7 @@ import com.ctacek.yandexschool.doitnow.di.module.RepositoryModule
 import com.ctacek.yandexschool.doitnow.di.module.WorkManagerModule
 import com.ctacek.yandexschool.doitnow.di.subcomp.LoginComponent
 import com.ctacek.yandexschool.doitnow.ui.activity.MainActivity
-import com.ctacek.yandexschool.doitnow.ui.fragment.managetask.ManageTaskFragment
+import com.ctacek.yandexschool.doitnow.ui.fragment.managetask.view.ManageTaskFragment
 import com.ctacek.yandexschool.doitnow.ui.fragment.settings.SettingsFragment
 import com.ctacek.yandexschool.doitnow.utils.PeriodWorkManager
 import com.ctacek.yandexschool.doitnow.utils.notificationmanager.NotificationPostponeReceiver

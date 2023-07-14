@@ -19,7 +19,7 @@ data class ToDoItem(
     val createdAt: Date,
     var changedAt: Date?
 ) {
-    constructor() : this("-1", "", Importance.BASIC, null, false, Date(), Date())
+    constructor() : this("-1", "", Importance.BASIC, null, false, Date(), Date(System.currentTimeMillis()))
 
     override fun toString(): String {
         val gson = Gson()

@@ -27,7 +27,7 @@
 
     <fragment
         android:id="@+id/manageTaskFragment"
-        android:name="com.ctacek.yandexschool.doitnow.ui.fragment.managetask.ManageTaskFragment"
+        android:name="com.ctacek.yandexschool.doitnow.ui.fragment.managetask.compose.ManageItemFragmentCompose"
         android:label="fragment_manage_task"
         tools:layout="@layout/fragment_manage_task">
 

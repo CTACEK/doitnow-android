@@ -1,4 +1,4 @@
-package com.ctacek.yandexschool.doitnow.ui.fragment.managetask
+package com.ctacek.yandexschool.doitnow.ui.fragment.managetask.view
 
 import android.annotation.SuppressLint
 import android.content.Context
