@@ -59,8 +59,8 @@ class NotificationReceiver : BroadcastReceiver() {
                         .setContentText(
                             context.getString(
                                 R.string.notification_text,
-                                task.importance.toString().lowercase(Locale.ROOT),
-                                task.description
+                                task.description,
+                                task.importance.toString().lowercase(Locale.ROOT)
                             )
                         )
                         .setPriority(NotificationCompat.PRIORITY_DEFAULT)

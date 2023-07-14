@@ -35,7 +35,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             binding,
             viewLifecycleOwner,
             viewModel,
-            layoutInflater
+            layoutInflater,
         ).apply {
             setUpViews()
         }

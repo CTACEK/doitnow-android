@@ -2,12 +2,14 @@ package com.ctacek.yandexschool.doitnow.ui.fragment.main
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
 import android.os.CountDownTimer
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.lifecycle.Lifecycle
@@ -19,13 +21,14 @@ import com.ctacek.yandexschool.doitnow.R
 import com.ctacek.yandexschool.doitnow.databinding.FragmentMainBinding
 import com.ctacek.yandexschool.doitnow.domain.model.ToDoItem
 import com.ctacek.yandexschool.doitnow.domain.model.UiState
+import com.ctacek.yandexschool.doitnow.ui.activity.MainActivity
 import com.ctacek.yandexschool.doitnow.ui.adapter.ToDoItemActionListener
 import com.ctacek.yandexschool.doitnow.ui.adapter.ToDoItemAdapter
 import com.ctacek.yandexschool.doitnow.ui.adapter.swipe.SwipeCallbackInterface
 import com.ctacek.yandexschool.doitnow.ui.adapter.swipe.SwipeHelper
-import com.ctacek.yandexschool.doitnow.utils.Constants.TIMER_START
 import com.ctacek.yandexschool.doitnow.utils.Constants.TIMER_END
 import com.ctacek.yandexschool.doitnow.utils.Constants.TIMER_ONE_SECOND
+import com.ctacek.yandexschool.doitnow.utils.Constants.TIMER_START
 import com.ctacek.yandexschool.doitnow.utils.internetchecker.ConnectivityObserver
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
@@ -41,7 +44,7 @@ class MainFragmentViewController(
     private val binding: FragmentMainBinding,
     private val lifecycleOwner: LifecycleOwner,
     private val viewModel: MainViewModel,
-    private val layoutInflater: LayoutInflater
+    private val layoutInflater: LayoutInflater,
 ) {
     private var internetState = viewModel.status.value
     private val adapter: ToDoItemAdapter get() = binding.recyclerview.adapter as ToDoItemAdapter
@@ -54,26 +57,13 @@ class MainFragmentViewController(
 
     private fun checkStatusNotification() {
         if (viewModel.getStatusNotifications() == null) {
-
-            val builder = MaterialAlertDialogBuilder(
-                ContextThemeWrapper(
-                    context, R.style.AlertDialogCustom
-                )
-            )
-            builder.apply {
-                setTitle(context.getString(R.string.allow_notifications_dialog_title))
-                setMessage(context.getString(R.string.allow_notification_dialog_body))
-                setPositiveButton(context.getString(R.string.allow_button)) { _, _ ->
-                    viewModel.putStatusNotification(true)
-                }
-                setNegativeButton(context.getString(R.string.deny_button)) { _, _ ->
-                    viewModel.putStatusNotification(false)
-                }
+            if (Build.VERSION.SDK_INT >= 33) {
+                notificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+            } else {
+                showNotificationDialog()
             }
-            builder.show().create()
         }
     }
-
 
     private fun createListeners() {
         with(binding) {
@@ -179,10 +169,15 @@ class MainFragmentViewController(
             when (uiState) {
                 is UiState.Success -> {
                     if (visibilityState) {
-                        adapter.submitList(uiState.data.sortedBy { it.createdAt })
+                        adapter.submitList(
+                            uiState.data
+                                .sortedWith(compareBy<ToDoItem, Long?>(nullsLast()) { it.deadline?.time }
+                                    .thenBy { it.createdAt.time })
+                        )
                     } else {
                         adapter.submitList(uiState.data.filter { !it.done }
-                            .sortedBy { it.createdAt })
+                            .sortedWith(compareBy<ToDoItem, Long?>(nullsLast()) { it.deadline?.time }
+                                .thenBy { it.createdAt.time }))
                     }
                     with(binding) {
                         recyclerview.visibility = View.VISIBLE
@@ -190,17 +185,17 @@ class MainFragmentViewController(
                     }
                 }
 
-                is UiState.Error -> Log.d(
-                    MainFragmentViewController::class.simpleName,
-                    uiState.cause
-                )
-
                 is UiState.Start -> {
                     with(binding) {
                         recyclerview.visibility = View.GONE
                         noResultAnimationView.visibility = View.VISIBLE
                     }
                 }
+
+                is UiState.Error -> Log.d(
+                    MainFragmentViewController::class.simpleName,
+                    uiState.cause
+                )
             }
         }
     }
@@ -267,4 +262,29 @@ class MainFragmentViewController(
         timer.start()
         snackbar.show()
     }
+
+    private val notificationPermissionLauncher =
+        (context as MainActivity).registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            viewModel.putStatusNotification(isGranted)
+        }
+
+    private fun showNotificationDialog() {
+        val builder = MaterialAlertDialogBuilder(
+            ContextThemeWrapper(
+                context, R.style.AlertDialogCustom
+            )
+        )
+        builder.apply {
+            setTitle(context.getString(R.string.allow_notifications_dialog_title))
+            setMessage(context.getString(R.string.allow_notification_dialog_body))
+            setPositiveButton(context.getString(R.string.allow_button)) { _, _ ->
+                viewModel.putStatusNotification(true)
+            }
+            setNegativeButton(context.getString(R.string.deny_button)) { _, _ ->
+                viewModel.putStatusNotification(false)
+            }
+        }
+        builder.show().create()
+    }
+
 }

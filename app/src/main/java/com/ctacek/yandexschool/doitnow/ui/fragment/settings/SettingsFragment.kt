@@ -1,9 +1,11 @@
 package com.ctacek.yandexschool.doitnow.ui.fragment.settings
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -11,6 +13,7 @@ import com.ctacek.yandexschool.doitnow.R
 import com.ctacek.yandexschool.doitnow.appComponent
 import com.ctacek.yandexschool.doitnow.data.datasource.SharedPreferencesAppSettings
 import com.ctacek.yandexschool.doitnow.databinding.FragmentSettingsBinding
+import com.ctacek.yandexschool.doitnow.domain.model.ThemeMode
 import com.ctacek.yandexschool.doitnow.utils.notificationmanager.NotificationScheduler
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import javax.inject.Inject
@@ -47,22 +50,26 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         return binding.root
     }
 
+
     private fun prepareSwitchStatus() {
         val status = sharedPreferences.getNotificationStatus()
         binding.switchAllowNotification.isChecked = status ?: false
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         with(binding) {
 
-            themeOptionsValue.text = sharedPreferences.getThemeMode()
+            themeOptionsValue.text = sharedPreferences.getThemeMode().toString().lowercase()
 
             switchAllowNotification.setOnCheckedChangeListener { _, status ->
                 if (status) {
-                    sharedPreferences.putNotificationStatus(true)
+                    if (Build.VERSION.SDK_INT >= 33) {
+                        notificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                    } else {
+                        showNotificationDialog()
+                    }
                 } else {
                     sharedPreferences.putNotificationStatus(false)
                     notificationScheduler.cancelAll()
@@ -82,13 +89,13 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
                 val currentTheme = sharedPreferences.getThemeMode()
 
-                val selectedIndex = themeOptions.indexOf(currentTheme)
+                val selectedIndex = themeOptions.indexOf(currentTheme.toString().lowercase())
                 builder.apply {
                     setTitle(getString(R.string.choose_theme_title))
 
                     setSingleChoiceItems(themeLabels, selectedIndex) { dialog, which ->
                         val selectedTheme = themeOptions[which]
-                        sharedPreferences.putThemeMode(selectedTheme)
+                        sharedPreferences.putThemeMode(ThemeMode.valueOf(selectedTheme.uppercase()))
                         themeOptionsValue.text = selectedTheme
                         dialog.dismiss()
                     }
@@ -113,7 +120,32 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
             }
 
         }
-
-
     }
+
+    private fun showNotificationDialog() {
+        val builder = MaterialAlertDialogBuilder(
+            ContextThemeWrapper(
+                context, R.style.AlertDialogCustom
+            )
+        )
+        builder.apply {
+            setTitle(context.getString(R.string.allow_notifications_dialog_title))
+            setMessage(context.getString(R.string.allow_notification_dialog_body))
+            setPositiveButton(context.getString(R.string.allow_button)) { _, _ ->
+                sharedPreferences.putNotificationStatus(true)
+            }
+            setNegativeButton(context.getString(R.string.deny_button)) { _, _ ->
+                sharedPreferences.putNotificationStatus(false)
+                binding.switchAllowNotification.isChecked = false
+            }
+        }
+        builder.show().create()
+    }
+
+    private val notificationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            sharedPreferences.putNotificationStatus(isGranted)
+            binding.switchAllowNotification.isChecked = isGranted
+        }
+
 }
