@@ -73,14 +73,16 @@ class ManageItemFragmentCompose : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                viewModel.actions.collect(::handleActions)
+                viewModel.actions.collect(::handleAction)
             }
         }
+
+
     }
 
-    private fun handleActions(action: ManageAction) {
+    private fun handleAction(action: ManageAction) {
         when (action) {
-            ManageAction.NavigateBack -> findNavController().popBackStack()
+            ManageAction.NavigateBack -> findNavController().navigateUp()
         }
     }
 }

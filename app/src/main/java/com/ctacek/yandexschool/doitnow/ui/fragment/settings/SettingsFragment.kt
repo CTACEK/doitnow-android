@@ -77,7 +77,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
             }
 
             toolbar.setNavigationOnClickListener {
-                findNavController().popBackStack()
+                findNavController().navigateUp()
             }
 
             themeOption.setOnClickListener {
