@@ -58,6 +58,12 @@ class MainFragmentViewController(
     private fun checkStatusNotification() {
         if (viewModel.getStatusNotifications() == null) {
             if (Build.VERSION.SDK_INT >= 33) {
+                val notificationPermissionLauncher =
+                    (context as MainActivity)
+                        .registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+                        viewModel.putStatusNotification(isGranted)
+                    }
+
                 notificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
             } else {
                 showNotificationDialog()
@@ -262,11 +268,6 @@ class MainFragmentViewController(
         timer.start()
         snackbar.show()
     }
-
-    private val notificationPermissionLauncher =
-        (context as MainActivity).registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            viewModel.putStatusNotification(isGranted)
-        }
 
     private fun showNotificationDialog() {
         val builder = MaterialAlertDialogBuilder(
