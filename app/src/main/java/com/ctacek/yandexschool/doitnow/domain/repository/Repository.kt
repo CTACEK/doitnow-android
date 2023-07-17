@@ -11,5 +11,5 @@ interface Repository {
     suspend fun deleteItem(todoItem: ToDoItem)
     suspend fun changeItem(todoItem: ToDoItem)
     fun getNetworkTasks(): Flow<UiState<List<ToDoItem>>>
-    suspend fun deleteCurrentItems()
+    suspend fun deleteCurrentLocalItems()
 }

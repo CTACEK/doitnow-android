@@ -2,4 +2,9 @@
 <resources>
     <string name="importance_title_text">Importance</string>
     <string name="data_sample">2 JUNE 2023</string>
+    <string name="app_theme_title">Application theme</string>
+    <string name="choose_theme_title">Choose theme</string>
+    <string name="hour_before_task">Hour before task!</string>
+    <string name="postpone_for_a_day">Postpone for a day</string>
+    <string name="allow_notification_dialog_body">The notifications will show you the text of the task and its importance. Also, by clicking on it, you can proceed to editing.</string>
 </resources>

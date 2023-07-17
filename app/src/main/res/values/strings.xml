@@ -44,6 +44,24 @@
     <string name="yandex_id_button_disc">Yandex id button</string>
     <string name="yandex_id_button">Sign in with Yandex ID</string>
     <string name="something_went_wrong">Something went wrong!</string>
+    <string name="app_theme_title">Application theme</string>
+    <string name="choose_theme_title">Choose theme</string>
+    <string name="key_theme">theme_option</string>
+    <string name="hour_before_task">Hour before task!</string>
+    <string name="postpone_for_a_day">Postpone for a day</string>
+    <string name="notification_text">Your notification is %1$s and importance is %2$s</string>
+    <string name="allow_notifications_dialog_title">Do you allow notifications to be displayed?</string>
+    <string name="value_temp">Value</string>
+    <string name="allow_notification_setting_title">Allow notification</string>
+    <string name="manage_fragment_title">Manage fragment</string>
+    <string name="allow_notification_dialog_body">The notifications will show you the text of the task and its importance. Also, by clicking on it, you can proceed to editing.</string>
+    <string name="allow_button">Allow</string>
+    <string name="deny_button">Deny</string>
+    <string name="cancel_deleting">Cancel deleting a task: %1$s?</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="ok_button">OK</string>
+    <string name="select_time_time_picker_tittle">"Select Time "</string>
+    <string name="enter_time_time_picker_tittle">Enter Time</string>
 
 
 </resources>

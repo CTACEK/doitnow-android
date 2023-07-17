@@ -1,6 +1,7 @@
 package com.ctacek.yandexschool.doitnow.domain.model
 
 import com.ctacek.yandexschool.doitnow.data.model.Importance
+import com.google.gson.Gson
 import java.util.Date
 
 /**
@@ -18,6 +19,10 @@ data class ToDoItem(
     val createdAt: Date,
     var changedAt: Date?
 ) {
+    constructor() : this("-1", "", Importance.BASIC, null, false, Date(), Date(System.currentTimeMillis()))
 
-    constructor() : this("-1", "", Importance.BASIC, null, false, Date(), Date())
+    override fun toString(): String {
+        val gson = Gson()
+        return gson.toJson(this)
+    }
 }

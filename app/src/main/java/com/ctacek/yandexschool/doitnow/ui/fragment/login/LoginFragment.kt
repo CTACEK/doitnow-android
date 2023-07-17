@@ -67,6 +67,7 @@ class LoginFragment : Fragment() {
                                 val curToken = yandexAuthToken.value
                                 if (curToken != sharedPreferences.getCurrentToken()) {
                                     viewModel.deleteCurrentItems()
+                                    viewModel.deleteAllNotifications()
                                     sharedPreferences.setCurrentToken("OAuth ${yandexAuthToken.value}")
                                     sharedPreferences.putRevisionId(0)
                                 }

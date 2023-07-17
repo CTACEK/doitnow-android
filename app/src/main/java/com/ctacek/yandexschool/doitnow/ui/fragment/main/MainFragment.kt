@@ -34,7 +34,8 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             findNavController(),
             binding,
             viewLifecycleOwner,
-            viewModel
+            viewModel,
+            layoutInflater,
         ).apply {
             setUpViews()
         }

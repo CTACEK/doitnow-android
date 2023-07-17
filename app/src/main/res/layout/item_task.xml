@@ -13,7 +13,8 @@
         android:id="@+id/isCompleted"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true" />
+        android:layout_centerVertical="true"
+        tools:ignore="TouchTargetSizeCheck" />
 
     <ImageView
         android:id="@+id/priority"
@@ -32,12 +33,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="12dp"
-        android:fontFamily="@font/roboto_medium"
         android:layout_toStartOf="@id/info"
         android:layout_toEndOf="@id/priority"
         android:ellipsize="end"
-        android:maxLines="3"
-        android:textSize="16sp" />
+        style="@style/ItemDescText"
+        android:maxLines="3" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/data"
@@ -48,10 +48,9 @@
         android:layout_marginTop="6dp"
         android:layout_toEndOf="@id/isCompleted"
         android:ellipsize="end"
-        android:maxLines="3"
-        android:textSize="11sp"
+        android:maxLines="1"
+        style="@style/ItemDateText"
         android:visibility="gone" />
-
 
     <ImageView
         android:id="@+id/info"

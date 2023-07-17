@@ -1,4 +1,4 @@
-package com.ctacek.yandexschool.doitnow.ui.fragment.managetask
+package com.ctacek.yandexschool.doitnow.ui.fragment.managetask.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.ctacek.yandexschool.doitnow.R
 import com.ctacek.yandexschool.doitnow.appComponent
 import com.ctacek.yandexschool.doitnow.databinding.FragmentManageTaskBinding
@@ -17,7 +16,7 @@ class ManageTaskFragment : Fragment(R.layout.fragment_manage_task) {
 
     private val viewModel: ManageTaskViewModel by viewModels { requireContext().appComponent.findViewModelFactory() }
     private lateinit var binding: FragmentManageTaskBinding
-    private val args: ManageTaskFragmentArgs by navArgs()
+//    private val args: ManageTaskFragmentArgs by navArgs()
     private var fragmentViewComponent: ManageTaskViewController? = null
 
 
@@ -32,13 +31,13 @@ class ManageTaskFragment : Fragment(R.layout.fragment_manage_task) {
     ): View {
         val root = binding.root
 
-        val id = args.newTaskArg
+//        val id = args.newTaskArg
 
-        if (id != null) {
-            viewModel.getItem(id)
-        } else {
-            viewModel.setItem()
-        }
+//        if (id != null) {
+//            viewModel.getItem(id)
+//        } else {
+//            viewModel.setItem()
+//        }
 
         fragmentViewComponent = ManageTaskViewController(
             requireContext(),
@@ -51,4 +50,10 @@ class ManageTaskFragment : Fragment(R.layout.fragment_manage_task) {
         }
         return root
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        fragmentViewComponent = null
+    }
+
 }

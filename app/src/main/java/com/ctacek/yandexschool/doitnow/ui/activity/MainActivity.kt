@@ -17,11 +17,11 @@ import com.ctacek.yandexschool.doitnow.utils.PeriodWorkManager
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
+
 class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var sharedPreferencesAppSettings: SharedPreferencesAppSettings
-
 
     private lateinit var navController: NavController
 
@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             prepareRootNavController(isSignedIn(), navController)
         }
+
 
     }
 
@@ -72,8 +73,10 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+
     private fun getRootNavController(): NavController {
-        val navHost = supportFragmentManager.findFragmentById(R.id.fragment_container_view) as NavHostFragment
+        val navHost =
+            supportFragmentManager.findFragmentById(R.id.fragment_container_view) as NavHostFragment
         return navHost.navController
     }
 

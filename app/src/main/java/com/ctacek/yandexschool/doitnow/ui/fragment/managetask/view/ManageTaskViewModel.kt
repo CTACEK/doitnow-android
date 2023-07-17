@@ -1,4 +1,4 @@
-package com.ctacek.yandexschool.doitnow.ui.fragment.managetask
+package com.ctacek.yandexschool.doitnow.ui.fragment.managetask.view
 
 import androidx.lifecycle.ViewModel
 import com.ctacek.yandexschool.doitnow.data.repository.ToDoItemsRepositoryImpl
@@ -52,6 +52,4 @@ class ManageTaskViewModel @Inject constructor(
             repository.changeItem(task)
         }
     }
-
-
 }
