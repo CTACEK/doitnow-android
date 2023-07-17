@@ -1,10 +1,11 @@
 @file:Suppress("UnstableApiUsage")
 
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("androidx.navigation.safeargs.kotlin")
-    id("kotlin-kapt")
+    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.kotlinAndroid)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.navigation.safe.args)
 }
 
 android {
@@ -27,7 +28,11 @@ android {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
+        debug {
+            isMinifyEnabled = false
+        }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -46,72 +51,59 @@ android {
 
 dependencies {
 
-    //Standard dependencies
-    implementation("androidx.core:core-ktx:1.10.1")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.9.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("androidx.legacy:legacy-support-v4:1.0.0")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
-    implementation("androidx.work:work-runtime-ktx:2.8.1")
-    implementation("androidx.preference:preference-ktx:1.2.0")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    implementation(platform("androidx.compose:compose-bom:2023.05.01"))
+    androidTestImplementation(platform("androidx.compose:compose-bom:2023.05.01"))
 
-    implementation("androidx.coordinatorlayout:coordinatorlayout:1.2.0")
+    //Core
+    implementation(libs.core.ktx)
+    implementation(libs.appcompat)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.lifecycle.viwemodel.ktx)
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.material)
 
-    implementation("it.xabaras.android:recyclerview-swipedecorator:1.4")
+    //Tests
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.espresso.core)
 
-    implementation("com.airbnb.android:lottie:6.0.1")
-    implementation("com.daimajia.androidanimations:library:2.4@aar")
+    implementation(libs.coroutines.android)
 
-    //Ktx coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.2")
+    implementation(libs.constraintlayout)
+    implementation(libs.coordinatorlayout)
+    implementation(libs.androidx.swiperefreshlayout)
+
+    //Animations
+    implementation(libs.swipedecorator)
+    implementation(libs.lottie)
+    implementation(libs.yoyo) {
+        artifact {
+            type = "aar"
+        }
+    }
 
     //Jetpack Navigation
-    implementation("androidx.navigation:navigation-fragment-ktx:2.6.0")
-    implementation("androidx.navigation:navigation-ui-ktx:2.6.0")
+    implementation(libs.bundles.navigation)
 
     //Room
-    implementation("androidx.room:room-runtime:2.5.2")
-    implementation("androidx.room:room-ktx:2.5.2")
-    kapt("androidx.room:room-compiler:2.5.2")
+    kapt(libs.room.compiler)
+    implementation(libs.room.runtime)
+    implementation(libs.room)
 
-    implementation("com.google.code.gson:gson:2.10.1")
+    implementation(libs.gson)
 
     //Retrofit
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.11")
-    implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.11")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation(libs.bundles.retrofit)
+    implementation(libs.bundles.okhttp)
 
     //Yandex auth
-    implementation("com.yandex.android:authsdk:2.5.1")
+    implementation(libs.authsdk)
 
     //Dagger 2
-    implementation("com.google.dagger:dagger:2.46.1")
-    kapt("com.google.dagger:dagger-compiler:2.46.1")
+    kapt(libs.bundles.dagger.compiler)
+    implementation(libs.bundles.dagger)
 
     // Compose
-    implementation("androidx.compose.ui:ui:1.4.3")
-
-    implementation("androidx.compose.material:material:1.4.3")
-    implementation("androidx.compose.material3:material3:1.1.1")
-
-    implementation("androidx.compose.material:material-icons-extended:1.4.3")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
-
-    implementation("androidx.compose.ui:ui-tooling-preview:1.4.3")
-    debugImplementation("androidx.compose.ui:ui-tooling:1.4.3")
-
-    implementation("androidx.activity:activity-compose:1.7.2")
-
-    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
-
-    // Compose navigation
-    implementation("androidx.navigation:navigation-compose:2.6.0")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
-
+    implementation(libs.bundles.compose.core)
+    implementation(libs.bundles.compose.material)
 }

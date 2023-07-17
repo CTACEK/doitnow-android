@@ -1,0 +1,145 @@
+[versions]
+#Core
+activity-ktx = "1.7.2"
+agp = "8.0.2"
+kotlin = "1.7.20"
+appcompat = "1.6.1"
+core-ktx = "1.10.1"
+work-runtime-ktx = "2.8.1"
+material = "1.9.0"
+coroutines-android = "1.7.2"
+ktor = "2.2.3"
+
+junit = "4.13.2"
+androidx-test-ext-junit = "1.1.5"
+espresso-core = "3.5.1"
+
+lifecycle-livedata-ktx = "2.6.1"
+
+constraintlayout = "2.1.4"
+coordinatorlayout = "1.2.0"
+recyclerview-swipedecorator = "1.4"
+swiperefreshlayout = "1.2.0-alpha01"
+
+navigation = "2.6.0"
+navigation-safe-args-gradle-plugin = "2.6.0"
+
+room = "2.5.2"
+
+retrofit = "2.9.0"
+okhttp = "5.0.0-alpha.11"
+
+gson = "2.10.1"
+gson-converter = "2.9.0"
+
+authsdk = "2.5.1"
+
+dagger = "2.46.1"
+
+#Animations
+lottie = "6.0.1"
+yoyo = "2.4"
+
+#Compose
+compose = "1.4.3"
+material-compose = "1.4.3"
+material3-compose = "1.1.1"
+
+[libraries]
+#Core
+core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle-livedata-ktx" }
+androidx-lifecycle-viwemodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle-livedata-ktx" }
+
+androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "work-runtime-ktx" }
+coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines-android" }
+
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
+
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+#Compose
+androidx-compose = { module = "androidx.compose.ui:ui", version.ref = "compose" }
+androidx-ui-tooling-compose = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
+androidx-ui-tooling-preview-compose = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-ktx" }
+androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle-livedata-ktx" }
+
+#Material compose
+compose-material-icons-core = { module = "androidx.compose.material:material-icons-core", version.ref = "material-compose" }
+compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "material-compose" }
+compose-material2 = { module = "androidx.compose.material:material", version.ref = "material-compose" }
+compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "material3-compose" }
+
+#Layouts
+constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+coordinatorlayout = { group = "androidx.coordinatorlayout", name = "coordinatorlayout", version.ref = "coordinatorlayout" }
+androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
+
+swipedecorator = { group = "it.xabaras.android", name = "recyclerview-swipedecorator", version.ref = "recyclerview-swipedecorator" }
+
+#Animations
+lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie" }
+yoyo = { group = "com.daimajia.androidanimations", name = "library", version.ref = "yoyo" }
+
+#Ydndex auth
+authsdk = { module = "com.yandex.android:authsdk", version.ref = "authsdk" }
+
+#Jetpack Navigation
+androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigation" }
+androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigation" }
+
+#Dagger
+dagger = { group = "com.google.dagger", name = "dagger", version.ref = "dagger" }
+dagger-android = { group = "com.google.dagger", name = "dagger-android", version.ref = "dagger" }
+dagger-android-support = { group = "com.google.dagger", name = "dagger-android-support", version.ref = "dagger" }
+dagger-compiler = { group = "com.google.dagger", name = "dagger-compiler", version.ref = "dagger" }
+dagger-android-compiler = { group = "com.google.dagger", name = "dagger-android-processor", version.ref = "dagger" }
+
+#Nav save args
+navigation-safe-args-gradle-plugin = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "navigation-safe-args-gradle-plugin" }
+
+#Room
+room = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+
+#Retrofit
+retrofit2 = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+gson-converter = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "gson-converter" }
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+
+#Okhttp
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+
+#Ktor
+ktor-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
+ktor-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-serialization = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
+
+[plugins]
+androidApplication = { id = "com.android.application", version.ref = "agp" }
+kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+navigation-safe-args = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigation-safe-args-gradle-plugin" }
+
+[bundles]
+
+ktor = ["ktor-okhttp", "ktor-negotiation", "ktor-serialization", "ktor-logging"]
+navigation = ["androidx-navigation-fragment-ktx", "androidx-navigation-ui-ktx"]
+
+compose-core = ["androidx-compose", "androidx-ui-tooling-compose", "androidx-ui-tooling-preview-compose", "androidx-activity-compose", "androidx-lifecycle-viewmodel-compose"]
+compose-material = ["compose-material-icons-core", "compose-material-icons-extended", "compose-material2", "compose-material3"]
+
+retrofit = ["retrofit2", "gson-converter"]
+okhttp = ["okhttp", "okhttp-logging"]
+
+room = ["room", "room-runtime"]
+
+dagger = ["dagger-android-support", "dagger-android", "dagger"]
+dagger-compiler = ["dagger-android-compiler", "dagger-compiler"]

@@ -13,6 +13,12 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
     }
+    versionCatalogs {
+        create("libs"){
+            from(files("gradle/libs.toml"))
+        }
+    }
 }
+
 rootProject.name = "DoItNow"
 include(":app")
