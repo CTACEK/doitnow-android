@@ -11,6 +11,7 @@ plugins {
 
 pluginExtension {
     enableSizeCheck.set(true)
+    enableAnalyzeApk.set(true)
     fileSizeLimitInMb.set(30)
 }
 

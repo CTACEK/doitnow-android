@@ -8,5 +8,5 @@ interface PluginExtension {
 
     val enableSizeCheck: Property<Boolean>
 
-
+    val enableAnalyzeApk: Property<Boolean>
 }
