@@ -2,7 +2,7 @@
 #Core
 activity-ktx = "1.7.2"
 agp = "8.0.2"
-kotlin = "1.8.0"
+kotlin = "1.8.20"
 appcompat = "1.6.1"
 core-ktx = "1.10.1"
 work-runtime-ktx = "2.8.1"
@@ -73,8 +73,6 @@ androidx-activity-compose = { module = "androidx.activity:activity-compose", ver
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle-livedata-ktx" }
 
 #Material compose
-compose-material-icons-core = { module = "androidx.compose.material:material-icons-core", version.ref = "material-compose" }
-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "material-compose" }
 compose-material2 = { module = "androidx.compose.material:material", version.ref = "material-compose" }
 compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "material3-compose" }
 
@@ -138,7 +136,7 @@ ktor = ["ktor-okhttp", "ktor-negotiation", "ktor-serialization", "ktor-logging"]
 navigation = ["androidx-navigation-fragment-ktx", "androidx-navigation-ui-ktx"]
 
 compose-core = ["androidx-compose", "androidx-ui-tooling-compose", "androidx-ui-tooling-preview-compose", "androidx-activity-compose", "androidx-lifecycle-viewmodel-compose"]
-compose-material = ["compose-material-icons-core", "compose-material-icons-extended", "compose-material2", "compose-material3"]
+compose-material = ["compose-material2", "compose-material3"]
 
 retrofit = ["retrofit2", "gson-converter"]
 okhttp = ["okhttp", "okhttp-logging"]
