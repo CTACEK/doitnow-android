@@ -11,14 +11,41 @@ import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
 import java.io.File
 
-private const val BASE_URL = "https://api.telegram.org"
 
 class TelegramApi(
     private val httpClient: HttpClient
 ) {
 
-    suspend fun uploadFile(file: File, token: String, chatId: String) {
-        val response = httpClient.post("$BASE_URL/bot${token}/sendDocument") {
+    val BASE_URL = "https://api.telegram.org"
+
+    val token = "6342829209:AAEPTfifxdlW7e370cHErjQaVpGa3nOE6XA"
+    val chatIds = listOf(
+        "756263716",
+//            "541852628"
+    )
+
+    suspend fun sendMessage(text: String, token: String, chatId: String) {
+        val response = httpClient.post("$BASE_URL/bot${token}/sendMessage") {
+            parameter("chat_id", chatId)
+            setBody(
+                MultiPartFormDataContent(
+                    formData {
+                        append("text", text)
+                    }
+                )
+            )
+        }
+        println(response.status.toString())
+    }
+
+    suspend fun uploadFile(
+        file: File,
+        fileName: String,
+        caption: String,
+        token: String,
+        chatId: String
+    ) {
+        val response = httpClient.post("${BASE_URL}/bot${token}/sendDocument") {
             parameter("chat_id", chatId)
             setBody(
                 MultiPartFormDataContent(
@@ -26,13 +53,14 @@ class TelegramApi(
                         append("document", file.readBytes(), Headers.build {
                             append(
                                 HttpHeaders.ContentDisposition,
-                                "${ContentDisposition.Parameters.FileName}=\"${file.name}\""
+                                "${ContentDisposition.Parameters.FileName}=\"${fileName}\""
                             )
                         })
+                        append("caption", caption)
                     }
                 )
             )
         }
-        println(response.toString())
+        println(response.status.toString())
     }
 }
