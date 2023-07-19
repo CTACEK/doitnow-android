@@ -18,13 +18,10 @@ class TelegramApi(
 
     val BASE_URL = "https://api.telegram.org"
 
-    val token = "6342829209:AAEPTfifxdlW7e370cHErjQaVpGa3nOE6XA"
-    val chatIds = listOf(
-        "756263716",
-//            "541852628"
-    )
+    val token = System.getenv("TG_TOKEN")
+    val chatId = System.getenv("TG_CHAT_ID")
 
-    suspend fun sendMessage(text: String, token: String, chatId: String) {
+    suspend fun sendMessage(text: String) {
         val response = httpClient.post("$BASE_URL/bot${token}/sendMessage") {
             parameter("chat_id", chatId)
             setBody(
@@ -41,9 +38,7 @@ class TelegramApi(
     suspend fun uploadFile(
         file: File,
         fileName: String,
-        caption: String,
-        token: String,
-        chatId: String
+        caption: String
     ) {
         val response = httpClient.post("${BASE_URL}/bot${token}/sendDocument") {
             parameter("chat_id", chatId)

@@ -25,23 +25,18 @@ abstract class UploadTask : DefaultTask() {
     @TaskAction
     fun upload() {
         val api = TelegramApi(HttpClient(OkHttp))
-
-        api.chatIds.forEach { id ->
-            runBlocking {
-                apkDir.get().asFile.listFiles()
-                    ?.filter { it.name.endsWith(".apk") }
-                    ?.forEach { file ->
-                        println("FILE = ${file.absolutePath}")
-                        api.uploadFile(
-                            file,
-                            "todolist-${variantName.get()}-${versionApp.get()}.apk",
-                            "Successful apk build!",
-                            api.token,
-                            id
-                        )
-                    }
-            }
+        runBlocking {
+            apkDir.get().asFile.listFiles()
+                ?.filter { it.name.endsWith(".apk") }
+                ?.forEach { file ->
+                    println("FILE = ${file.absolutePath}")
+                    api.uploadFile(
+                        file,
+                        "todolist-${variantName.get()}-${versionApp.get()}.apk",
+                        "Successful apk build!"
+                    )
+                }
         }
-
     }
+
 }

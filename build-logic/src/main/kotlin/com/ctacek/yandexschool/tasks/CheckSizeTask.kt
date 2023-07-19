@@ -24,32 +24,24 @@ abstract class CheckSizeTask : DefaultTask() {
     fun checkSizeAndSendMessage() {
         val api = TelegramApi(HttpClient(OkHttp))
 
-        api.chatIds.forEach { id ->
-            runBlocking {
-                apkDir.get().asFile.listFiles()
-                    ?.filter { it.name.endsWith(".apk") }
-                    ?.forEach {
-                        val sizeInMb: Long = it.length() / (1024 * 1024)
+        runBlocking {
+            apkDir.get().asFile.listFiles()
+                ?.filter { it.name.endsWith(".apk") }
+                ?.forEach {
+                    val sizeInMb: Long = it.length() / (1024 * 1024)
 
-                        println("FILE = ${it.absolutePath}, SIZE = $sizeInMb")
+                    println("FILE = ${it.absolutePath}, SIZE = $sizeInMb")
 
+                    api.sendMessage("Size of current building apk file is $sizeInMb")
+
+                    if (sizeInMb >= legalSizeMB.get()) {
                         api.sendMessage(
-                            "Size of current building apk file is $sizeInMb",
-                            api.token,
-                            id
+                            "Build and uploading this apk file are failed :c \n" +
+                                    "File size is $sizeInMb MB, but current limit is ${legalSizeMB.get()} MB.",
                         )
-
-                        if (sizeInMb >= legalSizeMB.get()) {
-                            api.sendMessage(
-                                "Build and uploading this apk file are failed :c \n" +
-                                        "File size is $sizeInMb MB, but current limit is ${legalSizeMB.get()} MB.",
-                                api.token,
-                                id
-                            )
-                            throw GradleException("File size is $sizeInMb MB, but the limit is ${legalSizeMB.get()} MB.")
-                        }
+                        throw GradleException("File size is $sizeInMb MB, but the limit is ${legalSizeMB.get()} MB.")
                     }
-            }
+                }
         }
     }
 }

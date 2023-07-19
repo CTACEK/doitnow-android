@@ -20,27 +20,23 @@ abstract class AnalyzeApkTask : DefaultTask() {
     fun analyzeApk() {
         val api = TelegramApi(HttpClient(OkHttp))
 
-        api.chatIds.forEach { id ->
-            runBlocking {
-                apkDir.get().asFile.listFiles()
-                    ?.filter { it.name.endsWith(".apk") }
-                    ?.forEach { file ->
-                        if (file.exists()) {
-                            try {
-                                var result = "Detailed output of the contents of the apk file:"
-                                result += analyzeApkResources(file.toString())
+        runBlocking {
+            apkDir.get().asFile.listFiles()
+                ?.filter { it.name.endsWith(".apk") }
+                ?.forEach { file ->
+                    if (file.exists()) {
+                        try {
+                            var result = "Detailed output of the contents of the apk file:"
+                            result += analyzeApkResources(file.toString())
 
-                                api.sendMessage(
-                                    result,
-                                    api.token,
-                                    id
-                                )
-                            } catch (e: IOException) {
-                                e.printStackTrace()
-                            }
+                            api.sendMessage(
+                                result
+                            )
+                        } catch (e: IOException) {
+                            e.printStackTrace()
                         }
                     }
-            }
+                }
         }
     }
 
