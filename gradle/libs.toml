@@ -1,5 +1,10 @@
 [versions]
+#My plugins
+sizeplugin = "0.0.1"
+uploadplugin = "0.0.1"
+
 #Core
+
 activity-ktx = "1.7.2"
 agp = "8.0.2"
 kotlin = "1.8.20"

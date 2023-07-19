@@ -3,13 +3,9 @@ plugins {
 }
 
 gradlePlugin {
-  plugins.register("check-size-plugin") {
-    id = "check-size-plugin"
-    implementationClass = "com.ctacek.yandexschool.checksize.CheckSizePlugin"
-  }
   plugins.register("upload-tg-plugin") {
     id = "upload-tg-plugin"
-    implementationClass = "com.ctacek.yandexschool.uploadtg.UploadPlugin"
+    implementationClass = "com.ctacek.yandexschool.UploadPlugin"
   }
 }
 

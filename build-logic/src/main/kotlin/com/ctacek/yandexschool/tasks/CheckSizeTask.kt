@@ -1,4 +1,4 @@
-package com.ctacek.yandexschool.checksize
+package com.ctacek.yandexschool.tasks
 
 import com.ctacek.yandexschool.TelegramApi
 import io.ktor.client.HttpClient
@@ -7,24 +7,24 @@ import kotlinx.coroutines.runBlocking
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.TaskAction
 
 abstract class CheckSizeTask : DefaultTask() {
 
+    @get:Input
+    abstract val legalSizeMB: Property<Int>
+
     @get:InputDirectory
     abstract val apkDir: DirectoryProperty
-
-    @get:Input
-    abstract var legalSizeMB: Long
 
     @TaskAction
     fun checkSizeAndSendMessage() {
         val api = TelegramApi(HttpClient(OkHttp))
 
-        api.chatIds.forEach {
-            val id = it
+        api.chatIds.forEach { id ->
             runBlocking {
                 apkDir.get().asFile.listFiles()
                     ?.filter { it.name.endsWith(".apk") }
@@ -39,14 +39,14 @@ abstract class CheckSizeTask : DefaultTask() {
                             id
                         )
 
-                        if (sizeInMb >= legalSizeMB) {
+                        if (sizeInMb >= legalSizeMB.get()) {
                             api.sendMessage(
                                 "Build and uploading this apk file are failed :c \n" +
-                                        "File size is $sizeInMb MB, but current limit is $legalSizeMB MB.",
+                                        "File size is $sizeInMb MB, but current limit is ${legalSizeMB.get()} MB.",
                                 api.token,
                                 id
                             )
-                            throw GradleException("File size is $sizeInMb MB, but the limit is $legalSizeMB MB.")
+                            throw GradleException("File size is $sizeInMb MB, but the limit is ${legalSizeMB.get()} MB.")
                         }
                     }
             }

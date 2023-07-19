@@ -1,14 +1,17 @@
 @file:Suppress("UnstableApiUsage")
 
 
-@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.navigation.safe.args)
-    id("check-size-plugin")
     id("upload-tg-plugin")
+}
+
+pluginExtension {
+    enableSizeCheck.set(true)
+    fileSizeLimitInMb.set(30)
 }
 
 android {
@@ -28,12 +31,12 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
-            isShrinkResources = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+//            isMinifyEnabled = true
+//            isShrinkResources = true
+//            proguardFiles(
+//                getDefaultProguardFile("proguard-android-optimize.txt"),
+//                "proguard-rules.pro"
+//            )
         }
         debug {
 //            isShrinkResources = true
