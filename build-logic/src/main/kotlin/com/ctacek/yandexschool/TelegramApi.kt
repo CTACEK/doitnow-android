@@ -16,10 +16,10 @@ class TelegramApi(
     private val httpClient: HttpClient
 ) {
 
-    val BASE_URL = "https://api.telegram.org"
+    private val BASE_URL = "https://api.telegram.org"
 
-    val token = System.getenv("TG_TOKEN")
-    val chatId = System.getenv("TG_CHAT_ID")
+    private val token = System.getenv("TG_TOKEN")
+    private val chatId = System.getenv("TG_CHAT_ID")
 
     suspend fun sendMessage(text: String) {
         val response = httpClient.post("$BASE_URL/bot${token}/sendMessage") {
