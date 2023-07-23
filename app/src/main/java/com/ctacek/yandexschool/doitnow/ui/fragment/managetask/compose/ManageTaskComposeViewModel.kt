@@ -91,14 +91,14 @@ class ManageTaskComposeViewModel @Inject constructor(
     }
 
     private fun changeTitle(text: String) {
-        _todoItem.update { _todoItem.value.copy(description = text) }
+        _todoItem.update { it.copy(description = text) }
     }
 
     private fun changeImportance(important: Importance) {
-        _todoItem.update { _todoItem.value.copy(importance = important) }
+        _todoItem.update { it.copy(importance = important) }
     }
 
     private fun changeDeadline(deadline: Date?) {
-        _todoItem.update { _todoItem.value.copy(deadline = deadline) }
+        _todoItem.update { it.copy(deadline = deadline) }
     }
 }

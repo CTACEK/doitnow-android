@@ -13,9 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Surface
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Keyboard
-import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.isContainer
 import androidx.compose.ui.semantics.semantics
@@ -110,9 +108,9 @@ fun TimePickerSwitchable(
                                     .zIndex(5f),
                                 onClick = { showingPicker.value = !showingPicker.value }) {
                                 val icon = if (showingPicker.value) {
-                                    Icons.Outlined.Keyboard
+                                    painterResource(id = R.drawable.baseline_keyboard_24)
                                 } else {
-                                    Icons.Outlined.Schedule
+                                    painterResource(id = R.drawable.baseline_access_time_24)
                                 }
                                 Icon(
                                     icon,

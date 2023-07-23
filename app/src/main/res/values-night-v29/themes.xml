@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.DoItNow" parent="Theme.MaterialComponents.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/back_dark_primary</item>
+        <item name="colorPrimaryVariant">@color/label_light_secondary</item>
+        <item name="colorOnPrimary">@color/label_dark_primary</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/back_dark_secondary</item>
+        <item name="colorSecondaryVariant">@color/color_dark_blue</item>
+        <item name="colorOnSecondary">@color/color_light_gray</item>
+
+        <item name="colorTertiary">@color/color_light_gray</item>
+        <item name="colorOnTertiary">@color/support_dark_overlay</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+
+        <item name="android:forceDarkAllowed">false</item>
+    </style>
+</resources>

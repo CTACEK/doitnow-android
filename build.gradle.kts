@@ -1,13 +1,18 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+plugins {
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.kotlin.kapt) apply false
+    alias(libs.plugins.navigation.safe.args) apply false
+}
 
 buildscript {
     dependencies {
-        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.6.0")
+        classpath(libs.navigation.safe.args.gradle.plugin)
+        classpath(libs.coroutines)
     }
-}
-
-plugins {
-    id("com.android.application") version "8.0.2" apply false
-    id("com.android.library") version "8.0.2" apply false
-    id("org.jetbrains.kotlin.android") version "1.7.20" apply false
+    repositories {
+        google()
+        mavenCentral()
+    }
 }

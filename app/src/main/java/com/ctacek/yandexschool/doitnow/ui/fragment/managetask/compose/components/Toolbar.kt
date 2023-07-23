@@ -79,7 +79,7 @@ private fun ToolbarPreviewDark() {
         Toolbar(
             onEvent = {},
             scrollState = ScrollState(10),
-            saveCreateState = "Save"
+            saveCreateState = "Create"
         )
     }
 }
